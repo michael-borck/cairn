@@ -1,0 +1,171 @@
+{
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Containers and images",
+      "order": 1,
+      "skillIds": [
+        "what-is-a-container",
+        "run-a-container",
+        "images-and-layers"
+      ]
+    },
+    {
+      "id": "wiring",
+      "title": "Ports, volumes, and networks",
+      "order": 2,
+      "skillIds": [
+        "port-mapping",
+        "volumes",
+        "container-networking"
+      ]
+    },
+    {
+      "id": "ship",
+      "title": "Build and troubleshoot",
+      "order": 3,
+      "skillIds": [
+        "dockerfiles",
+        "compose-basics",
+        "troubleshooting"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "what-is-a-container",
+      "title": "What a container is",
+      "description": "Separate a container from a virtual machine and a running process.",
+      "difficulty": 1,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 20,
+      "tags": [
+        "docker",
+        "containers"
+      ]
+    },
+    {
+      "id": "run-a-container",
+      "title": "Run a container",
+      "description": "Start, inspect, stop, and remove a container.",
+      "prerequisites": [
+        "what-is-a-container"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "docker",
+        "containers"
+      ]
+    },
+    {
+      "id": "images-and-layers",
+      "title": "Images and layers",
+      "description": "Understand image layers, caching, and the image-container relationship.",
+      "prerequisites": [
+        "what-is-a-container"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "docker",
+        "images"
+      ]
+    },
+    {
+      "id": "port-mapping",
+      "title": "Port mapping",
+      "description": "Publish container ports on the host and read the host:container order.",
+      "prerequisites": [
+        "run-a-container"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "docker",
+        "networking"
+      ]
+    },
+    {
+      "id": "volumes",
+      "title": "Volumes and persistence",
+      "description": "Keep data beyond the container lifecycle with named volumes and bind mounts.",
+      "prerequisites": [
+        "run-a-container"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "docker",
+        "storage"
+      ]
+    },
+    {
+      "id": "container-networking",
+      "title": "Container networking",
+      "description": "Connect containers on a user-defined bridge network and resolve them by name.",
+      "prerequisites": [
+        "port-mapping"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 30,
+      "tags": [
+        "docker",
+        "networking"
+      ]
+    },
+    {
+      "id": "dockerfiles",
+      "title": "Dockerfiles",
+      "description": "Build a repeatable image from a Dockerfile and understand instruction order.",
+      "prerequisites": [
+        "images-and-layers"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 35,
+      "tags": [
+        "docker",
+        "images",
+        "build"
+      ]
+    },
+    {
+      "id": "compose-basics",
+      "title": "Compose basics",
+      "description": "Run a small multi-container application with Docker Compose.",
+      "prerequisites": [
+        "dockerfiles",
+        "port-mapping"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 35,
+      "tags": [
+        "docker",
+        "compose"
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Troubleshooting",
+      "description": "Use logs, inspect, and status to diagnose a failing container.",
+      "prerequisites": [
+        "container-networking",
+        "volumes"
+      ],
+      "difficulty": 4,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 35,
+      "tags": [
+        "docker",
+        "debugging"
+      ]
+    }
+  ]
+}

@@ -129,7 +129,7 @@ export async function simulateLearner(
     };
     await engine.record(event);
 
-    current = new Date(current.getTime() + 6 * 60 * 60 * 1000);
+    current = new Date(current.getTime() + 5 * 60 * 1000);
   }
 
   const state = await engine.getState(learnerId);

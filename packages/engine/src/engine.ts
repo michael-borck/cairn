@@ -69,6 +69,7 @@ export function createInitialState(
     history: {
       sessions: 0,
       totalMinutes: 0,
+      recentItemIds: [],
     },
   };
 }
@@ -120,7 +121,12 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
 
   async function ensureState(learnerId: LearnerId): Promise<LearnerState> {
     const existing = await storage.loadLearner(learnerId);
-    if (existing && existing.packId === pack.manifest.id) return existing;
+    if (existing && existing.packId === pack.manifest.id) {
+      if (!Array.isArray(existing.history.recentItemIds)) {
+        existing.history.recentItemIds = [];
+      }
+      return existing;
+    }
     const state = createInitialState(pack, learnerId);
     await storage.saveLearner(state);
     return state;
@@ -273,6 +279,10 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
       }
 
       state.history.lastSessionAt = event.timestamp;
+      state.history.recentItemIds = [
+        event.itemId,
+        ...state.history.recentItemIds.filter((id) => id !== event.itemId),
+      ].slice(0, 12);
       await storage.saveLearner(state);
       await storage.appendEvent(event);
 
@@ -332,7 +342,8 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
           pack,
           skillId,
           action,
-          masteryOf(state, skillId)
+          masteryOf(state, skillId),
+          state.history.recentItemIds
         );
         if (!item) {
           const next = chooseNextDecision({

@@ -56,6 +56,7 @@ export interface LearnerHistory {
   sessions: number;
   totalMinutes: number;
   lastSessionAt?: string;
+  recentItemIds: string[];
 }
 
 export interface LearnerState {

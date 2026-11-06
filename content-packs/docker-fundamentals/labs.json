@@ -1,0 +1,252 @@
+[
+  {
+    "id": "run-nginx",
+    "title": "Run nginx",
+    "skillIds": [
+      "run-a-container"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "docker --version"
+    ],
+    "task": "Run nginx and confirm it responds on localhost:8080.",
+    "commands": [
+      "docker run -d --name web -p 8080:80 nginx:1.27"
+    ],
+    "checks": [
+      {
+        "id": "running",
+        "type": "manual",
+        "prompt": "Does docker ps show the container?",
+        "answer": "yes"
+      },
+      {
+        "id": "http",
+        "type": "manual",
+        "prompt": "Does http://localhost:8080 show the nginx welcome page?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Check the container is running before you check the browser."
+      }
+    ],
+    "solution": "docker run -d --name web -p 8080:80 nginx:1.27",
+    "cleanup": [
+      "docker stop web",
+      "docker rm web"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "publish-port",
+    "title": "Publish a different host port",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "docker ps"
+    ],
+    "task": "Run nginx on host port 8081 and confirm it responds.",
+    "commands": [
+      "docker run -d --name web2 -p 8081:80 nginx:1.27"
+    ],
+    "checks": [
+      {
+        "id": "running",
+        "type": "manual",
+        "prompt": "Does docker ps show web2 on port 8081?",
+        "answer": "yes"
+      },
+      {
+        "id": "http",
+        "type": "manual",
+        "prompt": "Does http://localhost:8081 respond?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The host port is the left side of the mapping."
+      }
+    ],
+    "solution": "docker run -d --name web2 -p 8081:80 nginx:1.27",
+    "cleanup": [
+      "docker stop web2",
+      "docker rm web2"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "persist-volume",
+    "title": "Persist data in a named volume",
+    "skillIds": [
+      "volumes"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "docker volume create appdata"
+    ],
+    "task": "Write a file into appdata from one container and read it from another.",
+    "commands": [
+      "docker run --rm -v appdata:/data alpine sh -c 'echo hello > /data/hello.txt'",
+      "docker run --rm -v appdata:/data alpine cat /data/hello.txt"
+    ],
+    "checks": [
+      {
+        "id": "written",
+        "type": "manual",
+        "prompt": "Did the first container write hello.txt?",
+        "answer": "yes"
+      },
+      {
+        "id": "read",
+        "type": "manual",
+        "prompt": "Did the second container print hello?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The volume must outlive the first container."
+      }
+    ],
+    "solution": "Use the same named volume in both containers.",
+    "cleanup": [
+      "docker volume rm appdata"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "build-image",
+    "title": "Build a custom image",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "mkdir -p app"
+    ],
+    "task": "Create a Dockerfile that starts from nginx:1.27, build it as my-nginx, and run it on host port 8082.",
+    "commands": [
+      "printf 'FROM nginx:1.27\\n' > app/Dockerfile",
+      "docker build -t my-nginx app",
+      "docker run -d --name custom -p 8082:80 my-nginx"
+    ],
+    "checks": [
+      {
+        "id": "built",
+        "type": "manual",
+        "prompt": "Does docker images show my-nginx?",
+        "answer": "yes"
+      },
+      {
+        "id": "running",
+        "type": "manual",
+        "prompt": "Does http://localhost:8082 respond?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The build context is the directory you pass at the end."
+      }
+    ],
+    "solution": "FROM nginx:1.27, then docker build -t my-nginx app.",
+    "cleanup": [
+      "docker stop custom",
+      "docker rm custom",
+      "docker rmi my-nginx"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "debug-container",
+    "title": "Diagnose a failing container",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "docker run -d --name broken alpine sh -c 'echo starting; exit 1'"
+    ],
+    "task": "Find out why the container exited. Read the logs and the exit code before removing it.",
+    "commands": [
+      "docker ps -a",
+      "docker logs broken",
+      "docker inspect broken"
+    ],
+    "checks": [
+      {
+        "id": "stopped",
+        "type": "manual",
+        "prompt": "Does docker ps -a show the container exited?",
+        "answer": "yes"
+      },
+      {
+        "id": "logs",
+        "type": "manual",
+        "prompt": "Did docker logs show the startup message?",
+        "answer": "yes"
+      },
+      {
+        "id": "exit",
+        "type": "manual",
+        "prompt": "Did docker inspect show a non-zero exit code?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the logs before you remove the container."
+      }
+    ],
+    "solution": "docker logs broken; docker inspect broken",
+    "cleanup": [
+      "docker rm broken"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

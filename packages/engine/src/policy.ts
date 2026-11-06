@@ -119,14 +119,17 @@ export function selectItem(
   pack: ContentPack,
   skillId: SkillId,
   action: DecisionAction,
-  mastery: number
+  mastery: number,
+  recentItemIds: string[] = []
 ): Item | undefined {
   const all = itemsForSkill(pack, skillId);
   if (all.length === 0) return undefined;
 
   const order = TYPE_ORDER[action];
   const preferred = all.filter((item) => order.includes(item.type));
-  const candidates = preferred.length > 0 ? preferred : all;
+  const pool = preferred.length > 0 ? preferred : all;
+  const fresh = pool.filter((item) => !recentItemIds.includes(item.id));
+  const candidates = fresh.length > 0 ? fresh : pool;
   const targetDifficulty = 1 + mastery * 4;
 
   return [...candidates].sort((a, b) => {
@@ -160,7 +163,13 @@ function dueReview(
     });
 
   for (const entry of due) {
-    const item = selectItem(pack, entry.skill.id, "review", entry.itemState.mastery);
+    const item = selectItem(
+      pack,
+      entry.skill.id,
+      "review",
+      entry.itemState.mastery,
+      state.history.recentItemIds
+    );
     if (item) return { skill: entry.skill, item };
   }
   return undefined;
@@ -289,7 +298,13 @@ export function chooseNextDecision(input: PolicyInput): Decision {
 
   const gap = firstPrerequisiteGap(target, state, pack);
   if (gap) {
-    const item = selectItem(pack, gap.id, "remediate", masteryOf(state, gap.id));
+    const item = selectItem(
+      pack,
+      gap.id,
+      "remediate",
+      masteryOf(state, gap.id),
+      state.history.recentItemIds
+    );
     if (item) {
       return makeDecision(
         input,
@@ -309,7 +324,13 @@ export function chooseNextDecision(input: PolicyInput): Decision {
   const consecutiveWrong = skillState?.consecutiveWrong ?? 0;
 
   if (consecutiveWrong >= pack.policy.wrongStreak.prerequisite) {
-    const item = selectItem(pack, target.id, "remediate", mastery);
+    const item = selectItem(
+      pack,
+      target.id,
+      "remediate",
+      mastery,
+      state.history.recentItemIds
+    );
     if (item) {
       return makeDecision(
         input,
@@ -322,16 +343,55 @@ export function chooseNextDecision(input: PolicyInput): Decision {
     }
   }
 
-  const choice = actionForMastery(mastery, threshold, consecutiveWrong);
-  let item = selectItem(pack, target.id, choice.action, mastery);
+  let choice = actionForMastery(mastery, threshold, consecutiveWrong);
+  let item = selectItem(
+    pack,
+    target.id,
+    choice.action,
+    mastery,
+    state.history.recentItemIds
+  );
+  if (
+    item &&
+    (choice.action === "explain" || choice.action === "worked_example") &&
+    state.history.recentItemIds.includes(item.id)
+  ) {
+    const practice = selectItem(
+      pack,
+      target.id,
+      "practice",
+      mastery,
+      state.history.recentItemIds
+    );
+    if (practice) {
+      item = practice;
+      choice = {
+        action: "practice",
+        reasonCode: "guided_practice",
+        reason: "You have seen the explanation. Move to practice.",
+      };
+    }
+  }
   if (!item) {
-    item = selectItem(pack, target.id, "practice", mastery);
+    item = selectItem(
+      pack,
+      target.id,
+      "practice",
+      mastery,
+      state.history.recentItemIds
+    );
   }
   if (!item) {
     for (const skill of orderedSkills(pack)) {
       if (skill.deprecated) continue;
       if (masteryOf(state, skill.id) >= thresholdFor(skill, pack)) continue;
-      const fallback = selectItem(pack, skill.id, "practice", masteryOf(state, skill.id));
+      const fallback = selectItem(
+        pack,
+        skill.id,
+        "practice",
+        masteryOf(state, skill.id),
+        state.history.recentItemIds
+      );
       if (fallback) {
         return makeDecision(
           input,
@@ -375,7 +435,13 @@ export function diagnoseDecisions(input: PolicyInput, maxItems = 5): Decision[] 
 
   const decisions: Decision[] = [];
   for (const skill of targets) {
-    const item = selectItem(pack, skill.id, "diagnose", masteryOf(state, skill.id));
+    const item = selectItem(
+      pack,
+      skill.id,
+      "diagnose",
+      masteryOf(state, skill.id),
+      state.history.recentItemIds
+    );
     if (!item) continue;
     decisions.push(
       makeDecision(
@@ -407,7 +473,13 @@ export function reviewQueueFor(
         overdueDays(b.itemState, now) - overdueDays(a.itemState, now)
     )
     .map((entry) => {
-      const item = selectItem(pack, entry.skill.id, "review", entry.itemState.mastery);
+      const item = selectItem(
+      pack,
+      entry.skill.id,
+      "review",
+      entry.itemState.mastery,
+      state.history.recentItemIds
+    );
       return {
         skillId: entry.skill.id,
         itemId: item?.id,

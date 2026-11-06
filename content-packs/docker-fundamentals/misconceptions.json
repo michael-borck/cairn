@@ -1,0 +1,180 @@
+[
+  {
+    "id": "container-is-vm",
+    "label": "Treats a container as a virtual machine",
+    "skillIds": [
+      "what-is-a-container"
+    ],
+    "description": "The learner thinks each container boots its own kernel.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A container shares the host kernel. A VM runs a guest kernel.",
+      "itemIds": [
+        "what-is-container-explain",
+        "what-is-container-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "image-is-container",
+    "label": "Confuses an image with a container",
+    "skillIds": [
+      "what-is-a-container",
+      "run-a-container",
+      "images-and-layers"
+    ],
+    "description": "The learner treats image commands and container commands as interchangeable.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "An image is a template. A container is a running instance.",
+      "itemIds": [
+        "images-explain",
+        "run-container-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "layers-are-temporary",
+    "label": "Thinks image layers disappear with the container",
+    "skillIds": [
+      "images-and-layers"
+    ],
+    "description": "The learner confuses the container's writable layer with the image layers.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Image layers are read-only and remain until the image is removed.",
+      "itemIds": [
+        "images-explain",
+        "images-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "port-order-reversed",
+    "label": "Reverses host and container ports",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "description": "The learner writes container:host instead of host:container.",
+    "remediation": {
+      "strategy": "worked_example",
+      "explanation": "The host port comes first. The container port comes second.",
+      "itemIds": [
+        "port-worked",
+        "port-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "volume-is-bind-mount",
+    "label": "Confuses a named volume with a bind mount",
+    "skillIds": [
+      "volumes"
+    ],
+    "description": "The learner treats Docker-managed storage and a host directory as the same.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A named volume is managed by Docker. A bind mount maps a host path.",
+      "itemIds": [
+        "volumes-explain",
+        "volumes-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "network-is-host",
+    "label": "Thinks containers need host networking to talk",
+    "skillIds": [
+      "container-networking"
+    ],
+    "description": "The learner reaches for host networking instead of a user-defined network.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "User-defined bridge networks provide name resolution without host networking.",
+      "itemIds": [
+        "network-explain",
+        "network-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "dockerfile-instruction-order",
+    "label": "Misorders Dockerfile instructions",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "description": "The learner places filesystem instructions before FROM.",
+    "remediation": {
+      "strategy": "worked_example",
+      "explanation": "FROM establishes the base image before COPY or RUN.",
+      "itemIds": [
+        "dockerfile-worked",
+        "dockerfile-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "build-vs-run",
+    "label": "Confuses build and run",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "description": "The learner uses docker run where docker build is needed.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "docker build creates an image. docker run starts a container.",
+      "itemIds": [
+        "dockerfile-worked",
+        "dockerfile-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "compose-is-production",
+    "label": "Treats Compose as a production platform",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "description": "The learner assumes a compose file covers deployment, secrets, and scaling.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Compose describes services. Production needs a host, deployment process, and secrets plan.",
+      "itemIds": [
+        "compose-explain",
+        "compose-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "compose-command-confusion",
+    "label": "Confuses compose build and up",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "description": "The learner expects docker compose build to start services.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "build creates images. up starts services.",
+      "itemIds": [
+        "compose-explain",
+        "compose-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "logs-are-optional",
+    "label": "Skips logs during troubleshooting",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "description": "The learner changes or deletes containers before reading the evidence.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Logs and exit codes are the first evidence. Read them before changing anything.",
+      "itemIds": [
+        "troubleshoot-explain",
+        "troubleshoot-mcq-1"
+      ]
+    }
+  }
+]

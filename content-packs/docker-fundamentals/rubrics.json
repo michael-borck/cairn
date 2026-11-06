@@ -1,0 +1,54 @@
+[
+  {
+    "id": "explain-network",
+    "title": "Explain container name resolution",
+    "criteria": [
+      {
+        "id": "dns",
+        "label": "Mentions Docker's internal DNS",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "names",
+        "label": "Explains that names replace IP addresses",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  },
+  {
+    "id": "explain-compose",
+    "title": "Explain Compose's role",
+    "criteria": [
+      {
+        "id": "describes",
+        "label": "Says Compose describes services",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "limits",
+        "label": "Names a production concern Compose does not solve",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  }
+]

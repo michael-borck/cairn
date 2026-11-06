@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "0.1",
+  "id": "docker-fundamentals",
+  "version": "0.1.0",
+  "title": "Docker Fundamentals",
+  "description": "A hands-on introduction to containers, images, ports, volumes, networks, Dockerfiles, Compose, and troubleshooting.",
+  "author": {
+    "name": "Cairn"
+  },
+  "license": "CC-BY-4.0",
+  "source": "https://github.com/michael-borck/cairn",
+  "language": "en",
+  "audience": "adult-self-learner",
+  "level": "beginner",
+  "estimatedMinutes": 240,
+  "engine": {
+    "minVersion": "0.1.0"
+  },
+  "requires": {
+    "ai": false,
+    "docker": true,
+    "appNetwork": false
+  },
+  "entries": {
+    "curriculum": "curriculum.json",
+    "items": "items.json",
+    "rubrics": "rubrics.json",
+    "misconceptions": "misconceptions.json",
+    "labs": "labs.json",
+    "policy": "policy.json"
+  }
+}

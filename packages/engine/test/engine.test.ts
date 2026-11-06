@@ -10,12 +10,17 @@ import {
   createMemoryStorage,
   evidenceWeight,
   scheduleReview,
+  selectItem,
   updateMastery,
 } from "../src";
 import { validPack } from "../../content/test/fixtures";
 
 const pack = validPack as unknown as ContentPack;
 const now = new Date("2026-01-01T00:00:00.000Z");
+
+function clone<T>(value: T): T {
+  return structuredClone(value);
+}
 
 function decisionInput(state = createInitialState(pack, "learner-1")) {
   return {
@@ -103,6 +108,23 @@ describe("policy", () => {
     expect(decision.reasonCode).toBe("review_due");
   });
 
+  it("avoids recently seen items when alternatives exist", () => {
+    const custom = clone(pack) as any;
+    custom.items.push({
+      ...custom.items[1],
+      id: "container-mcq-2",
+      prompt: "Which command lists images?",
+    });
+    const chosen = selectItem(
+      custom,
+      "container-basics",
+      "practice",
+      0.5,
+      ["container-mcq"]
+    );
+    expect(chosen?.id).toBe("container-mcq-2");
+  });
+
   it("steps back to a prerequisite when one is weak", () => {
     const state = createInitialState(pack, "learner-1");
     state.skills["container-basics"].mastery = 0.6;
@@ -155,6 +177,7 @@ describe("engine", () => {
     expect(result.state.skills["container-basics"].mastery).toBeGreaterThan(
       before.skills["container-basics"].mastery
     );
+    expect(result.state.history.recentItemIds[0]).toBe("container-explain");
 
     const explanation = await engine.explain(decision.id);
     expect(explanation.short).toContain("Start with an explanation");

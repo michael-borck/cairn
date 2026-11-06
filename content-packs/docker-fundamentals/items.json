@@ -1,0 +1,815 @@
+[
+  {
+    "id": "what-is-container-explain",
+    "type": "explain",
+    "skillIds": [
+      "what-is-a-container"
+    ],
+    "difficulty": 1,
+    "prompt": "What is a container?",
+    "body": "A container is one or more processes isolated from the rest of the machine with namespaces and limited by cgroups. It shares the host kernel. It is not a small virtual machine, and it is not the same thing as an image. An image is the read-only template. A container is a running instance of that image.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about what the container shares with the host."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "what-is-container-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "what-is-a-container"
+    ],
+    "difficulty": 1,
+    "prompt": "Which description best fits a container?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A lightweight virtual machine with its own kernel",
+        "misconceptionId": "container-is-vm"
+      },
+      {
+        "id": "b",
+        "text": "A process isolated with namespaces and cgroups"
+      }
+    ],
+    "correctOptionId": "b",
+    "explanation": "Containers share the host kernel. They isolate processes, not whole operating systems.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A container does not boot a guest kernel."
+      }
+    ],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "what-is-container-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "what-is-a-container"
+    ],
+    "difficulty": 1,
+    "prompt": "What does a container share with the host?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The host kernel"
+      },
+      {
+        "id": "b",
+        "text": "A full guest operating system",
+        "misconceptionId": "container-is-vm"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Sharing the kernel is what makes containers lighter than virtual machines.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "what-is-container-short",
+    "type": "short_answer",
+    "skillIds": [
+      "what-is-a-container"
+    ],
+    "difficulty": 1,
+    "prompt": "In one sentence, what does a container share with the host?",
+    "scoring": {
+      "mode": "contains",
+      "value": "kernel"
+    },
+    "modelAnswer": "A container shares the host kernel.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "It is the same word used for the core of an operating system."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "run-container-explain",
+    "type": "explain",
+    "skillIds": [
+      "run-a-container"
+    ],
+    "difficulty": 2,
+    "prompt": "Running a container",
+    "body": "`docker run` creates a container from an image and starts it. `-d` runs it in the background, `--name` gives it a stable name, and `-p` publishes a port. Use `docker ps` to see running containers, `docker stop` to stop one, and `docker rm` to remove it. Removing a container does not remove its image.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The command that creates and starts is not the same as the command that lists."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "run-container-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "run-a-container"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command starts nginx in the background with the name web?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker run -d --name web nginx"
+      },
+      {
+        "id": "b",
+        "text": "docker start nginx",
+        "misconceptionId": "image-is-container"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`docker run` creates a container from the image. `docker start` expects an existing container.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "run-container-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "run-a-container"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command lists running containers?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker ps"
+      },
+      {
+        "id": "b",
+        "text": "docker images",
+        "misconceptionId": "image-is-container"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`docker images` lists images. `docker ps` lists containers.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "run-container-lab",
+    "type": "lab",
+    "skillIds": [
+      "run-a-container"
+    ],
+    "difficulty": 2,
+    "prompt": "Run nginx and confirm it responds on localhost:8080.",
+    "labId": "run-nginx",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Check the container is running before you check the browser."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "images-explain",
+    "type": "explain",
+    "skillIds": [
+      "images-and-layers"
+    ],
+    "difficulty": 2,
+    "prompt": "Images and layers",
+    "body": "An image is a read-only template made of layers. Each Dockerfile instruction can create a layer, and Docker caches those layers. A container adds a writable layer on top of the image. Removing a container removes its writable layer, but the image remains. Layers are shared between images when the content matches.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "An image is a template. A container is an instance."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "images-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "images-and-layers"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a Docker image?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A read-only template used to create containers"
+      },
+      {
+        "id": "b",
+        "text": "A running process with a writable layer",
+        "misconceptionId": "image-is-container"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "The running process is the container. The image is the template.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "images-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "images-and-layers"
+    ],
+    "difficulty": 2,
+    "prompt": "What happens to image layers when a container stops?",
+    "options": [
+      {
+        "id": "a",
+        "text": "They remain because they belong to the image"
+      },
+      {
+        "id": "b",
+        "text": "They are deleted with the container",
+        "misconceptionId": "layers-are-temporary"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Stopping or removing a container does not remove its image layers.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "images-short",
+    "type": "short_answer",
+    "skillIds": [
+      "images-and-layers"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a Docker image layer?",
+    "scoring": {
+      "mode": "contains",
+      "value": "layer"
+    },
+    "modelAnswer": "A layer is a cached filesystem change produced by an image build instruction.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The answer is in the name of the concept."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "port-worked",
+    "type": "worked_example",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "difficulty": 2,
+    "prompt": "Publish container port 80 on host port 8080.",
+    "steps": [
+      {
+        "title": "Read the mapping order",
+        "body": "The syntax is host:container. The host port comes first."
+      },
+      {
+        "title": "Choose the host port",
+        "body": "You want the service on host port 8080, so 8080 comes first."
+      },
+      {
+        "title": "Choose the container port",
+        "body": "nginx listens on port 80 inside the container, so 80 comes second."
+      },
+      {
+        "title": "Write the flag",
+        "body": "The result is `-p 8080:80`."
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The host port is the one you type in the browser."
+      }
+    ],
+    "estimatedSeconds": 150
+  },
+  {
+    "id": "port-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "difficulty": 2,
+    "prompt": "Which flag publishes container port 80 on host port 8080?",
+    "options": [
+      {
+        "id": "a",
+        "text": "-p 80:8080",
+        "misconceptionId": "port-order-reversed"
+      },
+      {
+        "id": "b",
+        "text": "-p 8080:80"
+      }
+    ],
+    "correctOptionId": "b",
+    "explanation": "The order is host:container. Host 8080 maps to container 80.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which side do you open in the browser?"
+      }
+    ],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "port-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "difficulty": 2,
+    "prompt": "In `-p 8080:80`, which is the host port?",
+    "options": [
+      {
+        "id": "a",
+        "text": "8080"
+      },
+      {
+        "id": "b",
+        "text": "80",
+        "misconceptionId": "port-order-reversed"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "The host port is first. The container port is second.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "port-short",
+    "type": "short_answer",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "difficulty": 2,
+    "prompt": "Write the port mapping for host 8080 to container 80.",
+    "scoring": {
+      "mode": "contains",
+      "value": "8080:80"
+    },
+    "modelAnswer": "Use `-p 8080:80`.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Host first, container second."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "port-lab",
+    "type": "lab",
+    "skillIds": [
+      "port-mapping"
+    ],
+    "difficulty": 2,
+    "prompt": "Publish nginx on host port 8081 and confirm it responds.",
+    "labId": "publish-port",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Use a different host port from the earlier lab."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "volumes-explain",
+    "type": "explain",
+    "skillIds": [
+      "volumes"
+    ],
+    "difficulty": 2,
+    "prompt": "Volumes and persistence",
+    "body": "A container's writable layer disappears when the container is removed. A named volume is managed by Docker and survives container removal. A bind mount maps a host directory into the container. Use a volume when Docker should manage the storage, and a bind mount when you want to work with a specific host path.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A named volume is not the same as a host directory."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "volumes-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "volumes"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a named volume?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Storage managed by Docker that survives container removal"
+      },
+      {
+        "id": "b",
+        "text": "A host directory mapped into the container",
+        "misconceptionId": "volume-is-bind-mount"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "A bind mount maps a host path. A named volume is managed by Docker.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "volumes-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "volumes"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command creates a named volume called appdata?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker volume create appdata"
+      },
+      {
+        "id": "b",
+        "text": "docker run -v /appdata:/data alpine",
+        "misconceptionId": "volume-is-bind-mount"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "The `docker volume create` command creates a named volume. The `-v` form can create an anonymous volume or a bind mount depending on the source.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "volumes-lab",
+    "type": "lab",
+    "skillIds": [
+      "volumes"
+    ],
+    "difficulty": 2,
+    "prompt": "Write data into a named volume and read it back from a new container.",
+    "labId": "persist-volume",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The volume must outlive the first container."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "network-explain",
+    "type": "explain",
+    "skillIds": [
+      "container-networking"
+    ],
+    "difficulty": 3,
+    "prompt": "Container networking",
+    "body": "Containers on the same user-defined bridge network can reach each other by container name. Docker provides an internal DNS service for that network. The host network mode is different: it removes network isolation and is not required for two containers to talk. Create a network with `docker network create`, then attach containers with `--network`.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Docker has a DNS service on user-defined networks."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "network-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "container-networking"
+    ],
+    "difficulty": 3,
+    "prompt": "How can two containers on a user-defined bridge network reach each other?",
+    "options": [
+      {
+        "id": "a",
+        "text": "By container name through Docker's internal DNS"
+      },
+      {
+        "id": "b",
+        "text": "Only by using host networking",
+        "misconceptionId": "network-is-host"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "User-defined bridge networks provide name resolution. Host networking is not required.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "network-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "container-networking"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command creates a user-defined network called app-net?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker network create app-net"
+      },
+      {
+        "id": "b",
+        "text": "docker run --net host app-net",
+        "misconceptionId": "network-is-host"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`docker network create` creates the network. `--net host` removes network isolation.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "network-teach",
+    "type": "teach_back",
+    "skillIds": [
+      "container-networking"
+    ],
+    "difficulty": 3,
+    "prompt": "Explain why two containers on a user-defined bridge network can use names instead of IP addresses.",
+    "rubricId": "explain-network",
+    "modelAnswer": "Docker runs an internal DNS service on user-defined bridge networks. Each container's name resolves to its address on that network, so services can use stable names instead of IPs.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about what Docker adds on a user-defined network."
+      }
+    ],
+    "estimatedSeconds": 180
+  },
+  {
+    "id": "dockerfile-worked",
+    "type": "worked_example",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "difficulty": 3,
+    "prompt": "Build a tiny image from a Dockerfile.",
+    "steps": [
+      {
+        "title": "Start from a base image",
+        "body": "The first effective instruction is `FROM nginx:1.27`. Instructions that need a filesystem need a base first."
+      },
+      {
+        "title": "Copy the content",
+        "body": "`COPY index.html /usr/share/nginx/html/index.html` adds the file."
+      },
+      {
+        "title": "Build the image",
+        "body": "`docker build -t my-nginx .` sends the build context and tags the result."
+      },
+      {
+        "title": "Run it",
+        "body": "`docker run -d -p 8080:80 my-nginx` starts the built image."
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The base image must come before COPY."
+      }
+    ],
+    "estimatedSeconds": 150
+  },
+  {
+    "id": "dockerfile-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "difficulty": 3,
+    "prompt": "Which Dockerfile instruction must come before COPY?",
+    "options": [
+      {
+        "id": "a",
+        "text": "FROM"
+      },
+      {
+        "id": "b",
+        "text": "COPY must come before FROM",
+        "misconceptionId": "dockerfile-instruction-order"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "FROM establishes the base image and filesystem. COPY needs that base.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "dockerfile-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command builds an image tagged app:dev from the current directory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker build -t app:dev ."
+      },
+      {
+        "id": "b",
+        "text": "docker run -t app:dev .",
+        "misconceptionId": "build-vs-run"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`docker build` builds an image. `docker run` starts a container.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "dockerfile-lab",
+    "type": "lab",
+    "skillIds": [
+      "dockerfiles"
+    ],
+    "difficulty": 3,
+    "prompt": "Build a custom nginx image and run it.",
+    "labId": "build-image",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The build context is the directory you pass at the end."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "compose-explain",
+    "type": "explain",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "difficulty": 3,
+    "prompt": "Compose basics",
+    "body": "Docker Compose describes a small multi-container application in one YAML file. `docker compose up -d` creates and starts the services. `docker compose down` stops and removes them. Compose is useful for local development and simple deployments, but a compose file is not a production platform by itself. You still need a host, a deployment process, and a plan for data and secrets.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Compose is a convenience, not a whole platform."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "compose-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "difficulty": 3,
+    "prompt": "What is a Compose file?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A local description of services, networks, and volumes"
+      },
+      {
+        "id": "b",
+        "text": "A complete production deployment platform",
+        "misconceptionId": "compose-is-production"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Compose describes services. Production needs more than the file.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "compose-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command starts the services in the background?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker compose up -d"
+      },
+      {
+        "id": "b",
+        "text": "docker compose build",
+        "misconceptionId": "compose-command-confusion"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`up -d` creates and starts services. `build` only builds images.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "compose-teach",
+    "type": "teach_back",
+    "skillIds": [
+      "compose-basics"
+    ],
+    "difficulty": 3,
+    "prompt": "Explain what Compose does and what it does not do for production.",
+    "rubricId": "explain-compose",
+    "modelAnswer": "Compose describes and runs a small set of services from one file. It helps with local development and simple deployments. It does not provide a production platform, secrets management, scaling policy, or a full deployment process by itself.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Name one thing Compose does and one thing it does not do."
+      }
+    ],
+    "estimatedSeconds": 180
+  },
+  {
+    "id": "troubleshoot-explain",
+    "type": "explain",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "difficulty": 4,
+    "prompt": "Troubleshooting a container",
+    "body": "Start with evidence. `docker ps -a` shows stopped containers. `docker logs` shows output and errors. `docker inspect` shows configuration, mounts, networks, and exit codes. Read the logs before you delete the container or rebuild the image. A restart can hide the symptom without fixing the cause.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look for the evidence before you change anything."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "troubleshoot-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "difficulty": 4,
+    "prompt": "A container exits immediately. What should you check first?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The container logs and exit code"
+      },
+      {
+        "id": "b",
+        "text": "Delete the container and hope it restarts",
+        "misconceptionId": "logs-are-optional"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Logs and exit codes are evidence. Deleting the container removes the evidence.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "troubleshoot-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "difficulty": 4,
+    "prompt": "Which command shows the output from a container named web?",
+    "options": [
+      {
+        "id": "a",
+        "text": "docker logs web"
+      },
+      {
+        "id": "b",
+        "text": "docker images web",
+        "misconceptionId": "logs-are-optional"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`docker logs` reads container output. `docker images` lists images.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "troubleshoot-lab",
+    "type": "lab",
+    "skillIds": [
+      "troubleshooting"
+    ],
+    "difficulty": 4,
+    "prompt": "Diagnose a container that exits immediately.",
+    "labId": "debug-container",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the logs before you change the container."
+      }
+    ],
+    "estimatedSeconds": 300
+  }
+]
