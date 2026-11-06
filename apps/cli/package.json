@@ -1,0 +1,7 @@
+{
+  "name": "@cairn/cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Headless tools for Cairn authors and tests."
+}

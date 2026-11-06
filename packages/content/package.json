@@ -1,0 +1,7 @@
+{
+  "name": "@cairn/content",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Content pack schema, validator, and importers."
+}

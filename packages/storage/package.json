@@ -1,0 +1,7 @@
+{
+  "name": "@cairn/storage",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Storage adapters for Cairn."
+}
