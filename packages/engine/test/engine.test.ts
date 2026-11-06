@@ -184,6 +184,22 @@ describe("engine", () => {
     expect(explanation.evidence.some((entry) => entry.startsWith("skill="))).toBe(true);
   });
 
+  it("returns a challenge decision for a known skill", async () => {
+    const engine = createEngine({
+      pack,
+      storage: createMemoryStorage(),
+      now: () => now,
+      idFactory: () => "challenge-1",
+    });
+    const decision = await engine.challenge({
+      learnerId: "learner-1",
+      skillId: "container-basics",
+    });
+    expect(decision.action).toBe("challenge");
+    expect(decision.itemId).toBeTruthy();
+    expect(decision.skillIds).toEqual(["container-basics"]);
+  });
+
   it("exports and imports learner state", async () => {
     const engine = createEngine({
       pack,

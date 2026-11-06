@@ -190,6 +190,35 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
       return decision;
     },
 
+    async challenge(input) {
+      const state = await ensureState(input.learnerId);
+      const skill = pack.curriculum.skills.find(
+        (entry) => entry.id === input.skillId
+      );
+      if (!skill) throw new Error(`Unknown skill ${input.skillId}`);
+      const item = selectItem(
+        pack,
+        skill.id,
+        "challenge",
+        masteryOf(state, skill.id),
+        state.history.recentItemIds
+      );
+      if (!item) throw new Error(`No challenge item for ${skill.title}`);
+      const decision = decisionForItem(
+        pack,
+        state,
+        item,
+        skill.id,
+        "challenge",
+        "learner_override",
+        "You asked for an optional challenge.",
+        now(),
+        idFactory
+      );
+      await storage.saveDecision(decision);
+      return decision;
+    },
+
     async record(event: EvidenceEvent): Promise<RecordResult> {
       const state = await ensureState(event.learnerId);
       const item = pack.items.find((entry) => entry.id === event.itemId);

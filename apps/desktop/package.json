@@ -9,7 +9,8 @@
     "build": "node scripts/bundle-packs.mjs && tsc && vite build && node scripts/clean-dotfiles.mjs",
     "preview": "vite preview",
     "tauri": "node scripts/tauri.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cairn/content": "0.0.0",

@@ -258,6 +258,11 @@ export interface AdaptiveEngine {
     learnerId: LearnerId;
     session: SessionContext;
   }): Promise<Decision>;
+
+  challenge(input: {
+    learnerId: LearnerId;
+    skillId: SkillId;
+  }): Promise<Decision>;
   record(event: EvidenceEvent): Promise<RecordResult>;
   explain(decisionId: string): Promise<Explanation>;
   override(input: {

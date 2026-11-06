@@ -49,6 +49,7 @@ import {
   type PackEntry,
 } from "./packs";
 import { extractMaterial, packFromMaterial } from "./material-import";
+import { computeBadges } from "./badges";
 import { buildReviewCalendar } from "./review-calendar";
 import { createPersistentStorage, type AppStorage } from "./storage";
 
@@ -133,6 +134,7 @@ function App() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [textAnswer, setTextAnswer] = useState("");
   const [confidence, setConfidence] = useState<Confidence>("");
+  const [hintsUsed, setHintsUsed] = useState(0);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(
     "Open the built-in Docker pack or import a .json pack."
@@ -156,6 +158,7 @@ function App() {
     setSelectedOption(null);
     setTextAnswer("");
     setConfidence("");
+    setHintsUsed(0);
     setAiHint(null);
     setAiError(false);
     activityStartedAt.current = Date.now();
@@ -172,7 +175,7 @@ function App() {
     setLearner(await nextEngine.getState(LEARNER_ID));
     setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
     const storage = await getStorage();
-    setHistory((await storage.listEvents(LEARNER_ID)).slice(0, 20));
+    setHistory(await storage.listEvents(LEARNER_ID));
   }
 
   async function openPack(entry: PackEntry): Promise<void> {
@@ -193,7 +196,7 @@ function App() {
       setEngine(nextEngine);
       setLearner(state);
       setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
-      setHistory((await storage.listEvents(LEARNER_ID)).slice(0, 20));
+      setHistory(await storage.listEvents(LEARNER_ID));
       setDecision(null);
       setExplanation(null);
       resetActivity();
@@ -268,7 +271,7 @@ function App() {
         correct: input.correct,
         score: input.score,
         confidence: confidence || undefined,
-        hintsUsed: 0,
+        hintsUsed,
         attempts: 1,
         durationMs: Math.max(1000, Date.now() - activityStartedAt.current),
         evidenceSource:
@@ -426,6 +429,25 @@ function App() {
       setAiHint(cause instanceof Error ? cause.message : String(cause));
     } finally {
       setAiBusy(false);
+    }
+  }
+
+  async function startChallenge(skillId: string): Promise<void> {
+    if (!engine) return;
+    setBusy(true);
+    setError(false);
+    try {
+      const next = await engine.challenge({ learnerId: LEARNER_ID, skillId });
+      setDecision(next);
+      setExplanation(await engine.explain(next.id));
+      await refresh(engine);
+      resetActivity();
+      setMessage("Optional challenge started.");
+    } catch (cause) {
+      setError(true);
+      setMessage(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -815,6 +837,7 @@ function App() {
                   </div>
                 ) : currentItem ? (
                   <ActivityView
+                    key={decision.id}
                     item={currentItem}
                     lab={currentLab}
                     rubric={currentRubric}
@@ -838,6 +861,7 @@ function App() {
                     onSubmitText={() => submitText(currentItem)}
                     onContinue={() => void continueAfterPending()}
                     onSelfComplete={() => void markSelfComplete()}
+                    onHintUsed={() => setHintsUsed((count) => count + 1)}
                   />
                 ) : (
                   <p>No item selected for this decision.</p>
@@ -852,6 +876,17 @@ function App() {
                   onOverride={(type) => void applyOverride(type)}
                 />
                 <MasteryMap pack={active.pack} learner={learner} />
+                <BadgesPanel
+                  pack={active.pack}
+                  learner={learner}
+                  events={history}
+                />
+                <ChallengePanel
+                  pack={active.pack}
+                  learner={learner}
+                  busy={busy}
+                  onChallenge={(skillId) => void startChallenge(skillId)}
+                />
                 <ReviewPanel pack={active.pack} items={reviewQueue} />
                 <ReviewCalendar
                   pack={active.pack}
@@ -1240,6 +1275,89 @@ function MasteryMap({
   );
 }
 
+function BadgesPanel({
+  pack,
+  learner,
+  events,
+}: {
+  pack: ContentPack;
+  learner: LearnerState | null;
+  events: EvidenceEvent[];
+}) {
+  const badges = computeBadges(pack, learner, events);
+  const earned = badges.filter((badge) => badge.earned).length;
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Badges</h2>
+        <span>
+          {earned}/{badges.length}
+        </span>
+      </div>
+      <div className="badge-grid">
+        {badges.map((badge) => (
+          <div
+            key={badge.id}
+            className={`badge ${badge.earned ? "earned" : ""}`}
+            title={badge.description}
+          >
+            <span className="badge-mark">{badge.earned ? "✦" : "·"}</span>
+            <span className="badge-label">{badge.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChallengePanel({
+  pack,
+  learner,
+  busy,
+  onChallenge,
+}: {
+  pack: ContentPack;
+  learner: LearnerState | null;
+  busy: boolean;
+  onChallenge: (skillId: string) => void;
+}) {
+  const threshold = pack.policy.masteryThreshold;
+  const skills = pack.curriculum.skills
+    .map((skill) => ({
+      skill,
+      mastery: learner?.skills[skill.id]?.mastery ?? 0,
+    }))
+    .filter((entry) => entry.mastery >= threshold)
+    .sort((a, b) => b.mastery - a.mastery)
+    .slice(0, 5);
+
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Challenge</h2>
+        <span>{skills.length}</span>
+      </div>
+      {skills.length === 0 ? (
+        <p>Master a skill to unlock an optional challenge.</p>
+      ) : (
+        skills.map((entry) => (
+          <div key={entry.skill.id} className="challenge-row">
+            <span>{entry.skill.title}</span>
+            <button
+              type="button"
+              className="ghost-button small"
+              onClick={() => onChallenge(entry.skill.id)}
+              disabled={busy}
+            >
+              Challenge
+            </button>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
 function ReviewPanel({
   pack,
   items,
@@ -1497,6 +1615,7 @@ function ActivityView({
   onSubmitText,
   onContinue,
   onSelfComplete,
+  onHintUsed,
 }: {
   item: Item;
   lab?: Lab;
@@ -1517,7 +1636,34 @@ function ActivityView({
   onSubmitText: () => void;
   onContinue: () => void;
   onSelfComplete: () => void;
+  onHintUsed: () => void;
 }) {
+  const [visibleHints, setVisibleHints] = useState(0);
+  const hints = item.hints ?? [];
+  const hintBlock =
+    hints.length > 0 ? (
+      <div className="hints">
+        {hints.slice(0, visibleHints).map((hint, index) => (
+          <p key={`${hint.level}-${index}`}>
+            <strong>Hint {index + 1}</strong> {hint.text}
+          </p>
+        ))}
+        {visibleHints < hints.length && (
+          <button
+            type="button"
+            className="ghost-button small"
+            onClick={() => {
+              setVisibleHints((count) => count + 1);
+              onHintUsed();
+            }}
+            disabled={busy || Boolean(pending)}
+          >
+            Show hint {visibleHints + 1}
+          </button>
+        )}
+      </div>
+    ) : null;
+
   const feedback = pending ? (
     <div className={`feedback ${pending.correct === false ? "bad" : "good"}`}>
       <p>{pending.feedback}</p>
@@ -1574,6 +1720,7 @@ function ActivityView({
           onChange={onConfidence}
           disabled={Boolean(pending)}
         />
+        {hintBlock}
         {feedback}
         {aiBlock}
       </div>
@@ -1597,6 +1744,7 @@ function ActivityView({
           </ul>
         )}
         {rubric && <RubricView rubric={rubric} />}
+        {hintBlock}
         <textarea
           value={textAnswer}
           onChange={(event) => onTextChange(event.target.value)}
@@ -1625,6 +1773,7 @@ function ActivityView({
         <p className="eyebrow">{item.skillIds.join(" · ")}</p>
         <h2>{item.prompt}</h2>
         <div className="prose">{item.body}</div>
+        {hintBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
@@ -1646,6 +1795,7 @@ function ActivityView({
             </li>
           ))}
         </ol>
+        {hintBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
@@ -1677,6 +1827,7 @@ function ActivityView({
         ) : (
           <p>Lab details are missing from this pack.</p>
         )}
+        {hintBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Mark complete
         </button>

@@ -615,6 +615,54 @@ textarea {
   background: linear-gradient(90deg, var(--accent-2), var(--accent));
 }
 
+.badge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.badge.earned {
+  border-color: rgb(216 180 90 / 45%);
+  background: rgb(216 180 90 / 8%);
+  color: var(--text);
+}
+
+.badge-mark {
+  color: var(--accent);
+}
+
+.badge-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.challenge-row:first-of-type {
+  border-top: 0;
+}
+
 .review-row {
   display: flex;
   justify-content: space-between;
@@ -908,6 +956,31 @@ textarea:focus,
 select:focus {
   outline: 2px solid rgb(216 180 90 / 25%);
   border-color: var(--accent);
+}
+
+.hints {
+  margin: 12px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgb(216 180 90 / 5%);
+}
+
+.hints p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.hints p strong {
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hints button {
+  margin-top: 2px;
 }
 
 .feedback {
