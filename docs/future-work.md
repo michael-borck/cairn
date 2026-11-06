@@ -22,6 +22,7 @@ Uncommitted ideas. Each item needs a trigger before it becomes roadmap work.
 | Submission portal | Auth, spam, moderation queue | Non-technical creators want to submit |
 | Ratings and reviews | Moderation and gaming | Catalog is large enough to need ranking |
 | Popularity counts | Needs a small service or static workaround | Catalog has enough packs to need discovery help |
+| [Interactive fiction with Ink](ideas/interactive-fiction-ink.md) | Story runtime, evidence mapping, state versioning | v1.5 spike after item and lab formats are stable |
 
 ## Algorithms and research
 
@@ -44,6 +45,7 @@ Uncommitted ideas. Each item needs a trigger before it becomes roadmap work.
 - Accessibility-first item types, including audio and captioned video.
 - Offline pack bundles for low-connectivity settings.
 - A pack authoring guide with worked examples and a validation checklist.
+- Branching scenarios and interactive fiction for incident response, ethics, and communication practice. See [the Ink idea](ideas/interactive-fiction-ink.md).
 
 ## Open questions
 

@@ -41,6 +41,7 @@ content-packs/
 docs/
   adr/          architecture decisions
   spec/         product, pack schema, engine contract
+  ideas/        unscheduled concepts
   roadmap.md
   future-work.md
 ```
@@ -53,6 +54,7 @@ docs/
 - [Architecture decisions](docs/adr/README.md)
 - [Roadmap](docs/roadmap.md)
 - [Future work](docs/future-work.md)
+- [Interactive fiction with Ink](docs/ideas/interactive-fiction-ink.md)
 
 ## Contributing
 
