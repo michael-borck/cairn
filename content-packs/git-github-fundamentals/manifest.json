@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "0.1",
+  "id": "git-github-fundamentals",
+  "version": "0.1.0",
+  "title": "Git & GitHub Fundamentals",
+  "description": "A hands-on introduction to commits, branches, merges, conflicts, remotes, pull requests, ignores, and recovery.",
+  "author": {
+    "name": "Cairn"
+  },
+  "license": "CC-BY-4.0",
+  "language": "en",
+  "audience": "adult-self-learner",
+  "level": "beginner",
+  "estimatedMinutes": 240,
+  "engine": {
+    "minVersion": "0.1.0"
+  },
+  "requires": {
+    "ai": false,
+    "docker": false,
+    "appNetwork": false
+  },
+  "entries": {
+    "curriculum": "curriculum.json",
+    "items": "items.json",
+    "rubrics": "rubrics.json",
+    "misconceptions": "misconceptions.json",
+    "labs": "labs.json",
+    "policy": "policy.json"
+  }
+}

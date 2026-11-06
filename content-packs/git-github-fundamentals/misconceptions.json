@@ -1,0 +1,274 @@
+[
+  {
+    "id": "commit-is-folder-copy",
+    "label": "Thinks a commit copies the whole folder",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "description": "The learner thinks ignored files are included in every commit.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "A commit records tracked files only.",
+      "itemIds": [
+        "repo-explain",
+        "repo-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "init-versus-clone",
+    "label": "Confuses init and clone",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "description": "The learner thinks clone is how you create a new repository.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "init creates a repository. clone copies an existing one.",
+      "itemIds": [
+        "repo-explain",
+        "repo-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "status-is-log",
+    "label": "Confuses status and log",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "description": "The learner looks at history when they need working-tree state.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "status shows current changes. log shows commits.",
+      "itemIds": [
+        "status-explain",
+        "status-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "diff-staged-confusion",
+    "label": "Confuses staged and unstaged diff",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "description": "The learner uses --staged when they mean unstaged changes.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "diff is unstaged. diff --staged is staged.",
+      "itemIds": [
+        "status-explain",
+        "status-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "branch-create-switch",
+    "label": "Creates a branch but does not switch",
+    "skillIds": [
+      "branches"
+    ],
+    "description": "The learner expects git branch to move them.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "git branch creates. git switch changes branch.",
+      "itemIds": [
+        "branch-explain",
+        "branch-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "branch-is-copy",
+    "label": "Thinks a branch is a full copy",
+    "skillIds": [
+      "branches"
+    ],
+    "description": "The learner thinks branching duplicates the repository.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "A branch is a pointer to a commit.",
+      "itemIds": [
+        "branch-explain",
+        "branch-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "merge-always-commit",
+    "label": "Thinks merges always create a commit",
+    "skillIds": [
+      "merging"
+    ],
+    "description": "The learner misses fast-forward merges.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "A fast-forward moves the pointer without a merge commit.",
+      "itemIds": [
+        "merge-worked",
+        "merge-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "merge-command-syntax",
+    "label": "Misremembers merge syntax",
+    "skillIds": [
+      "merging"
+    ],
+    "description": "The learner passes two branches to git merge.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Switch to the target branch, then merge the source branch.",
+      "itemIds": [
+        "merge-worked",
+        "merge-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "conflict-markers-wrong",
+    "label": "Does not recognise conflict markers",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "description": "The learner does not know the marker format.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "The markers are <<<<<<<, =======, and >>>>>>>.",
+      "itemIds": [
+        "conflict-explain",
+        "conflict-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "conflict-delete-file",
+    "label": "Deletes the conflicted file",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "description": "The learner removes the file instead of resolving the content.",
+    "remediation": {
+      "strategy": "worked_example",
+      "explanation": "Edit, remove the markers, stage, and commit.",
+      "itemIds": [
+        "conflict-explain",
+        "conflict-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "origin-is-branch",
+    "label": "Thinks origin is a branch",
+    "skillIds": [
+      "remotes"
+    ],
+    "description": "The learner confuses a remote name with a branch name.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "origin is a remote. main is a branch.",
+      "itemIds": [
+        "remote-explain",
+        "remote-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "push-pull-confusion",
+    "label": "Confuses push and pull",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "description": "The learner thinks pull uploads or push downloads.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "push uploads. pull fetches and integrates.",
+      "itemIds": [
+        "push-worked",
+        "push-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "pr-is-deploy",
+    "label": "Thinks a pull request deploys",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "description": "The learner conflates review with deployment.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "A pull request asks for review and merge.",
+      "itemIds": [
+        "pr-explain",
+        "pr-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "pr-no-review",
+    "label": "Thinks review is optional",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "description": "The learner misses the review and checks step.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Review and checks happen before merge.",
+      "itemIds": [
+        "pr-explain",
+        "pr-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "gitignore-deletes",
+    "label": "Thinks .gitignore deletes files",
+    "skillIds": [
+      "gitignore"
+    ],
+    "description": "The learner expects ignored files to disappear from disk.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Ignore rules stop tracking. They do not delete.",
+      "itemIds": [
+        "gitignore-explain",
+        "gitignore-mcq-1"
+      ]
+    }
+  },
+  {
+    "id": "gitignore-tracked",
+    "label": "Thinks .gitignore untracks existing files",
+    "skillIds": [
+      "gitignore"
+    ],
+    "description": "The learner expects an already tracked file to become ignored.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Use git rm --cached for tracked files.",
+      "itemIds": [
+        "gitignore-explain",
+        "gitignore-mcq-2"
+      ]
+    }
+  },
+  {
+    "id": "reset-hard-is-safe",
+    "label": "Uses reset --hard too freely",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "description": "The learner discards work or rewrites shared history.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Prefer restore and revert. reset --hard discards changes.",
+      "itemIds": [
+        "undo-explain",
+        "undo-mcq-1"
+      ]
+    }
+  }
+]

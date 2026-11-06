@@ -4,7 +4,7 @@ A local-first adaptive learning engine for people who learn on their own.
 
 Cairn imports your notes, textbooks, and labs, builds a skill map, diagnoses where you are, and adapts difficulty, help, and review. Every decision is visible and overridable. AI is optional.
 
-Status: content schema, engine core, CLI, Docker pack, and Tauri app with SQLite storage, folder import, AI controls, history, a review calendar, form-based pack authoring, material import, AI practice generation, badges, optional challenges, and a working session view. Pilot packaging and evaluation are next.
+Status: content schema, engine core, CLI, Docker and Git packs, and a Tauri app with SQLite storage, folder import, AI controls, history, a review calendar, form-based pack authoring, material import, AI practice generation, badges, optional challenges, and a working session view. Pilot packaging and evaluation are next.
 
 ## What is built
 

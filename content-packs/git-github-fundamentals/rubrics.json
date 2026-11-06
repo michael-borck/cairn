@@ -1,0 +1,28 @@
+[
+  {
+    "id": "explain-pr",
+    "title": "Explain the pull request flow",
+    "criteria": [
+      {
+        "id": "review",
+        "label": "Names review or checks",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "merge",
+        "label": "Names the merge step",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  }
+]

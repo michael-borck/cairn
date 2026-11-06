@@ -3,7 +3,11 @@
 Packs are versioned content bundles. See [the pack schema](../docs/spec/pack-schema-v0.1.md).
 
 `example/pack.json` is a minimal fixture for CLI smoke tests, not a real course.
-The first real pack is `docker-fundamentals`. It is not committed yet.
+
+Real packs:
+
+- `docker-fundamentals`: containers, images, ports, volumes, networks, Dockerfiles, Compose, and troubleshooting.
+- `git-github-fundamentals`: commits, status, branches, merges, conflicts, remotes, pull requests, ignores, and recovery.
 
 Rules:
 

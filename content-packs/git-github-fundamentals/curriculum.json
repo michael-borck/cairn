@@ -1,0 +1,193 @@
+{
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Snapshots and history",
+      "order": 1,
+      "skillIds": [
+        "repositories-and-commits",
+        "status-and-diff"
+      ]
+    },
+    {
+      "id": "branching",
+      "title": "Branches and merges",
+      "order": 2,
+      "skillIds": [
+        "branches",
+        "merging",
+        "merge-conflicts"
+      ]
+    },
+    {
+      "id": "remotes",
+      "title": "Remotes and GitHub",
+      "order": 3,
+      "skillIds": [
+        "remotes",
+        "push-and-pull",
+        "pull-requests"
+      ]
+    },
+    {
+      "id": "hygiene",
+      "title": "Hygiene and recovery",
+      "order": 4,
+      "skillIds": [
+        "gitignore",
+        "undo-and-recovery"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "repositories-and-commits",
+      "title": "Repositories and commits",
+      "description": "Create a repository and understand what a commit records.",
+      "difficulty": 1,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "git",
+        "foundations"
+      ]
+    },
+    {
+      "id": "status-and-diff",
+      "title": "Status and diff",
+      "description": "Read the working tree, staging area, and differences.",
+      "prerequisites": [
+        "repositories-and-commits"
+      ],
+      "difficulty": 1,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 20,
+      "tags": [
+        "git",
+        "foundations"
+      ]
+    },
+    {
+      "id": "branches",
+      "title": "Branches",
+      "description": "Create, switch, and reason about branch pointers.",
+      "prerequisites": [
+        "repositories-and-commits"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "git",
+        "branching"
+      ]
+    },
+    {
+      "id": "merging",
+      "title": "Merging",
+      "description": "Merge branches and understand fast-forward merges.",
+      "prerequisites": [
+        "branches"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "git",
+        "branching"
+      ]
+    },
+    {
+      "id": "merge-conflicts",
+      "title": "Merge conflicts",
+      "description": "Read conflict markers and resolve a conflicted file.",
+      "prerequisites": [
+        "merging"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 30,
+      "tags": [
+        "git",
+        "branching"
+      ]
+    },
+    {
+      "id": "remotes",
+      "title": "Remotes",
+      "description": "Add a remote and understand the origin convention.",
+      "prerequisites": [
+        "repositories-and-commits"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 20,
+      "tags": [
+        "git",
+        "github"
+      ]
+    },
+    {
+      "id": "push-and-pull",
+      "title": "Push and pull",
+      "description": "Publish and retrieve commits with push, fetch, and pull.",
+      "prerequisites": [
+        "remotes"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "git",
+        "github"
+      ]
+    },
+    {
+      "id": "pull-requests",
+      "title": "Pull requests",
+      "description": "Explain the review and merge flow of a pull request.",
+      "prerequisites": [
+        "push-and-pull",
+        "branches"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 25,
+      "tags": [
+        "github",
+        "collaboration"
+      ]
+    },
+    {
+      "id": "gitignore",
+      "title": "Ignoring files",
+      "description": "Keep secrets and generated files out of history.",
+      "prerequisites": [
+        "repositories-and-commits"
+      ],
+      "difficulty": 2,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 20,
+      "tags": [
+        "git",
+        "hygiene"
+      ]
+    },
+    {
+      "id": "undo-and-recovery",
+      "title": "Undo and recovery",
+      "description": "Restore files, unstage changes, revert commits, and use reflog.",
+      "prerequisites": [
+        "status-and-diff",
+        "merging"
+      ],
+      "difficulty": 3,
+      "masteryThreshold": 0.9,
+      "estimatedMinutes": 35,
+      "tags": [
+        "git",
+        "recovery"
+      ]
+    }
+  ]
+}

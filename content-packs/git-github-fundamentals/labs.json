@@ -1,0 +1,397 @@
+[
+  {
+    "id": "init-and-commit",
+    "title": "Create a repository and commit",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Create a scratch repository, add a file, commit it, and inspect the log.",
+    "commands": [
+      "mkdir git-practice && cd git-practice",
+      "git init",
+      "printf 'hello\\n' > notes.md",
+      "git add notes.md",
+      "git commit -m 'Add notes'",
+      "git log --oneline"
+    ],
+    "checks": [
+      {
+        "id": "initialized",
+        "type": "manual",
+        "prompt": "Did git init create a .git directory?",
+        "answer": "yes"
+      },
+      {
+        "id": "commit",
+        "type": "manual",
+        "prompt": "Does git log show the Add notes commit?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Create the folder before you run git init."
+      }
+    ],
+    "solution": "git init; git add notes.md; git commit -m 'Add notes'; git log --oneline",
+    "cleanup": [
+      "cd ..",
+      "rm -rf git-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "create-branch",
+    "title": "Create and switch branches",
+    "skillIds": [
+      "branches"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Create a repository with one commit, create a feature branch, commit on it, and switch back to main.",
+    "commands": [
+      "mkdir branch-practice && cd branch-practice",
+      "git init",
+      "printf 'main\\n' > file.txt",
+      "git add file.txt",
+      "git commit -m 'Initial commit'",
+      "git switch -c feature",
+      "printf 'feature\\n' >> file.txt",
+      "git add file.txt",
+      "git commit -m 'Feature change'",
+      "git switch main",
+      "git branch"
+    ],
+    "checks": [
+      {
+        "id": "branches",
+        "type": "manual",
+        "prompt": "Does git branch show main and feature?",
+        "answer": "yes"
+      },
+      {
+        "id": "main",
+        "type": "manual",
+        "prompt": "Are you back on main?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "git switch -c creates and switches in one step."
+      }
+    ],
+    "solution": "git switch -c feature; commit; git switch main",
+    "cleanup": [
+      "cd ..",
+      "rm -rf branch-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "resolve-conflict",
+    "title": "Resolve a merge conflict",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Create two branches that edit the same line, merge them, resolve the conflict, and finish the merge.",
+    "commands": [
+      "mkdir conflict-practice && cd conflict-practice",
+      "git init",
+      "printf 'base\\n' > file.txt",
+      "git add file.txt",
+      "git commit -m 'Base'",
+      "git switch -c feature",
+      "printf 'feature\\n' > file.txt",
+      "git commit -am 'Feature'",
+      "git switch main",
+      "printf 'main\\n' > file.txt",
+      "git commit -am 'Main change'",
+      "git merge feature"
+    ],
+    "checks": [
+      {
+        "id": "conflict",
+        "type": "manual",
+        "prompt": "Did git report a conflict in file.txt?",
+        "answer": "yes"
+      },
+      {
+        "id": "resolved",
+        "type": "manual",
+        "prompt": "Did you remove the conflict markers and commit the resolution?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Edit the file, remove the markers, then git add and commit."
+      }
+    ],
+    "solution": "Resolve file.txt, remove markers, git add file.txt, git commit",
+    "cleanup": [
+      "cd ..",
+      "rm -rf conflict-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "add-remote-local-bare",
+    "title": "Add a local bare remote",
+    "skillIds": [
+      "remotes"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Create a local bare repository, add it as origin, and push main to it.",
+    "commands": [
+      "mkdir remote-practice && cd remote-practice",
+      "git init --bare remote.git",
+      "git init work",
+      "cd work",
+      "printf 'hello\\n' > file.txt",
+      "git add file.txt",
+      "git commit -m 'Initial commit'",
+      "git remote add origin ../remote.git",
+      "git push -u origin main",
+      "git remote -v"
+    ],
+    "checks": [
+      {
+        "id": "remote",
+        "type": "manual",
+        "prompt": "Does git remote -v show origin?",
+        "answer": "yes"
+      },
+      {
+        "id": "pushed",
+        "type": "manual",
+        "prompt": "Did the push succeed?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "A bare repository has no working tree. Use it as the remote."
+      }
+    ],
+    "solution": "git init --bare remote.git; git remote add origin ../remote.git; git push -u origin main",
+    "cleanup": [
+      "cd ..",
+      "rm -rf remote-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "push-pull-local",
+    "title": "Push and pull between clones",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Use a local bare remote to push from one clone and pull into another.",
+    "commands": [
+      "mkdir sync-practice && cd sync-practice",
+      "git init --bare remote.git",
+      "git clone remote.git alice",
+      "git clone remote.git bob",
+      "cd alice",
+      "printf 'hello\\n' > file.txt",
+      "git add file.txt",
+      "git commit -m 'From alice'",
+      "git push -u origin main",
+      "cd ../bob",
+      "git pull origin main",
+      "ls"
+    ],
+    "checks": [
+      {
+        "id": "push",
+        "type": "manual",
+        "prompt": "Did Alice push successfully?",
+        "answer": "yes"
+      },
+      {
+        "id": "pull",
+        "type": "manual",
+        "prompt": "Does Bob see file.txt after the pull?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Clone from the bare repository so both users share the same origin."
+      }
+    ],
+    "solution": "Push from Alice, pull into Bob.",
+    "cleanup": [
+      "cd ..",
+      "rm -rf sync-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "ignore-secrets",
+    "title": "Ignore a secret file",
+    "skillIds": [
+      "gitignore"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Create a .env file and a .gitignore rule, then confirm Git ignores the secret.",
+    "commands": [
+      "mkdir ignore-practice && cd ignore-practice",
+      "git init",
+      "printf 'TOKEN=secret\\n' > .env",
+      "printf '.env\\n' > .gitignore",
+      "git status --short",
+      "git check-ignore .env"
+    ],
+    "checks": [
+      {
+        "id": "ignored",
+        "type": "manual",
+        "prompt": "Does git status avoid showing .env?",
+        "answer": "yes"
+      },
+      {
+        "id": "check",
+        "type": "manual",
+        "prompt": "Does git check-ignore .env print .env?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ignore rules apply to untracked files."
+      }
+    ],
+    "solution": "printf '.env\\n' > .gitignore; git check-ignore .env",
+    "cleanup": [
+      "cd ..",
+      "rm -rf ignore-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "undo-changes",
+    "title": "Restore a change and inspect reflog",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "platforms": [
+      "macos",
+      "linux",
+      "windows"
+    ],
+    "setup": [
+      "Use Git Bash, WSL, or a POSIX shell on Windows."
+    ],
+    "task": "Commit a file, make an unstaged change, restore it, and inspect the reflog.",
+    "commands": [
+      "mkdir undo-practice && cd undo-practice",
+      "git init",
+      "printf 'hello\\n' > file.txt",
+      "git add file.txt",
+      "git commit -m 'Initial'",
+      "printf 'oops\\n' >> file.txt",
+      "git restore file.txt",
+      "cat file.txt",
+      "git reflog"
+    ],
+    "checks": [
+      {
+        "id": "restored",
+        "type": "manual",
+        "prompt": "Does cat file.txt show only hello?",
+        "answer": "yes"
+      },
+      {
+        "id": "reflog",
+        "type": "manual",
+        "prompt": "Does git reflog show the recent commit?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "git restore changes the working tree."
+      }
+    ],
+    "solution": "git restore file.txt; git reflog",
+    "cleanup": [
+      "cd ..",
+      "rm -rf undo-practice"
+    ],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

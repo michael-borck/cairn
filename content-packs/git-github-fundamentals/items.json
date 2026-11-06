@@ -1,0 +1,920 @@
+[
+  {
+    "id": "repo-explain",
+    "type": "explain",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "difficulty": 1,
+    "prompt": "What is a Git repository?",
+    "body": "A repository is the project folder plus the hidden `.git` directory. The `.git` directory stores commits, branches, and history. A commit is a snapshot of the tracked files at a point in time, with a message and a link to its parent commit. Git stores snapshots, not a separate copy of every file on every commit.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look for the hidden .git directory."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "repo-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "difficulty": 1,
+    "prompt": "What does a commit record?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A snapshot of tracked files with a message and parent"
+      },
+      {
+        "id": "b",
+        "text": "A full copy of the folder, including ignored files",
+        "misconceptionId": "commit-is-folder-copy"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "A commit records the tracked snapshot, the message, and the parent link. Ignored files are not included.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "repo-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "difficulty": 1,
+    "prompt": "Which command creates a new repository in the current folder?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git init"
+      },
+      {
+        "id": "b",
+        "text": "git clone .",
+        "misconceptionId": "init-versus-clone"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git init` creates the repository metadata. `git clone` copies an existing repository.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "repo-short",
+    "type": "short_answer",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "difficulty": 1,
+    "prompt": "What does a commit capture at a point in time?",
+    "scoring": {
+      "mode": "contains",
+      "value": "snapshot"
+    },
+    "modelAnswer": "A commit captures a snapshot of the tracked files, with a message and parent link.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The answer is not the word diff."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "repo-lab",
+    "type": "lab",
+    "skillIds": [
+      "repositories-and-commits"
+    ],
+    "difficulty": 1,
+    "prompt": "Create a repository, make a commit, and inspect the log.",
+    "labId": "init-and-commit",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Create a scratch folder first."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "status-explain",
+    "type": "explain",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "difficulty": 1,
+    "prompt": "Working tree, staging area, and history",
+    "body": "`git status` shows the state of the working tree and the staging area. `git diff` shows unstaged changes. `git diff --staged` shows changes that are already staged. `git add` moves changes from the working tree into the staging area. `git commit` records the staged snapshot.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "There are three places: working tree, index, and history."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "status-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "difficulty": 1,
+    "prompt": "Which command shows the state of the working tree and staging area?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git status"
+      },
+      {
+        "id": "b",
+        "text": "git log",
+        "misconceptionId": "status-is-log"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git status` reports working tree and staging state. `git log` shows commit history.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "status-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "difficulty": 1,
+    "prompt": "Which command shows unstaged changes?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git diff"
+      },
+      {
+        "id": "b",
+        "text": "git diff --staged",
+        "misconceptionId": "diff-staged-confusion"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git diff` compares the working tree to the index. `git diff --staged` compares the index to the last commit.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "status-short",
+    "type": "short_answer",
+    "skillIds": [
+      "status-and-diff"
+    ],
+    "difficulty": 1,
+    "prompt": "Which command stages a file named notes.md?",
+    "scoring": {
+      "mode": "contains",
+      "value": "git add"
+    },
+    "modelAnswer": "`git add notes.md` stages the file.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The command is two words."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "branch-explain",
+    "type": "explain",
+    "skillIds": [
+      "branches"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a branch?",
+    "body": "A branch is a movable pointer to a commit. Creating a branch does not copy the repository. `git switch -c feature` creates and switches to a new branch. Commits on that branch move the branch pointer forward. `git branch` lists branches, and `git switch main` changes the current branch.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A branch is a label that moves."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "branch-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "branches"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command creates and switches to a branch named feature?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git switch -c feature"
+      },
+      {
+        "id": "b",
+        "text": "git branch feature",
+        "misconceptionId": "branch-create-switch"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git switch -c feature` creates and switches. `git branch feature` creates the branch but leaves you on the current branch.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "branch-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "branches"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a branch in Git?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A movable pointer to a commit"
+      },
+      {
+        "id": "b",
+        "text": "A full copy of the repository",
+        "misconceptionId": "branch-is-copy"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Branches are lightweight pointers, not full copies.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "branch-lab",
+    "type": "lab",
+    "skillIds": [
+      "branches"
+    ],
+    "difficulty": 2,
+    "prompt": "Create a branch, commit on it, and switch back to main.",
+    "labId": "create-branch",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Switch to main before you inspect the branches."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "merge-worked",
+    "type": "worked_example",
+    "skillIds": [
+      "merging"
+    ],
+    "difficulty": 2,
+    "prompt": "Merge feature into main.",
+    "steps": [
+      {
+        "title": "Switch to the target branch",
+        "body": "Run `git switch main`. The branch you are on is the branch that receives the merge."
+      },
+      {
+        "title": "Merge the source branch",
+        "body": "Run `git merge feature`."
+      },
+      {
+        "title": "Inspect the result",
+        "body": "If Git fast-forwards, main moves to the feature commit. If histories diverged, Git may create a merge commit or stop on conflicts."
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The branch you switch to is the one that gets the merge."
+      }
+    ],
+    "estimatedSeconds": 150
+  },
+  {
+    "id": "merge-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "merging"
+    ],
+    "difficulty": 2,
+    "prompt": "What does a fast-forward merge do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Moves the target branch pointer forward without a merge commit"
+      },
+      {
+        "id": "b",
+        "text": "Always creates a merge commit",
+        "misconceptionId": "merge-always-commit"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "A fast-forward is possible when the target branch has no new commits. Git moves the pointer instead of creating a merge commit.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "merge-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "merging"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command merges feature into the current branch?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git merge feature"
+      },
+      {
+        "id": "b",
+        "text": "git merge main feature",
+        "misconceptionId": "merge-command-syntax"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git merge feature` merges feature into the branch you currently have checked out.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "merge-short",
+    "type": "short_answer",
+    "skillIds": [
+      "merging"
+    ],
+    "difficulty": 2,
+    "prompt": "Which branch should you switch to before merging feature into main?",
+    "scoring": {
+      "mode": "contains",
+      "value": "main"
+    },
+    "modelAnswer": "Switch to `main`, then run `git merge feature`.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The target branch is the one you check out."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "conflict-explain",
+    "type": "explain",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "difficulty": 3,
+    "prompt": "Resolving a merge conflict",
+    "body": "A conflict happens when both branches change the same part of a file. Git writes conflict markers: `<<<<<<<`, `=======`, and `>>>>>>>`. Edit the file to the version you want, remove the markers, stage the resolved file with `git add`, then commit. Do not blindly delete the file or push the markers.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The markers show both sides. You choose the final content."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "conflict-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "difficulty": 3,
+    "prompt": "Which markers show a merge conflict?",
+    "options": [
+      {
+        "id": "a",
+        "text": "<<<<<<<, =======, >>>>>>>"
+      },
+      {
+        "id": "b",
+        "text": "BEGIN and END",
+        "misconceptionId": "conflict-markers-wrong"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Git uses `<<<<<<<`, `=======`, and `>>>>>>>` to mark the two sides and the divider.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "conflict-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "difficulty": 3,
+    "prompt": "After resolving a conflict, what should you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Stage the resolved file and commit"
+      },
+      {
+        "id": "b",
+        "text": "Delete the file and push",
+        "misconceptionId": "conflict-delete-file"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Resolve the content, remove the markers, stage the file, then commit.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "conflict-lab",
+    "type": "lab",
+    "skillIds": [
+      "merge-conflicts"
+    ],
+    "difficulty": 3,
+    "prompt": "Create a conflict, resolve it, and finish the merge.",
+    "labId": "resolve-conflict",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read both sides before you edit."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "remote-explain",
+    "type": "explain",
+    "skillIds": [
+      "remotes"
+    ],
+    "difficulty": 2,
+    "prompt": "What is a remote?",
+    "body": "A remote is a named URL for another copy of the repository. `origin` is the conventional name for the main remote. Add one with `git remote add origin <url>`. A remote is not a branch. `git remote -v` lists remotes and their URLs.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "origin is a name for a URL, not a branch."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "remote-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "remotes"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command adds a remote named origin?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git remote add origin <url>"
+      },
+      {
+        "id": "b",
+        "text": "git branch origin <url>",
+        "misconceptionId": "origin-is-branch"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git remote add` registers a remote URL under a name.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "remote-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "remotes"
+    ],
+    "difficulty": 2,
+    "prompt": "What is origin?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A conventional name for a remote repository"
+      },
+      {
+        "id": "b",
+        "text": "The main branch",
+        "misconceptionId": "origin-is-branch"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`origin` is a remote name. The main branch is usually called `main`.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "remote-lab",
+    "type": "lab",
+    "skillIds": [
+      "remotes"
+    ],
+    "difficulty": 2,
+    "prompt": "Add a local bare repository as a remote and push to it.",
+    "labId": "add-remote-local-bare",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A bare repository is a remote without a working tree."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "push-worked",
+    "type": "worked_example",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "difficulty": 2,
+    "prompt": "Publish main to origin.",
+    "steps": [
+      {
+        "title": "Check the remote",
+        "body": "Run `git remote -v` and confirm origin points where you expect."
+      },
+      {
+        "title": "Push and set upstream",
+        "body": "Run `git push -u origin main`. The `-u` records the upstream so later pushes can be shorter."
+      },
+      {
+        "title": "Pull before you push next time",
+        "body": "If the remote has new commits, use `git pull` or `git fetch` and integrate before pushing."
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The first push often needs the upstream flag."
+      }
+    ],
+    "estimatedSeconds": 150
+  },
+  {
+    "id": "push-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command pushes main and sets the upstream?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git push -u origin main"
+      },
+      {
+        "id": "b",
+        "text": "git pull -u origin main",
+        "misconceptionId": "push-pull-confusion"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git push -u origin main` uploads commits and records the upstream.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "push-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "difficulty": 2,
+    "prompt": "What does git pull do by default?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Fetches remote changes and merges them"
+      },
+      {
+        "id": "b",
+        "text": "Only uploads local commits",
+        "misconceptionId": "push-pull-confusion"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git pull` is fetch plus integration, usually a merge unless you configure rebase.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "push-short",
+    "type": "short_answer",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "difficulty": 2,
+    "prompt": "Which command downloads remote changes without merging them?",
+    "scoring": {
+      "mode": "contains",
+      "value": "fetch"
+    },
+    "modelAnswer": "`git fetch` downloads remote updates. It does not merge them into your branch.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "It is not git pull."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "push-lab",
+    "type": "lab",
+    "skillIds": [
+      "push-and-pull"
+    ],
+    "difficulty": 2,
+    "prompt": "Push from one clone and pull into another using a local bare remote.",
+    "labId": "push-pull-local",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Treat the bare repository as the shared server."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "pr-explain",
+    "type": "explain",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "difficulty": 3,
+    "prompt": "Pull requests on GitHub",
+    "body": "A pull request asks to merge one branch into another. It shows the proposed diff, runs checks, and collects review. Reviewers can comment, request changes, or approve. A pull request does not deploy to production by itself. The merge happens after review and checks pass.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A pull request is a review and merge request."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "pr-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "difficulty": 3,
+    "prompt": "What does a pull request ask for?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Review and merge of one branch into another"
+      },
+      {
+        "id": "b",
+        "text": "Automatic deployment to production",
+        "misconceptionId": "pr-is-deploy"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "A pull request proposes a merge and invites review. Deployment is a separate step.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "pr-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "difficulty": 3,
+    "prompt": "What should happen before a pull request is merged?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Review and checks pass"
+      },
+      {
+        "id": "b",
+        "text": "Nothing, merge is automatic",
+        "misconceptionId": "pr-no-review"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Review and checks are the point of the pull request.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "pr-teach",
+    "type": "teach_back",
+    "skillIds": [
+      "pull-requests"
+    ],
+    "difficulty": 3,
+    "prompt": "Explain the pull request flow to a new contributor.",
+    "rubricId": "explain-pr",
+    "modelAnswer": "Create a branch, push it, open a pull request, respond to review and checks, then merge when approved.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Name the branch, review, and merge steps."
+      }
+    ],
+    "estimatedSeconds": 180
+  },
+  {
+    "id": "gitignore-explain",
+    "type": "explain",
+    "skillIds": [
+      "gitignore"
+    ],
+    "difficulty": 2,
+    "prompt": "Ignoring files",
+    "body": "`.gitignore` keeps matching untracked files out of commits. It does not delete files from disk. If a file is already tracked, adding it to `.gitignore` does not stop tracking. Remove it from the index with `git rm --cached` and commit. Use `.gitignore` for secrets, build output, and local editor files.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ignoring and untracking are different."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "gitignore-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "gitignore"
+    ],
+    "difficulty": 2,
+    "prompt": "What does .gitignore do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Keeps matching untracked files out of commits"
+      },
+      {
+        "id": "b",
+        "text": "Deletes matching files from disk",
+        "misconceptionId": "gitignore-deletes"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`.gitignore` affects tracking. It does not delete files.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "gitignore-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "gitignore"
+    ],
+    "difficulty": 2,
+    "prompt": "A file is already tracked. You add it to .gitignore. What happens?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Git keeps tracking it until you remove it from the index"
+      },
+      {
+        "id": "b",
+        "text": "Git stops tracking it immediately",
+        "misconceptionId": "gitignore-tracked"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "Ignore rules apply to untracked files. Use `git rm --cached` to untrack an existing file.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "gitignore-lab",
+    "type": "lab",
+    "skillIds": [
+      "gitignore"
+    ],
+    "difficulty": 2,
+    "prompt": "Keep a .env file out of a new repository and verify it is ignored.",
+    "labId": "ignore-secrets",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Check with git status after you create the ignore rule."
+      }
+    ],
+    "estimatedSeconds": 300
+  },
+  {
+    "id": "undo-explain",
+    "type": "explain",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "difficulty": 3,
+    "prompt": "Undo and recovery",
+    "body": "`git restore` changes the working tree. `git restore --staged` unstages without changing the file. `git revert` creates a new commit that reverses an earlier commit, which is safe on shared history. `git reset --hard` moves the branch and discards changes, so use it carefully. `git reflog` shows recent branch-tip movements and can help recover lost commits.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Prefer revert on shared history."
+      }
+    ],
+    "estimatedSeconds": 120
+  },
+  {
+    "id": "undo-mcq-1",
+    "type": "mcq",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command unstages a file while keeping the change?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git restore --staged notes.md"
+      },
+      {
+        "id": "b",
+        "text": "git reset --hard",
+        "misconceptionId": "reset-hard-is-safe"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git restore --staged` unstages. `git reset --hard` discards changes and moves the branch.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "undo-mcq-2",
+    "type": "mcq",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command safely reverses a published commit by creating a new commit?",
+    "options": [
+      {
+        "id": "a",
+        "text": "git revert <commit>"
+      },
+      {
+        "id": "b",
+        "text": "git reset --hard <commit>",
+        "misconceptionId": "reset-hard-is-safe"
+      }
+    ],
+    "correctOptionId": "a",
+    "explanation": "`git revert` creates a new commit that reverses the old one. It is safer on shared history.",
+    "hints": [],
+    "estimatedSeconds": 45
+  },
+  {
+    "id": "undo-short",
+    "type": "short_answer",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "difficulty": 3,
+    "prompt": "Which command shows the history of branch-tip movements?",
+    "scoring": {
+      "mode": "contains",
+      "value": "reflog"
+    },
+    "modelAnswer": "`git reflog` shows recent branch-tip movements and can help recover commits.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The word is short for reference log."
+      }
+    ],
+    "estimatedSeconds": 60
+  },
+  {
+    "id": "undo-lab",
+    "type": "lab",
+    "skillIds": [
+      "undo-and-recovery"
+    ],
+    "difficulty": 3,
+    "prompt": "Restore a working-tree change and inspect the reflog.",
+    "labId": "undo-changes",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Do not use reset --hard for this exercise."
+      }
+    ],
+    "estimatedSeconds": 300
+  }
+]
