@@ -39,6 +39,7 @@ import {
   saveImportedPack,
   type PackEntry,
 } from "./packs";
+import { buildReviewCalendar } from "./review-calendar";
 import { createPersistentStorage, type AppStorage } from "./storage";
 
 const LEARNER_ID = "local";
@@ -797,6 +798,11 @@ function App() {
                 />
                 <MasteryMap pack={active.pack} learner={learner} />
                 <ReviewPanel pack={active.pack} items={reviewQueue} />
+                <ReviewCalendar
+                  pack={active.pack}
+                  learner={learner}
+                  onReview={() => void startSession()}
+                />
                 <HistoryPanel pack={active.pack} events={history} />
                 <AIPanel settings={aiSettings} onChange={updateAISettings} />
               </aside>
@@ -1138,6 +1144,87 @@ function ReviewPanel({
             </div>
           );
         })
+      )}
+    </div>
+  );
+}
+
+function ReviewCalendar({
+  pack,
+  learner,
+  onReview,
+}: {
+  pack: ContentPack;
+  learner: LearnerState | null;
+  onReview: () => void;
+}) {
+  const days = buildReviewCalendar(pack, learner);
+  const [selected, setSelected] = useState(
+    days.find((day) => day.skills.length > 0)?.date ?? days[0]?.date ?? ""
+  );
+  const selectedDay =
+    days.find((day) => day.date === selected) ??
+    days.find((day) => day.skills.length > 0) ??
+    days[0];
+  const hasAny = days.some((day) => day.skills.length > 0);
+  const dueNow = days.some(
+    (day) => day.overdue || (day.today && day.skills.length > 0)
+  );
+
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Review calendar</h2>
+        {dueNow && (
+          <button
+            type="button"
+            className="ghost-button small"
+            onClick={onReview}
+          >
+            Review now
+          </button>
+        )}
+      </div>
+      {!hasAny ? (
+        <p>No reviews scheduled yet.</p>
+      ) : (
+        <>
+          <div className="calendar-strip">
+            {days.slice(0, 8).map((day) => (
+              <button
+                key={day.date}
+                type="button"
+                className={`calendar-day ${day.overdue ? "overdue" : ""} ${
+                  day.today ? "today" : ""
+                } ${selectedDay?.date === day.date ? "selected" : ""}`}
+                onClick={() => setSelected(day.date)}
+              >
+                <span>
+                  {day.overdue
+                    ? "Overdue"
+                    : day.today
+                      ? "Today"
+                      : day.label.split(",")[0]}
+                </span>
+                <strong>{day.skills.length}</strong>
+              </button>
+            ))}
+          </div>
+          {selectedDay && (
+            <div className="calendar-detail">
+              {selectedDay.skills.length === 0 ? (
+                <p>Nothing scheduled.</p>
+              ) : (
+                selectedDay.skills.map((skill) => (
+                  <div key={skill.id} className="review-row">
+                    <span>{skill.title}</span>
+                    <span>{percent(skill.mastery)}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

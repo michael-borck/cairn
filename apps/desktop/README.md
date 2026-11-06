@@ -28,7 +28,8 @@ Built:
   native dialog.
 - Session view for explain, worked example, MCQ, short answer, teach-back,
   reflection, and learner-run labs.
-- Mastery map, due-review panel, recent activity, and "why this?" decision panel.
+- Mastery map, due-review panel, 14-day review calendar, recent activity, and
+  "why this?" decision panel.
 - Easier, harder, more help, and less help overrides.
 - SQLite storage through `tauri-plugin-sql`, with local-storage fallback in the
   browser.
@@ -42,7 +43,6 @@ Built:
 Not built yet:
 
 - Form-based skill and item authoring.
-- A full review calendar.
 - More AI providers beyond local Ollama.
 - Mobile targets.
 
