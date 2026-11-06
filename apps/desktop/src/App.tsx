@@ -14,6 +14,15 @@ import {
 
 import "./App.css";
 import {
+  askOllama,
+  feedbackPrompt,
+  hintPrompt,
+  loadAISettings,
+  saveAISettings,
+  type AIMode,
+  type AISettings,
+} from "./ai";
+import {
   choosePackDirectory,
   entryForPack,
   loadBuiltinPacks,
@@ -95,6 +104,11 @@ function App() {
   const [store, setStore] = useState<AppStorage | null>(null);
   const [learner, setLearner] = useState<LearnerState | null>(null);
   const [reviewQueue, setReviewQueue] = useState<ReviewItem[]>([]);
+  const [history, setHistory] = useState<EvidenceEvent[]>([]);
+  const [aiSettings, setAISettings] = useState<AISettings>(() => loadAISettings());
+  const [aiHint, setAiHint] = useState<string | null>(null);
+  const [aiError, setAiError] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
   const [decision, setDecision] = useState<Decision | null>(null);
   const [explanation, setExplanation] = useState<Explanation | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
@@ -120,6 +134,8 @@ function App() {
     setSelectedOption(null);
     setTextAnswer("");
     setConfidence("");
+    setAiHint(null);
+    setAiError(false);
     activityStartedAt.current = Date.now();
   }
 
@@ -133,6 +149,8 @@ function App() {
   async function refresh(nextEngine: AdaptiveEngine): Promise<void> {
     setLearner(await nextEngine.getState(LEARNER_ID));
     setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
+    const storage = await getStorage();
+    setHistory((await storage.listEvents(LEARNER_ID)).slice(0, 20));
   }
 
   async function openPack(entry: PackEntry): Promise<void> {
@@ -153,6 +171,7 @@ function App() {
       setEngine(nextEngine);
       setLearner(state);
       setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
+      setHistory((await storage.listEvents(LEARNER_ID)).slice(0, 20));
       setDecision(null);
       setExplanation(null);
       resetActivity();
@@ -347,6 +366,47 @@ function App() {
     }
   }
 
+  function updateAISettings(patch: Partial<AISettings>): void {
+    const next = { ...aiSettings, ...patch };
+    setAISettings(next);
+    saveAISettings(next);
+    setAiHint(null);
+    setAiError(false);
+  }
+
+  async function askAI(kind: "hint" | "feedback"): Promise<void> {
+    if (!currentItem || !active || aiSettings.mode === "off") return;
+    setAiBusy(true);
+    setAiError(false);
+    setAiHint(null);
+    try {
+      const answer = pending
+        ? currentItem.type === "mcq"
+          ? (currentItem.options.find(
+              (option) => option.id === String(pending.response)
+            )?.text ?? String(pending.response))
+          : String(pending.response ?? textAnswer)
+        : textAnswer;
+      const prompts =
+        kind === "feedback" && pending
+          ? feedbackPrompt(
+              currentItem,
+              active.pack,
+              answer,
+              pending.correct
+            )
+          : hintPrompt(currentItem, active.pack);
+      setAiHint(
+        await askOllama(aiSettings, prompts.system, prompts.prompt)
+      );
+    } catch (cause) {
+      setAiError(true);
+      setAiHint(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setAiBusy(false);
+    }
+  }
+
   async function importFolder(): Promise<void> {
     setBusy(true);
     setError(false);
@@ -402,6 +462,7 @@ function App() {
     await storage.reset(LEARNER_ID);
     setLearner(await engine.getState(LEARNER_ID));
     setReviewQueue(await engine.reviewQueue(LEARNER_ID));
+    setHistory([]);
     setDecision(null);
     setExplanation(null);
     resetActivity();
@@ -582,6 +643,11 @@ function App() {
                     textAnswer={textAnswer}
                     confidence={confidence}
                     busy={busy}
+                    aiMode={aiSettings.mode}
+                    aiHint={aiHint}
+                    aiBusy={aiBusy}
+                    aiError={aiError}
+                    onAskAI={(kind) => void askAI(kind)}
                     onSelectOption={(optionId) =>
                       currentItem.type === "mcq"
                         ? chooseOption(currentItem, optionId)
@@ -607,6 +673,8 @@ function App() {
                 />
                 <MasteryMap pack={active.pack} learner={learner} />
                 <ReviewPanel pack={active.pack} items={reviewQueue} />
+                <HistoryPanel pack={active.pack} events={history} />
+                <AIPanel settings={aiSettings} onChange={updateAISettings} />
               </aside>
             </div>
           </>
@@ -792,6 +860,93 @@ function ReviewPanel({
   );
 }
 
+function HistoryPanel({
+  pack,
+  events,
+}: {
+  pack: ContentPack;
+  events: EvidenceEvent[];
+}) {
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Recent</h2>
+        <span>{events.length}</span>
+      </div>
+      {events.length === 0 ? (
+        <p>No activity yet.</p>
+      ) : (
+        events.slice(0, 6).map((event) => {
+          const item = pack.items.find((entry) => entry.id === event.itemId);
+          const state =
+            event.correct === true
+              ? "correct"
+              : event.correct === false
+                ? "miss"
+                : "done";
+          return (
+            <div key={event.id} className="history-row">
+              <span className="history-label">
+                {item?.prompt ?? event.itemId}
+              </span>
+              <span className={`history-state ${state}`}>{state}</span>
+            </div>
+          );
+        })
+      )}
+    </div>
+  );
+}
+
+function AIPanel({
+  settings,
+  onChange,
+}: {
+  settings: AISettings;
+  onChange: (patch: Partial<AISettings>) => void;
+}) {
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>AI</h2>
+        <span>{settings.mode}</span>
+      </div>
+      <label className="field-label">
+        Mode
+        <select
+          value={settings.mode}
+          onChange={(event) =>
+            onChange({ mode: event.target.value as AIMode })
+          }
+        >
+          <option value="off">Off</option>
+          <option value="assist">Assist</option>
+          <option value="full">Full</option>
+        </select>
+      </label>
+      {settings.mode !== "off" && (
+        <>
+          <label className="field-label">
+            Model
+            <input
+              value={settings.model}
+              onChange={(event) => onChange({ model: event.target.value })}
+            />
+          </label>
+          <label className="field-label">
+            Ollama URL
+            <input
+              value={settings.baseUrl}
+              onChange={(event) => onChange({ baseUrl: event.target.value })}
+            />
+          </label>
+          <p>Local Ollama only. AI hints are optional and never recorded as answers.</p>
+        </>
+      )}
+    </div>
+  );
+}
+
 function ConfidenceSelect({
   value,
   onChange,
@@ -838,6 +993,11 @@ function ActivityView({
   textAnswer,
   confidence,
   busy,
+  aiMode,
+  aiHint,
+  aiBusy,
+  aiError,
+  onAskAI,
   onSelectOption,
   onTextChange,
   onConfidence,
@@ -853,6 +1013,11 @@ function ActivityView({
   textAnswer: string;
   confidence: Confidence;
   busy: boolean;
+  aiMode: AIMode;
+  aiHint: string | null;
+  aiBusy: boolean;
+  aiError: boolean;
+  onAskAI: (kind: "hint" | "feedback") => void;
   onSelectOption: (optionId: string) => void;
   onTextChange: (value: string) => void;
   onConfidence: (value: Confidence) => void;
@@ -868,6 +1033,30 @@ function ActivityView({
       </button>
     </div>
   ) : null;
+
+  const aiBlock =
+    aiMode === "off" ? null : (
+      <div className={`ai-box ${aiError ? "error" : ""}`}>
+        <div className="ai-head">
+          <span>AI suggestion</span>
+          <button
+            type="button"
+            className="ghost-button small"
+            onClick={() =>
+              onAskAI(pending && aiMode === "full" ? "feedback" : "hint")
+            }
+            disabled={aiBusy || busy}
+          >
+            {aiBusy
+              ? "Thinking..."
+              : pending && aiMode === "full"
+                ? "Explain my answer"
+                : "Ask for a hint"}
+          </button>
+        </div>
+        {aiHint && <p>{aiHint}</p>}
+      </div>
+    );
 
   if (item.type === "mcq") {
     return (
@@ -893,6 +1082,7 @@ function ActivityView({
           disabled={Boolean(pending)}
         />
         {feedback}
+        {aiBlock}
       </div>
     );
   }
@@ -931,6 +1121,7 @@ function ActivityView({
           </button>
         )}
         {feedback}
+        {aiBlock}
       </div>
     );
   }
@@ -944,6 +1135,7 @@ function ActivityView({
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
+        {aiBlock}
       </div>
     );
   }
@@ -964,6 +1156,7 @@ function ActivityView({
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
+        {aiBlock}
       </div>
     );
   }
@@ -994,6 +1187,7 @@ function ActivityView({
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Mark complete
         </button>
+        {aiBlock}
       </div>
     );
   }

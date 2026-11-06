@@ -28,16 +28,20 @@ Built:
   native dialog.
 - Session view for explain, worked example, MCQ, short answer, teach-back,
   reflection, and learner-run labs.
-- Mastery map, due-review panel, and "why this?" decision panel.
+- Mastery map, due-review panel, recent activity, and "why this?" decision panel.
 - Easier, harder, more help, and less help overrides.
 - SQLite storage through `tauri-plugin-sql`, with local-storage fallback in the
   browser.
+- AI modes off, assist, and full, backed by a local Ollama instance. AI is off
+  by default, hints are optional, and AI output is never recorded as learner
+  evidence. Pull a model first, for example `ollama pull llama3.1:8b`, then set
+  the model name in the AI panel.
 
 Not built yet:
 
-- AI controls and AI-backed hints.
 - Pack authoring and export.
-- Full session history and a review calendar.
+- A full review calendar.
+- More AI providers beyond local Ollama.
 - Mobile targets.
 
 Keep Rust limited to shell commands, storage, keychain access, and packaging.

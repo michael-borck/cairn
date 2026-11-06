@@ -406,6 +406,75 @@ textarea {
   border-top: 0;
 }
 
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.history-row:first-of-type {
+  border-top: 0;
+}
+
+.history-label {
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-state {
+  flex-shrink: 0;
+  font-size: 11px;
+}
+
+.history-state.correct {
+  color: var(--good);
+}
+
+.history-state.miss {
+  color: var(--danger);
+}
+
+.history-state.done {
+  color: var(--accent-2);
+}
+
+.ai-box {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgb(127 183 163 / 7%);
+}
+
+.ai-box.error {
+  background: rgb(226 125 111 / 8%);
+  border-color: rgb(226 125 111 / 35%);
+}
+
+.ai-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--accent-2);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ai-box p {
+  margin: 10px 0 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
 .overview,
 .complete {
   display: flex;
@@ -523,12 +592,29 @@ textarea {
   cursor: default;
 }
 
-.confidence {
+.confidence,
+.field-label {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
+  margin-bottom: 8px;
   color: var(--muted);
   font-size: 12px;
+}
+
+.field-label select,
+.field-label input {
+  min-width: 140px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.field-label input {
+  width: 150px;
 }
 
 .confidence select {

@@ -61,7 +61,10 @@ export function createLocalStorage(): AppStorage {
       writeStore(store);
     },
     async listEvents(learnerId) {
-      return readStore().events.filter((event) => event.learnerId === learnerId);
+      return readStore()
+        .events.filter((event) => event.learnerId === learnerId)
+        .slice()
+        .reverse();
     },
     async saveDecision(decision) {
       const store = readStore();
