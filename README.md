@@ -10,7 +10,18 @@ Status: content schema and engine core v0.1 implemented. The Tauri app and first
 
 - `@cairn/content`: Zod schemas for packs, items, rubrics, labs, and policy, plus cross-field validation.
 - `@cairn/engine`: BKT-lite, review scheduling, next-activity policy, decision explanations, learner state, and an in-memory storage adapter.
-- Tests for schema validation, BKT, review scheduling, policy decisions, learner export, and import.
+- `@cairn/cli`: validate, inspect, and simulate packs against the real engine.
+- Tests for schema validation, BKT, review scheduling, policy decisions, learner export, import, and deterministic simulation.
+
+## Try it
+
+```bash
+npm test
+npm run typecheck
+npx tsx apps/cli/src/index.ts validate content-packs/example/pack.json
+npx tsx apps/cli/src/index.ts inspect content-packs/example/pack.json
+npx tsx apps/cli/src/index.ts simulate --pack content-packs/example/pack.json --learners 20
+```
 
 ## Why Cairn
 

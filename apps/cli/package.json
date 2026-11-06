@@ -3,5 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Headless tools for Cairn authors and tests."
+  "description": "Headless tools for Cairn authors and tests.",
+  "scripts": {
+    "cli": "tsx src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@cairn/content": "0.0.0",
+    "@cairn/engine": "0.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
 }

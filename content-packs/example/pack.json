@@ -1,0 +1,269 @@
+{
+  "manifest": {
+    "schemaVersion": "0.1",
+    "id": "docker-fundamentals",
+    "version": "1.0.0",
+    "title": "Docker Fundamentals",
+    "description": "A hands-on introduction to containers.",
+    "author": {
+      "name": "Cairn"
+    },
+    "license": "CC-BY-4.0",
+    "language": "en",
+    "audience": "adult-self-learner",
+    "level": "beginner",
+    "estimatedMinutes": 180,
+    "engine": {
+      "minVersion": "0.1.0"
+    },
+    "requires": {
+      "ai": false,
+      "docker": true,
+      "appNetwork": false
+    },
+    "entries": {
+      "curriculum": "curriculum.json",
+      "items": "items.json",
+      "rubrics": "rubrics.json",
+      "misconceptions": "misconceptions.json",
+      "labs": "labs.json",
+      "policy": "policy.json"
+    }
+  },
+  "curriculum": {
+    "modules": [
+      {
+        "id": "containers",
+        "title": "Containers",
+        "order": 1,
+        "skillIds": [
+          "container-basics",
+          "port-mapping"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "container-basics",
+        "title": "Container basics",
+        "difficulty": 1
+      },
+      {
+        "id": "port-mapping",
+        "title": "Port mapping",
+        "difficulty": 2,
+        "prerequisites": [
+          "container-basics"
+        ]
+      }
+    ]
+  },
+  "items": [
+    {
+      "id": "container-explain",
+      "type": "explain",
+      "skillIds": [
+        "container-basics"
+      ],
+      "difficulty": 1,
+      "prompt": "What is a container?",
+      "body": "A container packages an application and its dependencies.",
+      "hints": []
+    },
+    {
+      "id": "container-mcq",
+      "type": "mcq",
+      "skillIds": [
+        "container-basics"
+      ],
+      "difficulty": 1,
+      "prompt": "Which command lists running containers?",
+      "options": [
+        {
+          "id": "a",
+          "text": "docker ps"
+        },
+        {
+          "id": "b",
+          "text": "docker images"
+        }
+      ],
+      "correctOptionId": "a",
+      "hints": []
+    },
+    {
+      "id": "port-worked",
+      "type": "worked_example",
+      "skillIds": [
+        "port-mapping"
+      ],
+      "difficulty": 2,
+      "prompt": "Map container port 80 to host port 8080.",
+      "steps": [
+        {
+          "title": "Choose the host port",
+          "body": "The host port comes first."
+        },
+        {
+          "title": "Write the mapping",
+          "body": "Use host:container, so 8080:80."
+        }
+      ],
+      "hints": []
+    },
+    {
+      "id": "port-mcq",
+      "type": "mcq",
+      "skillIds": [
+        "port-mapping"
+      ],
+      "difficulty": 2,
+      "prompt": "Which command publishes container port 80 on host port 8080?",
+      "options": [
+        {
+          "id": "a",
+          "text": "docker run -p 80:8080 nginx",
+          "misconceptionId": "port-order-reversed"
+        },
+        {
+          "id": "b",
+          "text": "docker run -p 8080:80 nginx"
+        }
+      ],
+      "correctOptionId": "b",
+      "hints": [
+        {
+          "level": 1,
+          "text": "Which side is the host?"
+        },
+        {
+          "level": 2,
+          "text": "The syntax is host:container."
+        }
+      ]
+    },
+    {
+      "id": "port-lab",
+      "type": "lab",
+      "skillIds": [
+        "port-mapping"
+      ],
+      "difficulty": 2,
+      "prompt": "Run nginx on port 8080.",
+      "labId": "run-nginx",
+      "hints": []
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "explain-port-mapping",
+      "title": "Explain port mapping",
+      "criteria": [
+        {
+          "id": "host-port",
+          "label": "Identifies the host port",
+          "weight": 0.5,
+          "levels": {
+            "0": "Missing",
+            "1": "Partial",
+            "2": "Clear"
+          }
+        },
+        {
+          "id": "container-port",
+          "label": "Identifies the container port",
+          "weight": 0.5,
+          "levels": {
+            "0": "Missing",
+            "1": "Partial",
+            "2": "Clear"
+          }
+        }
+      ]
+    }
+  ],
+  "misconceptions": [
+    {
+      "id": "port-order-reversed",
+      "label": "Reverses host and container ports",
+      "skillIds": [
+        "port-mapping"
+      ],
+      "description": "The learner maps 80:8080 instead of 8080:80.",
+      "remediation": {
+        "strategy": "contrast",
+        "explanation": "The host port comes first.",
+        "itemIds": [
+          "port-worked"
+        ]
+      }
+    }
+  ],
+  "labs": [
+    {
+      "id": "run-nginx",
+      "title": "Run nginx",
+      "skillIds": [
+        "port-mapping"
+      ],
+      "platforms": [
+        "macos",
+        "linux",
+        "windows"
+      ],
+      "task": "Run nginx and confirm it responds on localhost:8080.",
+      "commands": [
+        "docker run -d --name web -p 8080:80 nginx:1.27"
+      ],
+      "checks": [
+        {
+          "id": "running",
+          "type": "manual",
+          "prompt": "Does docker ps show the container?",
+          "answer": "yes"
+        }
+      ],
+      "solution": "docker run -d --name web -p 8080:80 nginx:1.27",
+      "cleanup": [
+        "docker stop web",
+        "docker rm web"
+      ],
+      "security": {
+        "executesOnHost": false,
+        "network": true
+      }
+    }
+  ],
+  "policy": {
+    "id": "default-v1",
+    "targetSuccessMin": 0.75,
+    "targetSuccessMax": 0.85,
+    "masteryThreshold": 0.9,
+    "reviewIntervalsDays": [
+      1,
+      3,
+      7,
+      21,
+      60
+    ],
+    "hysteresis": {
+      "observations": 2,
+      "minItemsBetweenChanges": 3
+    },
+    "wrongStreak": {
+      "similarItem": 1,
+      "switchRepresentation": 2,
+      "prerequisite": 3
+    },
+    "help": {
+      "startLevelByMastery": {
+        "0.0": 2,
+        "0.4": 1,
+        "0.7": 0
+      },
+      "escalateAfterWrong": 2,
+      "fadeAfterCorrect": 2
+    },
+    "confidenceSampleRate": 0.2
+  }
+}

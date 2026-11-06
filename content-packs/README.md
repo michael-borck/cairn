@@ -1,8 +1,9 @@
 # Content packs
 
-Packs are versioned `.learnpack` archives. See [the pack schema](../docs/spec/pack-schema-v0.1.md).
+Packs are versioned content bundles. See [the pack schema](../docs/spec/pack-schema-v0.1.md).
 
-The first pack is `docker-fundamentals`. It is not committed yet.
+`example/pack.json` is a minimal fixture for CLI smoke tests, not a real course.
+The first real pack is `docker-fundamentals`. It is not committed yet.
 
 Rules:
 
