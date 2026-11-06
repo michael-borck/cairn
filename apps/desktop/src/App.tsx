@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
 import type { ContentPack, Item, Lab, MCQItem, Rubric } from "@cairn/content";
@@ -13,6 +13,15 @@ import {
 } from "@cairn/engine";
 
 import "./App.css";
+import {
+  ItemsForm,
+  MetadataForm,
+  ModulesForm,
+  PolicyForm,
+  PracticeGenerator,
+  SkillsForm,
+  type PackData,
+} from "./AuthoringForms";
 import {
   exportPack,
   formatPackText,
@@ -39,6 +48,7 @@ import {
   saveImportedPack,
   type PackEntry,
 } from "./packs";
+import { extractMaterial, packFromMaterial } from "./material-import";
 import { buildReviewCalendar } from "./review-calendar";
 import { createPersistentStorage, type AppStorage } from "./storage";
 
@@ -486,6 +496,30 @@ function App() {
     setDraftMessage(exported ? "Pack exported." : "Export cancelled.");
   }
 
+  async function importMaterial(file: File | undefined): Promise<void> {
+    if (!file) return;
+    setBusy(true);
+    setError(false);
+    setMessage(`Extracting ${file.name}...`);
+    try {
+      const material = await extractMaterial(file);
+      const pack = packFromMaterial(material);
+      const text = JSON.stringify(pack, null, 2);
+      setDraft(text);
+      setDraftResult(validatePackText(text));
+      setDraftMessage(
+        `Draft from ${file.name}. Review it and add practice items before saving.`
+      );
+      setAuthoring(true);
+      setMessage(`Imported material from ${file.name}.`);
+    } catch (cause) {
+      setError(true);
+      setMessage(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function importDraft(file: File | undefined): Promise<void> {
     if (!file) return;
     try {
@@ -641,6 +675,22 @@ function App() {
           Import folder
         </button>
 
+        <label
+          className="import-button"
+          title="Markdown, HTML, DOCX, EPUB, or PDF"
+        >
+          Import material
+          <input
+            type="file"
+            accept=".md,.markdown,.html,.htm,.docx,.epub,.pdf"
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              void importMaterial(file);
+              event.target.value = "";
+            }}
+          />
+        </label>
+
         <button
           type="button"
           className="ghost-button"
@@ -663,7 +713,10 @@ function App() {
             result={draftResult}
             message={draftMessage}
             busy={busy}
-            onDraft={setDraft}
+            onDraft={(value) => {
+              setDraft(value);
+              setDraftResult(null);
+            }}
             onValidate={() => void validateDraft()}
             onSave={() => void saveDraft()}
             onExport={() => void exportDraft()}
@@ -674,6 +727,8 @@ function App() {
               setDraftMessage("");
             }}
             onImport={(file) => void importDraft(file)}
+            aiSettings={aiSettings}
+            onAISettings={updateAISettings}
           />
         ) : !active ? (
           <>
@@ -819,6 +874,8 @@ function App() {
   );
 }
 
+type AuthoringTab = "metadata" | "modules" | "skills" | "items" | "policy" | "json";
+
 function AuthoringView({
   draft,
   result,
@@ -831,11 +888,15 @@ function AuthoringView({
   onFormat,
   onBack,
   onImport,
+  aiSettings,
+  onAISettings,
 }: {
   draft: string;
   result: DraftResult | null;
   message: string;
   busy: boolean;
+  aiSettings: AISettings;
+  onAISettings: (patch: Partial<AISettings>) => void;
   onDraft: (value: string) => void;
   onValidate: () => void;
   onSave: () => void;
@@ -846,6 +907,28 @@ function AuthoringView({
 }) {
   const errors = result?.errors ?? [];
   const warnings = result?.warnings ?? [];
+  const [tab, setTab] = useState<AuthoringTab>("metadata");
+  const data = useMemo<PackData | null>(() => {
+    try {
+      return JSON.parse(draft) as PackData;
+    } catch {
+      return null;
+    }
+  }, [draft]);
+  const tabs: { id: AuthoringTab; label: string }[] = [
+    { id: "metadata", label: "Metadata" },
+    { id: "modules", label: "Modules" },
+    { id: "skills", label: "Skills" },
+    { id: "items", label: "Items" },
+    { id: "policy", label: "Policy" },
+    { id: "json", label: "JSON" },
+  ];
+  function update(mutator: (draftData: PackData) => void): void {
+    if (!data) return;
+    const next = structuredClone(data);
+    mutator(next);
+    onDraft(JSON.stringify(next, null, 2));
+  }
   return (
     <>
       <header className="pack-head">
@@ -913,13 +996,52 @@ function AuthoringView({
             </label>
             <span className="muted">{message}</span>
           </div>
-          <textarea
-            className="authoring-editor"
-            value={draft}
-            onChange={(event) => onDraft(event.target.value)}
-            spellCheck={false}
-            aria-label="Pack JSON"
-          />
+          <div className="authoring-tabs" role="tablist">
+            {tabs.map((entry) => (
+              <button
+                key={entry.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === entry.id}
+                className={`authoring-tab ${tab === entry.id ? "active" : ""}`}
+                onClick={() => setTab(entry.id)}
+              >
+                {entry.label}
+              </button>
+            ))}
+          </div>
+          {tab === "json" ? (
+            <textarea
+              className="authoring-editor"
+              value={draft}
+              onChange={(event) => onDraft(event.target.value)}
+              spellCheck={false}
+              aria-label="Pack JSON"
+            />
+          ) : data ? (
+            tab === "metadata" ? (
+              <MetadataForm data={data} update={update} />
+            ) : tab === "modules" ? (
+              <ModulesForm data={data} update={update} />
+            ) : tab === "skills" ? (
+              <SkillsForm data={data} update={update} />
+            ) : tab === "items" ? (
+              <>
+                <PracticeGenerator
+                  data={data}
+                  update={update}
+                  aiSettings={aiSettings}
+                />
+                <ItemsForm data={data} update={update} />
+              </>
+            ) : (
+              <PolicyForm data={data} update={update} />
+            )
+          ) : (
+            <p className="hint">
+              Fix the JSON in the JSON tab before using the form editor.
+            </p>
+          )}
         </section>
 
         <aside className="right-rail">
@@ -972,6 +1094,7 @@ function AuthoringView({
               <li>No free-form prompts or external media</li>
             </ul>
           </div>
+          <AIPanel settings={aiSettings} onChange={onAISettings} />
         </aside>
       </div>
     </>

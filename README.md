@@ -4,14 +4,14 @@ A local-first adaptive learning engine for people who learn on their own.
 
 Cairn imports your notes, textbooks, and labs, builds a skill map, diagnoses where you are, and adapts difficulty, help, and review. Every decision is visible and overridable. AI is optional.
 
-Status: content schema, engine core, CLI, Docker pack, and Tauri app with SQLite storage, folder import, AI controls, history, a review calendar, pack authoring v0.1, and a working session view. Form-based authoring is next.
+Status: content schema, engine core, CLI, Docker pack, and Tauri app with SQLite storage, folder import, AI controls, history, a review calendar, form-based pack authoring, material import, AI practice generation, and a working session view. Badges, challenges, and a pilot are next.
 
 ## What is built
 
 - `@cairn/content`: Zod schemas for packs, items, rubrics, labs, and policy, plus cross-field validation.
 - `@cairn/engine`: BKT-lite, review scheduling, next-activity policy, decision explanations, learner state, and an in-memory storage adapter.
 - `@cairn/cli`: validate, inspect, and simulate packs against the real engine.
-- `@cairn/desktop`: Tauri v2, React, and TypeScript app with SQLite storage, folder import, session view, mastery map, due review, review calendar, recent history, local Ollama AI controls, overrides, and pack authoring v0.1.
+- `@cairn/desktop`: Tauri v2, React, and TypeScript app with SQLite storage, folder import, session view, mastery map, due review, review calendar, recent history, local Ollama AI controls, overrides, form-based pack authoring, Markdown/HTML/DOCX/EPUB/PDF import, and AI-assisted practice generation.
 - Tests for schema validation, BKT, review scheduling, policy decisions, learner export, import, and deterministic simulation.
 
 ## Try it

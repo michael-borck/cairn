@@ -37,13 +37,22 @@ Built:
   by default, hints are optional, and AI output is never recorded as learner
   evidence. Pull a model first, for example `ollama pull llama3.1:8b`, then set
   the model name in the AI panel.
-- Pack authoring v0.1: edit pack JSON, validate with the real schema, save to
-  the local library, import a draft, and export through the native save dialog.
+- Pack authoring v0.2: form tabs for metadata, modules, skills, items, and
+  policy, plus a raw JSON tab. Validate with the real schema, save to the local
+  library, import a draft, and export through the native save dialog.
+- Material import: Markdown, HTML, DOCX, EPUB, and PDF become a draft pack in
+  the authoring editor. The importer creates explain items and a reflection.
+- AI practice generator: choose a skill, generate three MCQ or short-answer
+  candidates from the imported material, review them, then insert them into the
+  draft. Requires local Ollama and human review.
+- Advanced fields such as hints, media, labs, and rubrics remain in the JSON
+  tab.
 
 Not built yet:
 
-- Form-based skill and item authoring.
+- Better PDF heading and section detection.
 - More AI providers beyond local Ollama.
+- Badges and optional challenge modes.
 - Mobile targets.
 
 Keep Rust limited to shell commands, storage, keychain access, and packaging.
