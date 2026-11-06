@@ -36,10 +36,12 @@ Built:
   by default, hints are optional, and AI output is never recorded as learner
   evidence. Pull a model first, for example `ollama pull llama3.1:8b`, then set
   the model name in the AI panel.
+- Pack authoring v0.1: edit pack JSON, validate with the real schema, save to
+  the local library, import a draft, and export through the native save dialog.
 
 Not built yet:
 
-- Pack authoring and export.
+- Form-based skill and item authoring.
 - A full review calendar.
 - More AI providers beyond local Ollama.
 - Mobile targets.

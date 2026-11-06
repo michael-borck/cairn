@@ -22,6 +22,15 @@ fn health() -> &'static str {
 }
 
 #[tauri::command]
+fn write_text_file(path: String, contents: String) -> Result<(), String> {
+    let path = PathBuf::from(path);
+    if path.extension().and_then(|ext| ext.to_str()) != Some("json") {
+        return Err("Only .json pack files can be written.".into());
+    }
+    fs::write(&path, contents).map_err(|error| error.to_string())
+}
+
+#[tauri::command]
 async fn ollama_chat(
     base_url: String,
     model: String,
@@ -106,7 +115,12 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_sql::Builder::default().build())
-        .invoke_handler(tauri::generate_handler![health, read_pack_dir, ollama_chat])
+        .invoke_handler(tauri::generate_handler![
+            health,
+            read_pack_dir,
+            write_text_file,
+            ollama_chat
+        ])
         .run(tauri::generate_context!())
         .expect("error while running the Cairn app");
 }
@@ -121,6 +135,18 @@ mod tests {
         assert!(super::local_base_url("http://127.0.0.1:11434").is_ok());
         assert!(super::local_base_url("http://localhost:11434").is_ok());
         assert!(super::local_base_url("https://example.com").is_err());
+    }
+
+    #[test]
+    fn writes_a_json_pack_file() {
+        let path = std::env::temp_dir().join("cairn-test-pack.json");
+        super::write_text_file(
+            path.to_string_lossy().to_string(),
+            "{\"ok\":true}".to_string(),
+        )
+        .unwrap();
+        assert_eq!(std::fs::read_to_string(&path).unwrap(), "{\"ok\":true}");
+        let _ = std::fs::remove_file(path);
     }
 
     #[test]

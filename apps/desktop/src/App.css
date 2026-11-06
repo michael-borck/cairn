@@ -294,6 +294,58 @@ textarea {
   padding: 26px;
 }
 
+.authoring-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.authoring-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.authoring-toolbar .muted {
+  flex-basis: 100%;
+}
+
+.authoring-editor {
+  flex: 1;
+  min-height: 58vh;
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  tab-size: 2;
+}
+
+.draft-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.draft-list.errors li {
+  color: var(--danger);
+  margin-bottom: 5px;
+}
+
+.draft-list.warnings li {
+  color: var(--accent);
+  margin-bottom: 5px;
+}
+
+.checklist {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
 .right-rail {
   display: flex;
   flex-direction: column;

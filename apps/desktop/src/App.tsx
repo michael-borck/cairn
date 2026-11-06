@@ -14,6 +14,13 @@ import {
 
 import "./App.css";
 import {
+  exportPack,
+  formatPackText,
+  starterPackText,
+  validatePackText,
+  type DraftResult,
+} from "./authoring";
+import {
   askOllama,
   feedbackPrompt,
   hintPrompt,
@@ -120,6 +127,10 @@ function App() {
     "Open the built-in Docker pack or import a .json pack."
   );
   const [error, setError] = useState(false);
+  const [authoring, setAuthoring] = useState(false);
+  const [draft, setDraft] = useState("");
+  const [draftResult, setDraftResult] = useState<DraftResult | null>(null);
+  const [draftMessage, setDraftMessage] = useState("");
   const activityStartedAt = useRef(Date.now());
 
   const currentItem =
@@ -407,6 +418,84 @@ function App() {
     }
   }
 
+  function startNewPack(): void {
+    setAuthoring(true);
+    setDraft(starterPackText());
+    setDraftResult(null);
+    setDraftMessage("Starter pack loaded. Edit the JSON, then validate.");
+    setError(false);
+  }
+
+  function editActivePack(): void {
+    if (!active) return;
+    setAuthoring(true);
+    setDraft(JSON.stringify(active.pack, null, 2));
+    setDraftResult(null);
+    setDraftMessage("Editing the loaded pack. Saving replaces the local copy.");
+    setError(false);
+  }
+
+  function validateDraft(): DraftResult {
+    const result = validatePackText(draft);
+    setDraftResult(result);
+    setDraftMessage(
+      result.errors.length === 0
+        ? result.warnings.length === 0
+          ? "Valid pack."
+          : `Valid with ${result.warnings.length} warning(s).`
+        : `${result.errors.length} error(s). Fix them before saving.`
+    );
+    return result;
+  }
+
+  function formatDraft(): void {
+    try {
+      setDraft(formatPackText(draft));
+      setDraftResult(null);
+      setDraftMessage("JSON formatted.");
+    } catch (cause) {
+      setDraftResult({
+        errors: [
+          `JSON: ${cause instanceof Error ? cause.message : String(cause)}`,
+        ],
+        warnings: [],
+      });
+      setDraftMessage("Could not format invalid JSON.");
+    }
+  }
+
+  async function saveDraft(): Promise<void> {
+    const result = validateDraft();
+    if (!result.pack) return;
+    saveImportedPack(result.pack);
+    const entry = entryForPack(result.pack, "local");
+    setPacks((current) => [
+      entry,
+      ...current.filter((item) => item.id !== entry.id),
+    ]);
+    await openPack(entry);
+    setAuthoring(false);
+    setMessage(`Saved ${result.pack.manifest.title} to the local library.`);
+  }
+
+  async function exportDraft(): Promise<void> {
+    const result = validateDraft();
+    if (!result.pack) return;
+    const exported = await exportPack(result.pack);
+    setDraftMessage(exported ? "Pack exported." : "Export cancelled.");
+  }
+
+  async function importDraft(file: File | undefined): Promise<void> {
+    if (!file) return;
+    try {
+      setDraft(await file.text());
+      setDraftResult(null);
+      setDraftMessage("Imported draft. Validate before saving.");
+    } catch (cause) {
+      setDraftMessage(cause instanceof Error ? cause.message : String(cause));
+    }
+  }
+
   async function importFolder(): Promise<void> {
     setBusy(true);
     setError(false);
@@ -521,6 +610,15 @@ function App() {
           ))}
         </div>
 
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={startNewPack}
+          disabled={busy}
+        >
+          New pack
+        </button>
+
         <label className="import-button">
           Import pack
           <input
@@ -558,7 +656,25 @@ function App() {
       </aside>
 
       <main className="main">
-        {!active ? (
+        {authoring ? (
+          <AuthoringView
+            draft={draft}
+            result={draftResult}
+            message={draftMessage}
+            busy={busy}
+            onDraft={setDraft}
+            onValidate={() => void validateDraft()}
+            onSave={() => void saveDraft()}
+            onExport={() => void exportDraft()}
+            onFormat={formatDraft}
+            onBack={() => {
+              setAuthoring(false);
+              setDraftResult(null);
+              setDraftMessage("");
+            }}
+            onImport={(file) => void importDraft(file)}
+          />
+        ) : !active ? (
           <>
             <section className="hero">
               <p className="eyebrow">Local-first adaptive learning</p>
@@ -598,6 +714,14 @@ function App() {
                 <p className="lede">{active.pack.manifest.description}</p>
               </div>
               <div className="pack-actions">
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={editActivePack}
+                  disabled={busy}
+                >
+                  Edit pack
+                </button>
                 <button
                   type="button"
                   className="button"
@@ -686,6 +810,165 @@ function App() {
         </footer>
       </main>
     </div>
+  );
+}
+
+function AuthoringView({
+  draft,
+  result,
+  message,
+  busy,
+  onDraft,
+  onValidate,
+  onSave,
+  onExport,
+  onFormat,
+  onBack,
+  onImport,
+}: {
+  draft: string;
+  result: DraftResult | null;
+  message: string;
+  busy: boolean;
+  onDraft: (value: string) => void;
+  onValidate: () => void;
+  onSave: () => void;
+  onExport: () => void;
+  onFormat: () => void;
+  onBack: () => void;
+  onImport: (file: File | undefined) => void;
+}) {
+  const errors = result?.errors ?? [];
+  const warnings = result?.warnings ?? [];
+  return (
+    <>
+      <header className="pack-head">
+        <div>
+          <p className="eyebrow">Authoring</p>
+          <h1>Pack editor</h1>
+          <p className="lede">
+            Edit the JSON pack, validate it against the real schema, then save it
+            to the local library or export it as a file.
+          </p>
+        </div>
+        <div className="pack-actions">
+          <button type="button" className="ghost-button" onClick={onBack}>
+            Back
+          </button>
+        </div>
+      </header>
+
+      <div className="workspace">
+        <section className="session-card authoring-card">
+          <div className="authoring-toolbar">
+            <button
+              type="button"
+              className="button"
+              onClick={onValidate}
+              disabled={busy}
+            >
+              Validate
+            </button>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={onSave}
+              disabled={busy}
+            >
+              Save to library
+            </button>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={onExport}
+              disabled={busy}
+            >
+              Export
+            </button>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={onFormat}
+              disabled={busy}
+            >
+              Format JSON
+            </button>
+            <label className="ghost-button small">
+              Import draft
+              <input
+                type="file"
+                accept=".json,application/json"
+                hidden
+                onChange={(event) => {
+                  onImport(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
+              />
+            </label>
+            <span className="muted">{message}</span>
+          </div>
+          <textarea
+            className="authoring-editor"
+            value={draft}
+            onChange={(event) => onDraft(event.target.value)}
+            spellCheck={false}
+            aria-label="Pack JSON"
+          />
+        </section>
+
+        <aside className="right-rail">
+          <div className="panel">
+            <div className="panel-head">
+              <h2>Validation</h2>
+              <span>
+                {errors.length
+                  ? `${errors.length} errors`
+                  : warnings.length
+                    ? `${warnings.length} warnings`
+                    : result
+                      ? "ok"
+                      : "not run"}
+              </span>
+            </div>
+            {!result ? (
+              <p>Run validate before saving.</p>
+            ) : errors.length === 0 && warnings.length === 0 ? (
+              <p>Valid pack. Save it to the local library or export it.</p>
+            ) : (
+              <>
+                {errors.length > 0 && (
+                  <ul className="draft-list errors">
+                    {errors.map((error) => (
+                      <li key={error}>{error}</li>
+                    ))}
+                  </ul>
+                )}
+                {warnings.length > 0 && (
+                  <ul className="draft-list warnings">
+                    {warnings.map((warning) => (
+                      <li key={warning}>{warning}</li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </div>
+
+          <div className="panel">
+            <div className="panel-head">
+              <h2>Checklist</h2>
+            </div>
+            <ul className="checklist">
+              <li>Manifest id, version, licence, and entries</li>
+              <li>Skills with prerequisites and mastery thresholds</li>
+              <li>Items linked to skills and misconceptions</li>
+              <li>Policy thresholds and review intervals</li>
+              <li>No free-form prompts or external media</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </>
   );
 }
 
