@@ -392,6 +392,20 @@ textarea {
   background: linear-gradient(90deg, var(--accent-2), var(--accent));
 }
 
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.review-row:first-of-type {
+  border-top: 0;
+}
+
 .overview,
 .complete {
   display: flex;

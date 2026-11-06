@@ -24,20 +24,21 @@ connected.
 
 Built:
 
-- Built-in Docker pack and `.json` pack import.
+- Built-in Docker pack, `.json` pack import, and folder import through the
+  native dialog.
 - Session view for explain, worked example, MCQ, short answer, teach-back,
   reflection, and learner-run labs.
-- Mastery map and "why this?" decision panel.
+- Mastery map, due-review panel, and "why this?" decision panel.
 - Easier, harder, more help, and less help overrides.
-- Learner state and decisions in local storage.
+- SQLite storage through `tauri-plugin-sql`, with local-storage fallback in the
+  browser.
 
 Not built yet:
 
-- Directory pack import.
-- SQLite storage adapter.
 - AI controls and AI-backed hints.
 - Pack authoring and export.
-- Session history and review calendar.
+- Full session history and a review calendar.
+- Mobile targets.
 
 Keep Rust limited to shell commands, storage, keychain access, and packaging.
 The engine stays in TypeScript.

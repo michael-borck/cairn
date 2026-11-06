@@ -9,10 +9,12 @@ import {
   type EvidenceEvent,
   type Explanation,
   type LearnerState,
+  type ReviewItem,
 } from "@cairn/engine";
 
 import "./App.css";
 import {
+  choosePackDirectory,
   entryForPack,
   loadBuiltinPacks,
   loadImportedPack,
@@ -21,7 +23,7 @@ import {
   saveImportedPack,
   type PackEntry,
 } from "./packs";
-import { createLocalStorage, resetLearner } from "./storage";
+import { createPersistentStorage, type AppStorage } from "./storage";
 
 const LEARNER_ID = "local";
 const ACTION_LABEL: Record<Decision["action"], string> = {
@@ -90,7 +92,9 @@ function App() {
     pack: ContentPack;
   } | null>(null);
   const [engine, setEngine] = useState<AdaptiveEngine | null>(null);
+  const [store, setStore] = useState<AppStorage | null>(null);
   const [learner, setLearner] = useState<LearnerState | null>(null);
+  const [reviewQueue, setReviewQueue] = useState<ReviewItem[]>([]);
   const [decision, setDecision] = useState<Decision | null>(null);
   const [explanation, setExplanation] = useState<Explanation | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
@@ -119,8 +123,16 @@ function App() {
     activityStartedAt.current = Date.now();
   }
 
+  async function getStorage(): Promise<AppStorage> {
+    if (store) return store;
+    const next = await createPersistentStorage();
+    setStore(next);
+    return next;
+  }
+
   async function refresh(nextEngine: AdaptiveEngine): Promise<void> {
     setLearner(await nextEngine.getState(LEARNER_ID));
+    setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
   }
 
   async function openPack(entry: PackEntry): Promise<void> {
@@ -129,9 +141,10 @@ function App() {
     setMessage(`Loading ${entry.title}...`);
     try {
       const pack = await loadPack(entry);
+      const storage = await getStorage();
       const nextEngine = createEngine({
         pack,
-        storage: createLocalStorage(),
+        storage,
         now: () => new Date(),
         idFactory: newId,
       });
@@ -139,6 +152,7 @@ function App() {
       setActive({ entry, pack });
       setEngine(nextEngine);
       setLearner(state);
+      setReviewQueue(await nextEngine.reviewQueue(LEARNER_ID));
       setDecision(null);
       setExplanation(null);
       resetActivity();
@@ -333,6 +347,32 @@ function App() {
     }
   }
 
+  async function importFolder(): Promise<void> {
+    setBusy(true);
+    setError(false);
+    setMessage("Choose a pack folder...");
+    try {
+      const pack = await choosePackDirectory();
+      if (!pack) {
+        setMessage("Folder import cancelled.");
+        return;
+      }
+      saveImportedPack(pack);
+      const entry = entryForPack(pack, "local");
+      setPacks((current) => [
+        entry,
+        ...current.filter((item) => item.id !== entry.id),
+      ]);
+      await openPack(entry);
+      setMessage(`Imported ${pack.manifest.title}.`);
+    } catch (cause) {
+      setError(true);
+      setMessage(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function importPack(file: File | undefined): Promise<void> {
     if (!file) return;
     setBusy(true);
@@ -358,8 +398,10 @@ function App() {
 
   async function resetProgress(): Promise<void> {
     if (!engine) return;
-    resetLearner(LEARNER_ID);
+    const storage = await getStorage();
+    await storage.reset(LEARNER_ID);
     setLearner(await engine.getState(LEARNER_ID));
+    setReviewQueue(await engine.reviewQueue(LEARNER_ID));
     setDecision(null);
     setExplanation(null);
     resetActivity();
@@ -430,6 +472,14 @@ function App() {
             }}
           />
         </label>
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => void importFolder()}
+          disabled={busy}
+        >
+          Import folder
+        </button>
 
         <button
           type="button"
@@ -556,6 +606,7 @@ function App() {
                   onOverride={(type) => void applyOverride(type)}
                 />
                 <MasteryMap pack={active.pack} learner={learner} />
+                <ReviewPanel pack={active.pack} items={reviewQueue} />
               </aside>
             </div>
           </>
@@ -705,6 +756,38 @@ function MasteryMap({
           })}
         </div>
       ))}
+    </div>
+  );
+}
+
+function ReviewPanel({
+  pack,
+  items,
+}: {
+  pack: ContentPack;
+  items: ReviewItem[];
+}) {
+  return (
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Due review</h2>
+        <span>{items.length}</span>
+      </div>
+      {items.length === 0 ? (
+        <p>Nothing due.</p>
+      ) : (
+        items.map((item) => {
+          const skill = pack.curriculum.skills.find(
+            (entry) => entry.id === item.skillId
+          );
+          return (
+            <div key={item.skillId} className="review-row">
+              <span>{skill?.title ?? item.skillId}</span>
+              <span>{percent(item.mastery)}</span>
+            </div>
+          );
+        })
+      )}
     </div>
   );
 }

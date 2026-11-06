@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core";
 import { validatePack, type ContentPack } from "@cairn/content";
 
 export type PackSource = "builtin" | "local";
@@ -66,6 +67,18 @@ export function saveImportedPack(pack: ContentPack): void {
 export async function readPackFile(file: File): Promise<ContentPack> {
   const text = await file.text();
   return requirePack(JSON.parse(text));
+}
+
+export async function choosePackDirectory(): Promise<ContentPack | null> {
+  const { open } = await import("@tauri-apps/plugin-dialog");
+  const selected = await open({
+    directory: true,
+    multiple: false,
+    title: "Open a Cairn pack folder",
+  });
+  if (typeof selected !== "string") return null;
+  const input = await invoke<unknown>("read_pack_dir", { path: selected });
+  return requirePack(input);
 }
 
 export async function loadPack(entry: PackEntry): Promise<ContentPack> {
