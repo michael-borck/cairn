@@ -38,6 +38,8 @@ interface SkillState {
   reviewIntervalDays: number;
   misconceptions: Record<string, number>;
   difficultyElo: number;
+  consecutiveWrong: number;
+  consecutiveCorrect: number;
 }
 
 interface CalibrationState {

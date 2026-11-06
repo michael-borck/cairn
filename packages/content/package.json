@@ -3,5 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Content pack schema, validator, and importers."
+  "description": "Content pack schema, validator, and importers.",
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  }
 }

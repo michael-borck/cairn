@@ -96,12 +96,13 @@ Rules:
 
 ## items.json
 
-Items are a discriminated union on `type`. V1 types: `mcq`, `short_answer`, `teach_back`, `worked_example`, `lab`, `reflection`.
+Items are a discriminated union on `type`. V1 types: `explain`, `mcq`, `short_answer`, `teach_back`, `worked_example`, `lab`, `reflection`.
 
 ### Base fields
 
 ```ts
 type ItemType =
+  | "explain"
   | "mcq"
   | "short_answer"
   | "teach_back"
@@ -147,6 +148,15 @@ interface SourceRef {
 ### Item types
 
 ```ts
+interface ExplainItem extends ItemBase {
+  type: "explain";
+  body: string;
+  check?: {
+    prompt: string;
+    answer: string;
+  };
+}
+
 interface MCQItem extends ItemBase {
   type: "mcq";
   options: {
