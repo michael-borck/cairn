@@ -5,8 +5,8 @@
   "type": "module",
   "description": "Cairn desktop app.",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "node scripts/bundle-packs.mjs && vite",
+    "build": "node scripts/bundle-packs.mjs && tsc && vite build && node scripts/clean-dotfiles.mjs",
     "preview": "vite preview",
     "tauri": "node scripts/tauri.mjs",
     "typecheck": "tsc --noEmit"

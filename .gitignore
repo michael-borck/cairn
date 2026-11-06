@@ -37,6 +37,7 @@ Thumbs.db
 !.vscode/extensions.json
 
 # Tauri
+apps/desktop/public/packs/
 apps/desktop/src-tauri/target/
 apps/desktop/src-tauri/gen/
 
