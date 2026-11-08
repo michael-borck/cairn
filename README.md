@@ -77,6 +77,7 @@ docs/
 - [Future work](docs/future-work.md)
 - [Interactive fiction with Ink](docs/ideas/interactive-fiction-ink.md)
 - [Adaptive model research log](docs/research/2026-11-09-adaptive-model-design.md)
+- [Cairn build session transcript](docs/research/transcripts/2026-11-06-cairn-build-session.md)
 - [Ledgers research prototype](research/ledgers/README.md)
 
 ## Contributing
