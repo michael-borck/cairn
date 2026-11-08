@@ -79,6 +79,7 @@ docs/
 - [Adaptive model research log](docs/research/2026-11-09-adaptive-model-design.md)
 - [Cairn build session transcript](docs/research/transcripts/2026-11-06-cairn-build-session.md)
 - [Ledgers research prototype](research/ledgers/README.md)
+- [Gemini Cognitive Foraging synthesis](research/external/2026-11-09-gemini-cognitive-foraging/README.md)
 
 ## Contributing
 

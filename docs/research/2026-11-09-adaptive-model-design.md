@@ -3,6 +3,7 @@
 - Status: Research log, not a decision
 - Related: [Adaptive methods audit](../spec/adaptive-methods-audit.md), [ADR 0011](../adr/0011-incorporate-ledgers-research-prototype.md), [Ledgers prototype](../../research/ledgers/README.md)
 - Raw transcript: [Cairn build session](transcripts/2026-11-06-cairn-build-session.md)
+- External synthesis: [Gemini Cognitive Foraging and Wayfinder](../../research/external/2026-11-09-gemini-cognitive-foraging/README.md)
 
 ## Why this log exists
 

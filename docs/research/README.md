@@ -5,6 +5,7 @@ Research logs are exploratory. They are not decisions.
 - [Adaptive model design log, 2026-11-09](2026-11-09-adaptive-model-design.md)
 - [Ledgers research prototype](../../research/ledgers/README.md)
 - [Raw transcripts](transcripts/README.md)
+- [External research](../../research/external/README.md)
 
 ## What belongs where
 

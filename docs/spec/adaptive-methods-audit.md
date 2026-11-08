@@ -5,6 +5,7 @@
 - Scope: engine policy, learner model, and pack policy fields
 - Code at time of writing: `packages/engine/src/policy.ts`, `packages/engine/src/engine.ts`, `packages/engine/src/types.ts`, `packages/content/src/schema.ts`
 - Research prototype: [`research/ledgers`](../../research/ledgers/README.md)
+- External synthesis: [Gemini Cognitive Foraging](../../research/external/2026-11-09-gemini-cognitive-foraging/README.md)
 
 ## Summary
 

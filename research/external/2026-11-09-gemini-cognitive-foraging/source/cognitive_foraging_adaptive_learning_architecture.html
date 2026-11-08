@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cognitive Foraging & Wayfinder Controller Architecture</title>
+    <!-- Chosen Palette: Warm Sand, Sage & Slate -->
+    <!-- Application Structure Plan: 
+         The SPA is structured into 7 primary interactive modules to transform a dense academic/engineering blueprint into an explorable dashboard:
+         1. Hero & Paradigm Shift: Quick executive metrics + interactive comparison between traditional difficulty dials and cognitive foraging.
+         2. Taxonomy & Theoretical Lenses: Searchable matrix of edtech lineages and an interactive drawer for the 7 borrowed interdisciplinary lenses.
+         3. Formal State Model & Multi-Scale Architecture: Visualizer for the 7-dimension Beta belief state and an interactive 4-timescale coordinator workflow.
+         4. Productive Surprise & Apprenticeship Matrix: Interactive 2x2 diagnostic quadrant (Accuracy vs Confidence vs Speed) triggering targeted cognitive roles.
+         5. Git Merge Conflict Execution Trace: Interactive step-by-step visualizer comparing standard practice vs. Wayfinder's 3-step MPC trajectory.
+         6. Empirical Benchmark Simulator & Policy Sandbox: Live Chart.js visualization of Monte Carlo results across 5 synthetic archetypes + real-time mathematical ETL/UA trajectory scorer where users manipulate state variables.
+         7. Implementation Roadmap & Guardrail Directory: 7-stage production launch guide and an interactive anti-pattern lookup table.
+         Why: This structure allows researchers, learning engineers, and system architects to navigate from high-level theoretical foundations down to real-time algorithmic execution and production safety guardrails.
+    -->
+    <!-- Visualization & Content Choices:
+         - Lineage Taxonomy: Dynamic HTML table with search filter.
+         - 7 Borrowed Lenses: Interactive HTML card grid updating a detail focus pane.
+         - Productive Surprise Matrix: HTML 2x2 dynamic grid mapping (Latency, Confidence, Accuracy) to pedagogical actions and transparent explanations.
+         - Git Execution Trace: Multi-step interactive stepper with live math balance table.
+         - Benchmark Performance: Chart.js Bar and Radar charts comparing 4 controller policies across 5 learner archetypes.
+         - Interactive Scorer: Custom Vanilla JS sandbox calculating ETL/UA scores live based on slider inputs.
+         - Confirmation: NO SVG graphics used (styled HTML/CSS icons & standard Unicode characters used). NO Mermaid JS used. Chart rendering via Canvas.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 380px;
+            }
+        }
+        .tab-btn.active {
+            border-bottom-color: #0d9488;
+            color: #0f766e;
+            font-weight: 600;
+            background-color: #f0fdf4;
+        }
+        .quadrant-card:hover {
+            transform: translateY(-2px);
+            transition: all 0.2s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header / Hero Banner -->
+    <header class="bg-stone-900 text-stone-100 border-b border-stone-800 shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded text-xs font-semibold bg-emerald-900 text-emerald-200 border border-emerald-700">Architecture Blueprint</span>
+                        <span class="text-xs text-stone-400">IEEE AIS / AIED Specification</span>
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-tight text-white mt-1">
+                        Cognitive Foraging & The Wayfinder Controller
+                    </h1>
+                    <p class="text-xs md:text-sm text-stone-300">
+                        Multi-Scale Adaptive Instructional Systems Engine Architecture
+                    </p>
+                </div>
+                
+                <!-- Quick Metric Highlights -->
+                <div class="grid grid-cols-4 gap-2 bg-stone-800 p-2 rounded-lg border border-stone-700 text-center text-xs">
+                    <div class="px-2 border-r border-stone-700">
+                        <div class="text-emerald-400 font-bold text-sm md:text-base">2.56x</div>
+                        <div class="text-stone-400 text-[10px]">14D Retention</div>
+                    </div>
+                    <div class="px-2 border-r border-stone-700">
+                        <div class="text-teal-400 font-bold text-sm md:text-base">7.81x</div>
+                        <div class="text-stone-400 text-[10px]">Far Transfer</div>
+                    </div>
+                    <div class="px-2 border-r border-stone-700">
+                        <div class="text-amber-400 font-bold text-sm md:text-base">-81%</div>
+                        <div class="text-stone-400 text-[10px]">Wheel-Spinning</div>
+                    </div>
+                    <div class="px-2">
+                        <div class="text-cyan-400 font-bold text-sm md:text-base">4</div>
+                        <div class="text-stone-400 text-[10px]">Timescales</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Navigation Tabs -->
+            <nav class="flex overflow-x-auto space-x-1 mt-4 pt-2 border-t border-stone-800 text-xs md:text-sm no-scrollbar">
+                <button onclick="switchTab('paradigm')" id="tab-paradigm" class="tab-btn active px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    1. Core Claims & Paradigm Shift
+                </button>
+                <button onclick="switchTab('taxonomy')" id="tab-taxonomy" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    2. Taxonomy & 7 Borrowed Lenses
+                </button>
+                <button onclick="switchTab('math')" id="tab-math" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    3. State Model & 4-Scale Control
+                </button>
+                <button onclick="switchTab('surprise')" id="tab-surprise" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    4. Productive Surprise Matrix
+                </button>
+                <button onclick="switchTab('trace')" id="tab-trace" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    5. Git Conflict Execution Trace
+                </button>
+                <button onclick="switchTab('sandbox')" id="tab-sandbox" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    6. Benchmark & Policy Sandbox
+                </button>
+                <button onclick="switchTab('roadmap')" id="tab-roadmap" class="tab-btn px-3 py-2 rounded-t-md whitespace-nowrap text-stone-300 hover:text-white transition">
+                    7. Implementation & Guardrails
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- TAB 1: PARADIGM SHIFT -->
+        <section id="sec-paradigm" class="space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">Reframing Learning Systems: From Difficulty Dials to Cognitive Foraging</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Traditional adaptive instructional software treats learning as a linear curriculum with an adjustable difficulty dial—typically tuning item difficulty to target a static ~85% success rate. Cognitive Foraging rejects this model. Human learning is not homogeneous gradient descent; it is an ecological search for useful knowledge patches under resource depletion, memory decay, and structural misconceptions.
+                </p>
+            </div>
+
+            <!-- Comparison Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Traditional Model -->
+                <div class="bg-red-50/50 p-6 rounded-xl border border-red-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-red-200 pb-3">
+                        <h3 class="font-bold text-red-900 flex items-center gap-2">
+                            <span>&#9888;</span> Traditional Adaptive Model
+                        </h3>
+                        <span class="text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded font-mono">Difficulty Dial</span>
+                    </div>
+                    <ul class="space-y-2 text-xs md:text-sm text-red-900">
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold">&times;</span>
+                            <div><strong>Objective:</strong> Maximize immediate item accuracy or target a fixed scalar (e.g., 85% correct).</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold">&times;</span>
+                            <div><strong>State Model:</strong> Single mastery scalar ($p_k$) that ignores epistemic uncertainty and misconceptions.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold">&times;</span>
+                            <div><strong>Path Rule:</strong> Serves standard items continuously until a high threshold is crossed, triggering "wheel-spinning".</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-red-500 font-bold">&times;</span>
+                            <div><strong>Review Logic:</strong> External spaced-repetition scheduler fights against the primary mastery controller.</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Cognitive Foraging Model -->
+                <div class="bg-emerald-50/50 p-6 rounded-xl border border-emerald-200 space-y-4">
+                    <div class="flex items-center justify-between border-b border-emerald-200 pb-3">
+                        <h3 class="font-bold text-emerald-900 flex items-center gap-2">
+                            <span>&#10004;</span> Cognitive Foraging & Wayfinder
+                        </h3>
+                        <span class="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono">Optimal Controller</span>
+                    </div>
+                    <ul class="space-y-2 text-xs md:text-sm text-emerald-900">
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">&#10003;</span>
+                            <div><strong>Objective:</strong> Maximize <em>Expected Transferable Learning per Unit of Attention (ETL/UA)</em>.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">&#10003;</span>
+                            <div><strong>State Model:</strong> Factored Beta distribution $M_k \sim \text{Beta}(\alpha, \beta)$, variance $\sigma_k^2$, bug vector $\hat{\mu}_k$, and transfer $\hat{\tau}_k$.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">&#10003;</span>
+                            <div><strong>Foraging Rule:</strong> Departs a skill patch when marginal rate $\hat{\lambda}_k$ drops below best available alternative.</div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-emerald-600 font-bold">&#10003;</span>
+                            <div><strong>Unified Review:</strong> Spaced retrieval is organically modeled as patch return during memory regeneration.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- The Three Core Foraging Questions -->
+            <div class="bg-stone-900 text-stone-100 p-6 rounded-xl border border-stone-800">
+                <h3 class="text-base font-bold text-emerald-400 mb-4">The Three Core Questions Wayfinder Answers Continuously</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs md:text-sm">
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700">
+                        <div class="text-amber-400 font-bold mb-1">1. Readiness</div>
+                        <p class="text-stone-300"><em>What is the learner ready to learn next?</em></p>
+                        <p class="text-stone-400 text-xs mt-2">Determined via Knowledge Space Theory outer fringes and prerequisite gating.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700">
+                        <div class="text-teal-400 font-bold mb-1">2. Patch Productivity</div>
+                        <p class="text-stone-300"><em>Is this patch productive, or should we move?</em></p>
+                        <p class="text-stone-400 text-xs mt-2">Calculated by comparing local marginal learning rate $\hat{\lambda}_k$ to switching costs.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700">
+                        <div class="text-cyan-400 font-bold mb-1">3. Transferability</div>
+                        <p class="text-stone-300"><em>Will this help later, in a new context?</em></p>
+                        <p class="text-stone-400 text-xs mt-2">Evaluated via context-transfer coupling matrices and curriculum option value.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: TAXONOMY & 7 BORROWED LENSES -->
+        <section id="sec-taxonomy" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">EdTech Taxonomy & Interdisciplinary Theoretical Lenses</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Adaptive learning draws on disparate research lineages—ITS, CAT, Knowledge Tracing, KST, and AIS. Wayfinder synthesizes these lineages by borrowing seven operational lenses from ecology, control theory, information theory, statistical physics, immunology, apprenticeship, and economics.
+                </p>
+            </div>
+
+            <!-- Interdisciplinary Lenses Interactive Cards -->
+            <div class="space-y-4">
+                <h3 class="text-base font-bold text-stone-900">The 7 Interdisciplinary Lenses of Wayfinder (Click a lens to examine specification)</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2" id="lens-buttons">
+                    <button onclick="selectLens('ecology')" id="lens-btn-ecology" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#127793;</div>
+                        <div class="text-xs font-bold text-stone-800">1. Ecology</div>
+                    </button>
+                    <button onclick="selectLens('control')" id="lens-btn-control" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#127919;</div>
+                        <div class="text-xs font-bold text-stone-800">2. Control</div>
+                    </button>
+                    <button onclick="selectLens('info')" id="lens-btn-info" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#128269;</div>
+                        <div class="text-xs font-bold text-stone-800">3. Info Theory</div>
+                    </button>
+                    <button onclick="selectLens('physics')" id="lens-btn-physics" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#9889;</div>
+                        <div class="text-xs font-bold text-stone-800">4. Physics</div>
+                    </button>
+                    <button onclick="selectLens('immunology')" id="lens-btn-immunology" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#128737;</div>
+                        <div class="text-xs font-bold text-stone-800">5. Immunology</div>
+                    </button>
+                    <button onclick="selectLens('apprenticeship')" id="lens-btn-apprenticeship" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#127917;</div>
+                        <div class="text-xs font-bold text-stone-800">6. Role/Scaffold</div>
+                    </button>
+                    <button onclick="selectLens('economics')" id="lens-btn-economics" class="p-3 rounded-lg border bg-white border-stone-300 text-center hover:border-emerald-500 transition">
+                        <div class="text-lg mb-1">&#128200;</div>
+                        <div class="text-xs font-bold text-stone-800">7. Economics</div>
+                    </button>
+                </div>
+
+                <!-- Active Lens Focus Drawer -->
+                <div id="lens-detail-box" class="bg-emerald-950 text-emerald-100 p-6 rounded-xl border border-emerald-800">
+                    <!-- Dynamic JS content loaded here -->
+                </div>
+            </div>
+
+            <!-- Taxonomy Filter & Table -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <h3 class="text-base font-bold text-stone-900">Lineage Taxonomy Matrix</h3>
+                    <input type="text" id="taxonomy-search" oninput="filterTaxonomy()" placeholder="Search terms (e.g. CAT, BKT, ALEKS)..." class="px-3 py-1.5 text-xs rounded border border-stone-300 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-stone-700 border-collapse">
+                        <thead class="bg-stone-100 text-stone-900 uppercase font-semibold">
+                            <tr>
+                                <th class="p-2.5 border-b">Category</th>
+                                <th class="p-2.5 border-b">Core Term</th>
+                                <th class="p-2.5 border-b">Primary Mechanism</th>
+                                <th class="p-2.5 border-b">Canonical Systems</th>
+                                <th class="p-2.5 border-b">Wayfinder Solution</th>
+                            </tr>
+                        </thead>
+                        <tbody id="taxonomy-tbody" class="divide-y divide-stone-200">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: STATE MODEL & 4-SCALE CONTROL -->
+        <section id="sec-math" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">7-Dimension Distributional State Model & 4-Scale Coordinator</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Wayfinder replaces scalar mastery numbers with a factored Bayesian belief state $\mathcal{B}_t$ across 7 dimensions. To eliminate policy drift, the engine coordinates actions across 4 distinct timescales (Micro, Meso, Macro, Meta).
+                </p>
+            </div>
+
+            <!-- 7 State Dimensions Interactive Grid -->
+            <div class="space-y-4">
+                <h3 class="text-base font-bold text-stone-900">The 7 Learner Belief State Dimensions ($\mathcal{B}_t$)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">1. Mastery Mean & Epistemic Variance</div>
+                        <div class="font-mono text-stone-500">$M_k \sim \text{Beta}(\alpha_k, \beta_k) \implies \sigma_k^2$</div>
+                        <p class="text-stone-600">High variance triggers diagnostic probes; low variance enables transfer tasks.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">2. Misconception Probabilities</div>
+                        <div class="font-mono text-stone-500">$\hat{\boldsymbol{\mu}}_k \in [0, 1]^{B_k}$</div>
+                        <p class="text-stone-600">Tracks active bug patterns. High-confidence errors cause sharp posterior updates.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">3. Context Transfer Strength</div>
+                        <div class="font-mono text-stone-500">$\hat{\tau}_{k,t} \in [0, 1] \text{ via } \mathbf{T}$</div>
+                        <p class="text-stone-600">Measures ability to execute skill in novel contexts; spills over across coupled skills.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">4. Memory Stability & Decay Lag</div>
+                        <div class="font-mono text-stone-500 font-xs">$\hat{S}_{k,t} \in [10, 100], \Delta t_{k,t}$</div>
+                        <p class="text-stone-600">Elapsed lag discounts concentration parameters; retrieval multiplies stability $\hat{S}_k$.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">5. Patch Marginal Rate</div>
+                        <div class="font-mono text-stone-500">$\hat{\lambda}_{k,t} = \Delta p_k / \Delta \text{Attn}$</div>
+                        <p class="text-stone-600">Exponentially weighted gain rate; triggers MVT patch departure when flattened.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">6. Metacognitive Calibration</div>
+                        <div class="font-mono text-stone-500 font-xs">$\text{BS}_t, \text{Bias} = \frac{1}{W}\sum(c_i - y_i)$</div>
+                        <p class="text-stone-600">Rolling Brier score and over/underconfidence bias governing contrast case selection.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 sm:col-span-2 lg:col-span-1 shadow-sm">
+                        <div class="font-bold text-emerald-700">7. Context & Policy Vector</div>
+                        <div class="font-mono text-stone-500">$\mathbf{g}_t = [\hat{F}_t, \text{Mode}, \text{Budget}]$</div>
+                        <p class="text-stone-600">Tracks frustration $\hat{F}_t$, help-seeking style, and learner mode vetoes.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Timescales Coordination Workflow -->
+            <div class="bg-stone-900 text-stone-100 p-6 rounded-xl border border-stone-800 space-y-4">
+                <h3 class="text-base font-bold text-emerald-400">The 4-Timescale Coordination Architecture</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+                    <div class="bg-stone-800 p-4 rounded-lg border-t-4 border-amber-500">
+                        <div class="font-bold text-stone-200 mb-1">Micro Scale</div>
+                        <div class="text-amber-400 text-[11px] mb-2 font-mono">Seconds &rarr; Minutes</div>
+                        <p class="text-stone-400">Step hints, immediate feedback, speed-accuracy latency tracking, and representation switches.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border-t-4 border-teal-500">
+                        <div class="font-bold text-stone-200 mb-1">Meso Scale</div>
+                        <div class="text-teal-400 text-[11px] mb-2 font-mono">Minutes &rarr; Hours</div>
+                        <p class="text-stone-400">MVT patch departure (stay/leave skill), cognitive role shift (Observer &rarr; Practitioner &rarr; Reviewer).</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border-t-4 border-cyan-500">
+                        <div class="font-bold text-stone-200 mb-1">Macro Scale</div>
+                        <div class="text-cyan-400 text-[11px] mb-2 font-mono">Days &rarr; Weeks</div>
+                        <p class="text-stone-400">Path routing over KST outer fringes, prerequisite challenges, and patch-regeneration review scheduling.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border-t-4 border-emerald-500">
+                        <div class="font-bold text-stone-200 mb-1">Meta Scale</div>
+                        <div class="text-emerald-400 text-[11px] mb-2 font-mono">Weeks &rarr; Months</div>
+                        <p class="text-stone-400">Double-loop calibration graph, help-seeking coaching, and user mode negotiation (Explore/Consolidate).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: PRODUCTIVE SURPRISE MATRIX -->
+        <section id="sec-surprise" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">Productive Surprise Diagnostic Regime</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Instead of clamping task accuracy to a single 85% scalar, Wayfinder evaluates accuracy ($y_t$), confidence ($c_t$), and normalized response latency ($z_t$) together to classify learner dynamics into four operational quadrants.
+                </p>
+            </div>
+
+            <!-- Interactive 2x2 Quadrant Grid -->
+            <div class="space-y-4">
+                <h3 class="text-base font-bold text-stone-900">Interactive 2x2 Productive Surprise Matrix (Click any quadrant to test)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="quadrant-grid">
+                    <!-- Quadrant 1: Too Predictable -->
+                    <div onclick="selectQuadrant('predictable')" id="quad-predictable" class="quadrant-card bg-blue-50/70 p-5 rounded-xl border-2 border-blue-200 cursor-pointer space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="font-bold text-blue-900 text-sm">High Conf + High Acc + Fast</span>
+                            <span class="text-xs bg-blue-200 text-blue-900 font-mono px-2 py-0.5 rounded">Predictable</span>
+                        </div>
+                        <div class="text-xs text-blue-800">
+                            <strong>Diagnosis:</strong> Habituation risk. Minimal prediction error; task is too predictable.
+                        </div>
+                    </div>
+
+                    <!-- Quadrant 2: Hypercorrection Window -->
+                    <div onclick="selectQuadrant('hypercorrection')" id="quad-hypercorrection" class="quadrant-card bg-amber-50/70 p-5 rounded-xl border-2 border-amber-300 cursor-pointer space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="font-bold text-amber-900 text-sm">High Conf + Low Acc + Fast/Mod</span>
+                            <span class="text-xs bg-amber-200 text-amber-900 font-mono px-2 py-0.5 rounded">Misconception</span>
+                        </div>
+                        <div class="text-xs text-amber-800">
+                            <strong>Diagnosis:</strong> Hypercorrection Window. Active procedural bug executed with high confidence.
+                        </div>
+                    </div>
+
+                    <!-- Quadrant 3: Fragile Mastery -->
+                    <div onclick="selectQuadrant('fragile')" id="quad-fragile" class="quadrant-card bg-purple-50/70 p-5 rounded-xl border-2 border-purple-200 cursor-pointer space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="font-bold text-purple-900 text-sm">Low Conf + High Acc + Slow</span>
+                            <span class="text-xs bg-purple-200 text-purple-900 font-mono px-2 py-0.5 rounded">Fragile</span>
+                        </div>
+                        <div class="text-xs text-purple-800">
+                            <strong>Diagnosis:</strong> Unconsolidated Mastery. Correct answer reached via slow trial-and-error.
+                        </div>
+                    </div>
+
+                    <!-- Quadrant 4: Too Chaotic -->
+                    <div onclick="selectQuadrant('chaotic')" id="quad-chaotic" class="quadrant-card bg-rose-50/70 p-5 rounded-xl border-2 border-rose-200 cursor-pointer space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="font-bold text-rose-900 text-sm">Low Conf + Low Acc + Slow</span>
+                            <span class="text-xs bg-rose-200 text-rose-900 font-mono px-2 py-0.5 rounded">Chaotic</span>
+                        </div>
+                        <div class="text-xs text-rose-800">
+                            <strong>Diagnosis:</strong> Overload / Wheel-Spinning. Task exceeds current schema or prerequisites.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quadrant Detail Focus Panel -->
+                <div id="quadrant-detail-panel" class="bg-stone-900 text-stone-100 p-6 rounded-xl border border-stone-800 space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 5: GIT CONFLICT EXECUTION TRACE -->
+        <section id="sec-trace" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">Concrete Scenario: Git Merge Conflict Execution Trace</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Consider a learner stuck on <em>Git Merge Conflicts</em> (Skill 2): high confidence ($c=0.88$), two consecutive failures ($y=0$), fast latency ($z=-0.40$), and high bug probability ($\hat{\mu}_2 = 0.804$). See how Wayfinder's 3-step MPC planner acts differently from standard drill.
+                </p>
+            </div>
+
+            <!-- Execution Stepper Controls -->
+            <div class="bg-stone-900 text-white p-6 rounded-xl border border-stone-800 space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-base font-bold text-emerald-400">Wayfinder 3-Step Horizon Trajectory</h3>
+                    <div class="flex items-center gap-2 text-xs">
+                        <button onclick="setTraceStep(1)" id="trace-btn-1" class="px-3 py-1 rounded bg-emerald-600 text-white font-bold">Step 1</button>
+                        <button onclick="setTraceStep(2)" id="trace-btn-2" class="px-3 py-1 rounded bg-stone-700 text-stone-300 font-bold">Step 2</button>
+                        <button onclick="setTraceStep(3)" id="trace-btn-3" class="px-3 py-1 rounded bg-stone-700 text-stone-300 font-bold">Step 3</button>
+                        <button onclick="setTraceStep(4)" id="trace-btn-4" class="px-3 py-1 rounded bg-stone-700 text-stone-300 font-bold">Step 4 (Macro)</button>
+                    </div>
+                </div>
+
+                <!-- Step Detail Box -->
+                <div id="trace-step-display" class="bg-stone-800 p-5 rounded-lg border border-stone-700 space-y-3">
+                    <!-- Dynamic Step Content -->
+                </div>
+            </div>
+
+            <!-- Mathematical Scorer Breakdown Table -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm space-y-4">
+                <h3 class="text-base font-bold text-stone-900">Step 1 Scorer Comparison: Rejected Drill vs Selected Contrast Case</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-xs text-left text-stone-700 border-collapse">
+                        <thead class="bg-stone-100 text-stone-900 font-semibold">
+                            <tr>
+                                <th class="p-2.5 border-b">Objective Component</th>
+                                <th class="p-2.5 border-b">Symbol & Weight</th>
+                                <th class="p-2.5 border-b text-red-700 bg-red-50">Standard Practice (Rejected)</th>
+                                <th class="p-2.5 border-b text-emerald-700 bg-emerald-50">Contrast Case (Selected)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-stone-200">
+                            <tr>
+                                <td class="p-2.5 font-medium">Expected Long-Term Mastery Gain</td>
+                                <td class="p-2.5 font-mono">$w_m \mathbb{E}[\Delta m_2^{\text{long}}]$</td>
+                                <td class="p-2.5 text-red-700 font-mono bg-red-50/50">+0.0099 (depleted $\hat{\lambda}_2$)</td>
+                                <td class="p-2.5 text-emerald-700 font-bold font-mono bg-emerald-50/50">+0.3726 (hypercorrected)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Expected Transfer Gain</td>
+                                <td class="p-2.5 font-mono">$w_\tau \mathbb{E}[\Delta \tau_2]$</td>
+                                <td class="p-2.5 text-red-700 font-mono bg-red-50/50">+0.0576</td>
+                                <td class="p-2.5 text-emerald-700 font-bold font-mono bg-emerald-50/50">+0.0936</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Expected Information Gain</td>
+                                <td class="p-2.5 font-mono">$w_{\text{IG}} \mathbb{E}[\text{IG}_2]$</td>
+                                <td class="p-2.5 text-red-700 font-mono bg-red-50/50">+0.0225</td>
+                                <td class="p-2.5 text-emerald-700 font-bold font-mono bg-emerald-50/50">+0.3262 (pinpoints bug)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Option Value Bonus</td>
+                                <td class="p-2.5 font-mono">$w_{\text{cur}} B_{\text{cur}, 2}$</td>
+                                <td class="p-2.5 font-mono bg-red-50/50">+0.0606</td>
+                                <td class="p-2.5 font-mono bg-emerald-50/50">+0.0606</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Cognitive Load Cost</td>
+                                <td class="p-2.5 font-mono">$-w_{\text{load}} C_{\text{load}}$</td>
+                                <td class="p-2.5 font-mono bg-red-50/50">-0.1050</td>
+                                <td class="p-2.5 font-mono bg-emerald-50/50">-0.1225</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 font-medium">Frustration & Overconfidence Risk</td>
+                                <td class="p-2.5 font-mono">$-w_{\text{risk}} R_{\text{risk}}$</td>
+                                <td class="p-2.5 text-red-700 font-bold font-mono bg-red-50/50">-0.5996 (severe risk)</td>
+                                <td class="p-2.5 text-emerald-700 font-mono bg-emerald-50/50">0.0000</td>
+                            </tr>
+                            <tr class="font-bold border-t-2 border-stone-300">
+                                <td class="p-2.5 text-stone-900">Immediate Step Score ($\mathcal{J}$)</td>
+                                <td class="p-2.5">---</td>
+                                <td class="p-2.5 text-red-700 font-mono bg-red-100">-0.5540</td>
+                                <td class="p-2.5 text-emerald-700 font-mono bg-emerald-100">+0.6351 (+1.1891 diff)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 6: BENCHMARK & POLICY SANDBOX -->
+        <section id="sec-sandbox" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">Empirical Benchmark Simulator & Dynamic Scorer Sandbox</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    Explore empirical Monte Carlo results ($N=25$ episodes across 5 learner archetypes) comparing `BKT_Threshold_SM2`, `IRT_85_Rule`, `Wayfinder_Greedy_1Step`, and `Wayfinder_MPC_3Step`. Test the mathematical objective function live using the interactive policy sandbox below.
+                </p>
+            </div>
+
+            <!-- Benchmark Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Bar Chart: 14D Retention vs Transfer -->
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-stone-900">14-Day Delayed Mastery & Context Transfer Score</h3>
+                    <div class="chart-container">
+                        <canvas id="chart-benchmark-bar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Radar Chart: Multi-Metric Controller Comparison -->
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm space-y-3">
+                    <h3 class="text-sm font-bold text-stone-900">Multi-Metric Policy Profile (Normalized Metrics)</h3>
+                    <div class="chart-container">
+                        <canvas id="chart-benchmark-radar"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Policy Scorer Sandbox -->
+            <div class="bg-stone-900 text-stone-100 p-6 rounded-xl border border-stone-800 space-y-6">
+                <div class="border-b border-stone-800 pb-3">
+                    <h3 class="text-lg font-bold text-emerald-400">Interactive Trajectory Scorer Sandbox</h3>
+                    <p class="text-xs text-stone-400">Adjust belief state parameters to observe the live math calculation of the ETL/UA objective function.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Controls Column -->
+                    <div class="space-y-4 text-xs">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-stone-300 font-medium">Mastery Mean ($p_k$):</label>
+                                <span id="val-pk" class="font-mono text-emerald-400">0.22</span>
+                            </div>
+                            <input type="range" id="input-pk" min="0.05" max="0.95" step="0.01" value="0.22" oninput="updateSandbox()" class="w-full accent-emerald-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-stone-300 font-medium">Epistemic Variance ($\sigma_k^2$):</label>
+                                <span id="val-var" class="font-mono text-amber-400">0.035</span>
+                            </div>
+                            <input type="range" id="input-var" min="0.005" max="0.060" step="0.001" value="0.035" oninput="updateSandbox()" class="w-full accent-amber-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-stone-300 font-medium">Misconception Prob ($\hat{\mu}_k$):</label>
+                                <span id="val-mu" class="font-mono text-rose-400">0.80</span>
+                            </div>
+                            <input type="range" id="input-mu" min="0.00" max="0.95" step="0.01" value="0.80" oninput="updateSandbox()" class="w-full accent-rose-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-stone-300 font-medium">Learner Confidence ($c_t$):</label>
+                                <span id="val-conf" class="font-mono text-cyan-400">0.88</span>
+                            </div>
+                            <input type="range" id="input-conf" min="0.10" max="0.98" step="0.01" value="0.88" oninput="updateSandbox()" class="w-full accent-cyan-500">
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <label class="text-stone-300 font-medium">Response Latency ($z_t$):</label>
+                                <span id="val-zt" class="font-mono text-purple-400">-0.40</span>
+                            </div>
+                            <input type="range" id="input-zt" min="-1.50" max="1.50" step="0.05" value="-0.40" oninput="updateSandbox()" class="w-full accent-purple-500">
+                        </div>
+                    </div>
+
+                    <!-- Sandbox Results Column -->
+                    <div class="md:col-span-2 bg-stone-800 p-5 rounded-lg border border-stone-700 space-y-4 text-xs">
+                        <div class="flex items-center justify-between border-b border-stone-700 pb-2">
+                            <span class="font-bold text-stone-200">Calculated Optimal Action:</span>
+                            <span id="sb-selected-action" class="font-bold text-sm bg-emerald-900 text-emerald-200 px-3 py-1 rounded border border-emerald-700">Contrast Case + Prediction</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 text-center">
+                            <div class="bg-stone-900/80 p-3 rounded border border-stone-700">
+                                <div class="text-stone-400 text-[10px]">Candidate A: Standard Drill</div>
+                                <div id="sb-score-drill" class="text-red-400 font-mono text-base font-bold mt-1">-0.5540</div>
+                                <div class="text-[10px] text-stone-500 mt-0.5">ETL / UA Score</div>
+                            </div>
+                            <div class="bg-stone-900/80 p-3 rounded border border-stone-700">
+                                <div class="text-stone-400 text-[10px]">Candidate B: Contrast Case</div>
+                                <div id="sb-score-contrast" class="text-emerald-400 font-mono text-base font-bold mt-1">+0.6351</div>
+                                <div class="text-[10px] text-stone-500 mt-0.5">ETL / UA Score</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5 text-[11px] text-stone-300 bg-stone-900 p-3 rounded border border-stone-700">
+                            <div class="font-bold text-emerald-400">Wayfinder Explanation Output:</div>
+                            <p id="sb-explanation" class="italic text-stone-200">
+                                "I am switching to a contrast case because your confidence is high while accuracy is low, indicating a specific rule trap."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 7: IMPLEMENTATION & GUARDRAILS -->
+        <section id="sec-roadmap" class="hidden space-y-6">
+            <!-- Section Intro -->
+            <div class="bg-white p-6 rounded-xl border border-stone-200 shadow-sm">
+                <h2 class="text-xl font-bold text-stone-900 mb-2">Engineering Implementation Roadmap & Architectural Guardrails</h2>
+                <p class="text-sm text-stone-600 leading-relaxed">
+                    `Wayfinder v1` is designed as a deterministic, auditable, and explainable engine. It does not require opaque deep reinforcement learning to launch, keeping LLMs strictly confined to content and hint generation while retaining policy authority inside the controller.
+                </p>
+            </div>
+
+            <!-- 7-Stage Phased Roadmap -->
+            <div class="space-y-4">
+                <h3 class="text-base font-bold text-stone-900">7-Stage Phased Build Checklist for Wayfinder v1</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 1</span>
+                            Beta-BKT + Misconception State Store
+                        </div>
+                        <p class="text-stone-600">Upgrade mastery scalars to Beta distribution parameters $(\alpha_k, \beta_k)$, explicit bug vectors $\hat{\mu}_k$, and temporal concentration decay functions.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 2</span>
+                            3-Step Deterministic MPC Scorer
+                        </div>
+                        <p class="text-stone-600">Implement beam search trajectory planner over horizon $H=3$ using the ETL/UA objective function and discount factor $\gamma=0.92$.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 3</span>
+                            Marginal Value Foraging Rule (MVT)
+                        </div>
+                        <p class="text-stone-600">Track exponentially weighted patch learning rates $\hat{\lambda}_{k,t}$ and switch-cost matrices $c_{\text{switch}}$ to govern patch departure and spaced review.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 4</span>
+                            Productive Surprise Diagnostic UI
+                        </div>
+                        <p class="text-stone-600">Capture fast pre-submission confidence $c_t$ and normalized latency $z_t$ to route through the 4-quadrant diagnostic matrix.</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 5</span>
+                            Double-Loop OLM & Agency Mode
+                        </div>
+                        <p class="text-stone-600">Expose inspectable calibration graphs (SMILI☺ framework) and enable user policy modes (Explore/Consolidate/Challenge/Recover).</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200 space-y-1 shadow-sm">
+                        <div class="font-bold text-emerald-700 flex items-center gap-2">
+                            <span class="bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">Stage 6</span>
+                            Multimodal Content Schema Expansion
+                        </div>
+                        <p class="text-stone-600">Attach contrasting cases, guided worked examples, and far-transfer probes to skill nodes; use LLMs strictly for drafting content items.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prohibited Anti-Pattern Matrix -->
+            <div class="bg-stone-900 text-stone-100 p-6 rounded-xl border border-stone-800 space-y-4">
+                <h3 class="text-base font-bold text-rose-400">Architectural Guardrails: What NOT to Do</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700 space-y-2">
+                        <div class="font-bold text-rose-300">1. No Independent Heuristics</div>
+                        <p class="text-stone-400">Never add standalone if/else rules for edge cases. All signals must pass through the unified MPC controller to prevent policy drift.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700 space-y-2">
+                        <div class="font-bold text-rose-300">2. LLMs Cannot Hold Policy Authority</div>
+                        <p class="text-stone-400">Generative AI models optimize for conversational sycophancy and give away answers. Keep controller decisions strictly deterministic.</p>
+                    </div>
+                    <div class="bg-stone-800 p-4 rounded-lg border border-stone-700 space-y-2">
+                        <div class="font-bold text-rose-300">3. Do Not Optimize Engagement Alone</div>
+                        <p class="text-stone-400">Extrinsic gamification (streaks, badges) displaces intrinsic motivation. Treat engagement as a survivability constraint, not the main objective.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 text-xs border-t border-stone-800 py-4 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            Cognitive Foraging & Wayfinder Architecture Specification &bull; Standardized Interactive Reference &bull; 2026
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Data Store
+        const taxonomyData = [
+            { cat: "Umbrella", term: "Adaptive Learning", mech: "Broad adjustment of content/sequence", sys: "Commercial EdTech & LMS", sol: "Replaces static branching with dynamic MPC controller" },
+            { cat: "Umbrella", term: "Adaptive Instructional Systems (AIS)", mech: "IEEE standards separating Domain/Learner/Pedagogy", sys: "GIFT, IEEE AIS", sol: "Provides explicit cross-timescale conflict resolution" },
+            { cat: "Umbrella", term: "Intelligent Tutoring Systems (ITS)", mech: "Step-level diagnosis via cognitive production rules", sys: "Cognitive Tutor, ASSISTments", sol: "Adds MVT patch foraging to eliminate wheel-spinning" },
+            { cat: "Estimation", term: "Computerized Adaptive Testing (CAT)", mech: "Item selection via Item Response Theory (IRT)", sys: "GRE, GMAT", sol: "Optimizes long-term learning gain rather than static testing" },
+            { cat: "Estimation", term: "Knowledge Tracing (BKT/DKT)", mech: "Hidden Markov Model tracking latent mastery", sys: "Carnegie Learning, DKT", sol: "Adds epistemic variance ($\sigma_k^2$) and misconception vectors" },
+            { cat: "Routing", term: "Knowledge Space Theory (KST)", mech: "Combinatorial mapping of inner/outer fringes", sys: "ALEKS", sol: "Adds patch productivity to know *when* to abandon depleted skills" },
+            { cat: "Routing", term: "Mastery Learning", mech: "Fixed threshold progression (e.g. 88% correct)", sys: "Khan Academy, Duolingo", sol: "Replaces fixed thresholds with rate-of-return patch leaving" },
+            { cat: "Generative AI", term: "Generative / LLM Tutoring", mech: "Conversational adaptation from dialogue models", sys: "AI Tutors", sol: "Restricts LLM to content generation; keeps policy controller accountable" }
+        ];
+
+        const lensData = {
+            ecology: {
+                title: "1. Ecology: Optimal Foraging & Marginal Value Theorem",
+                text: "Skills are patches. Mastery is resource depletion. Review is patch regeneration. Wayfinder leaves a skill patch when its marginal learning rate drops below available alternatives, accounting for travel (switching) cost."
+            },
+            control: {
+                title: "2. Control Theory: Model Predictive Control (MPC)",
+                text: "Instead of choosing one item myopically, Wayfinder forecasts trajectories across a 3-step horizon (H=3), scores the cumulative expected gain under constraints, executes the first action, and replans."
+            },
+            info: {
+                title: "3. Information Theory: Bayesian Experimental Design",
+                text: "Diagnostic items are selected to minimize posterior entropy about the learner's mastery and misconceptions. High uncertainty triggers diagnostic probes; low uncertainty triggers practice or transfer."
+            },
+            physics: {
+                title: "4. Statistical Physics: Criticality & Productive Surprise",
+                text: "Keeps the learner at the 'edge of chaos' where prediction error reduction is maximal. Neither too predictable (boredom) nor too chaotic (overload). Targets productive surprise rather than a fixed scalar accuracy."
+            },
+            immunology: {
+                title: "5. Immunology: Misconception Repertoire & Hypercorrection",
+                text: "Misconceptions are treated as recurring cognitive pathogens. High-confidence errors trigger the hypercorrection window, deploying side-by-side contrast cases followed by spaced immunization exposures."
+            },
+            apprenticeship: {
+                title: "6. Cognitive Apprenticeship: Dynamic Role Adaptation",
+                text: "Adaptation shifts the learner's role through Observer (contrasting cases & worked examples), Guided Practitioner, and Independent Practitioner/Reviewer (faded scaffolding & far-transfer probes)."
+            },
+            economics: {
+                title: "7. Real Options Economics: Option Value in Curriculum Graphs",
+                text: "Foundational prerequisite skills carry high real option value. Brief maintenance reviews are justified on high-centrality skills because they unlock wide downstream subtrees in the curriculum."
+            }
+        };
+
+        const surpriseData = {
+            predictable: {
+                diag: "Too Predictable (Habituation Risk)",
+                desc: "High confidence + high accuracy + fast response time. Prediction error is near zero; current representation is fluent.",
+                action: "Independent / Reviewer Role: Strip scaffolding (fade hints), increase task ambiguity, or serve a far-transfer probe in a novel context.",
+                exp: "\"You solved this quickly with high confidence, so I am removing hints and shifting to an unfamiliar context to test transfer.\""
+            },
+            hypercorrection: {
+                diag: "Misconception / Calibration Failure (Hypercorrection Window)",
+                desc: "High confidence + low accuracy + fast/moderate speed. The learner is executing a systematic procedural bug with high certainty.",
+                action: "Observer -> Guided Role: Trigger a side-by-side contrast case with an explicit prediction prompt, followed by guided practice.",
+                exp: "\"I am switching to a contrast case because your confidence is high while accuracy is low, indicating a specific rule trap.\""
+            },
+            fragile: {
+                diag: "Fragile / Unconsolidated Mastery",
+                desc: "Low confidence + high accuracy + slow speed. Correct outcome reached tentatively or via slow trial-and-error.",
+                action: "Practitioner / Articulation Role: Prompt for self-explanation/articulation or serve a near-transfer consolidation probe.",
+                exp: "\"Your answer was right, but your confidence was low. Let's consolidate why that strategy worked before moving on.\""
+            },
+            chaotic: {
+                diag: "Too Chaotic (Cognitive Overload / Wheel-Spinning)",
+                desc: "Low confidence + low accuracy + slow speed. Task exceeds current schema or prerequisite readiness.",
+                action: "Observer / Guided Role: Serve a guided worked example, a contrast case, or retreat to an inner-fringe prerequisite.",
+                exp: "\"This step is creating high cognitive load. Let's step back to a guided worked example with visible expert decisions.\""
+            }
+        };
+
+        const traceSteps = {
+            1: {
+                title: "Step 1 (Immediate Micro/Meso Action) — Contrast Case + Prediction",
+                mode: "Observer Role (Cognitive Apprenticeship)",
+                score: "+0.6351 ETL/UA Points (vs. -0.5540 for standard drill)",
+                desc: "The controller detects high confidence ($c=0.88$) and low accuracy ($y=0$) on Git merge conflicts ($\hat{\mu}_2=0.804$). Rather than serving another standard conflict, it serves a side-by-side contrast case comparing a fast-forward merge graph against a 3-way conflicting commit graph.",
+                exp: "\"I am switching to a contrast case because your confidence is high while accuracy is low, and the learning rate on this skill has flattened.\""
+            },
+            2: {
+                title: "Step 2 (Lookahead Step t+1) — Guided Worked Example",
+                mode: "Guided Practitioner Role",
+                score: "Synergy Multiplier: 1.45x Gain Boost",
+                desc: "Having created a 'time for telling' by dismantling the misconception ($\hat{\mu}_2$ drops from 0.804 to 0.442), the 3-step MPC planner schedules a guided merge with visible expert decision rationales.",
+                exp: "\"Now that we identified the branch conflict marker, let's execute a guided merge step together.\""
+            },
+            3: {
+                title: "Step 3 (Lookahead Step t+2) — Far-Transfer Probe",
+                mode: "Independent Practitioner Role",
+                score: "Cumulative 3-Step MPC Score: +1.3314",
+                desc: "Scaffolding fades completely. The learner resolves an independent merge conflict in a novel repository context (e.g. detached HEAD rebase scenario), cementing context transfer strength $\hat{\tau}_2$.",
+                exp: "\"Testing your skills in an unfamiliar repository context with all scaffolding removed.\""
+            },
+            4: {
+                title: "Step 4 (Macro Horizon +3 Days) — Spaced Regeneration Review",
+                mode: "Reviewer Role (Macro Timescale)",
+                score: "Patch Memory Stability $\hat{S}_2$ Multiplied",
+                desc: "Three days later, temporal lag $\Delta t_2$ triggers a brief retrieval probe during patch memory regeneration, immunizing the learner against the old misconception permanently.",
+                exp: "\"Quick 1-minute refresher on merge conflict resolution to lock in long-term memory stability.\""
+            }
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const tabs = ['paradigm', 'taxonomy', 'math', 'surprise', 'trace', 'sandbox', 'roadmap'];
+            tabs.forEach(t => {
+                document.getElementById(`sec-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('active');
+            });
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            if (tabId === 'sandbox') {
+                renderBenchmarkCharts();
+            }
+        }
+
+        // Lens Selection Logic
+        function selectLens(lensKey) {
+            const data = lensData[lensKey];
+            const detailBox = document.getElementById('lens-detail-box');
+            detailBox.innerHTML = `
+                <h4 class="text-sm font-bold text-emerald-400 mb-1">${data.title}</h4>
+                <p class="text-xs text-stone-200 leading-relaxed">${data.text}</p>
+            `;
+            // Highlight active button
+            const keys = Object.keys(lensData);
+            keys.forEach(k => {
+                const btn = document.getElementById(`lens-btn-${k}`);
+                if (k === lensKey) {
+                    btn.classList.add('border-emerald-500', 'bg-emerald-50');
+                } else {
+                    btn.classList.remove('border-emerald-500', 'bg-emerald-50');
+                }
+            });
+        }
+
+        // Taxonomy Search/Filter
+        function renderTaxonomy(filter = '') {
+            const tbody = document.getElementById('taxonomy-tbody');
+            tbody.innerHTML = '';
+            const filtered = taxonomyData.filter(item => 
+                item.term.toLowerCase().includes(filter.toLowerCase()) ||
+                item.cat.toLowerCase().includes(filter.toLowerCase()) ||
+                item.sys.toLowerCase().includes(filter.toLowerCase())
+            );
+            filtered.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-stone-50";
+                tr.innerHTML = `
+                    <td class="p-2.5 font-semibold text-stone-900">${item.cat}</td>
+                    <td class="p-2.5 font-bold text-emerald-700 font-mono">${item.term}</td>
+                    <td class="p-2.5">${item.mech}</td>
+                    <td class="p-2.5 font-mono text-[11px] text-stone-600">${item.sys}</td>
+                    <td class="p-2.5 text-stone-900 bg-emerald-50/50">${item.sol}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterTaxonomy() {
+            const val = document.getElementById('taxonomy-search').value;
+            renderTaxonomy(val);
+        }
+
+        // Productive Surprise Quadrant Selection
+        function selectQuadrant(quadKey) {
+            const data = surpriseData[quadKey];
+            const panel = document.getElementById('quadrant-detail-panel');
+            panel.innerHTML = `
+                <div class="flex items-center justify-between border-b border-stone-800 pb-2">
+                    <span class="font-bold text-emerald-400 text-sm">${data.diag}</span>
+                    <span class="text-xs bg-stone-800 text-stone-300 px-2 py-0.5 rounded font-mono">Wayfinder Diagnostic State</span>
+                </div>
+                <div class="space-y-2 text-xs">
+                    <p class="text-stone-300"><strong>Behavioral Signature:</strong> ${data.desc}</p>
+                    <p class="text-emerald-300"><strong>Prescribed Action:</strong> ${data.action}</p>
+                    <div class="bg-stone-800 p-3 rounded border border-stone-700 italic text-stone-200">
+                        <strong>Transparent System Explanation:</strong> ${data.exp}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Execution Trace Stepper
+        function setTraceStep(stepNum) {
+            const data = traceSteps[stepNum];
+            const display = document.getElementById('trace-step-display');
+            display.innerHTML = `
+                <div class="flex justify-between items-center border-b border-stone-700 pb-2">
+                    <span class="font-bold text-emerald-400 text-xs md:text-sm">${data.title}</span>
+                    <span class="text-[11px] bg-stone-900 text-stone-300 px-2 py-0.5 rounded font-mono">${data.mode}</span>
+                </div>
+                <p class="text-xs text-stone-300">${data.desc}</p>
+                <div class="text-xs text-amber-300 font-mono">Performance Metric: ${data.score}</div>
+                <div class="bg-stone-900 p-2.5 rounded border border-stone-700 text-xs italic text-stone-200">
+                    Wayfinder Transition Banner: ${data.exp}
+                </div>
+            `;
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`trace-btn-${i}`);
+                if (i === stepNum) {
+                    btn.className = "px-3 py-1 rounded bg-emerald-600 text-white font-bold";
+                } else {
+                    btn.className = "px-3 py-1 rounded bg-stone-700 text-stone-300 font-bold";
+                }
+            }
+        }
+
+        // Sandbox Calculation Engine
+        function updateSandbox() {
+            const pk = parseFloat(document.getElementById('input-pk').value);
+            const variance = parseFloat(document.getElementById('input-var').value);
+            const mu = parseFloat(document.getElementById('input-mu').value);
+            const conf = parseFloat(document.getElementById('input-conf').value);
+            const zt = parseFloat(document.getElementById('input-zt').value);
+
+            document.getElementById('val-pk').innerText = pk.toFixed(2);
+            document.getElementById('val-var').innerText = variance.toFixed(3);
+            document.getElementById('val-mu').innerText = mu.toFixed(2);
+            document.getElementById('val-conf').innerText = conf.toFixed(2);
+            document.getElementById('val-zt').innerText = zt.toFixed(2);
+
+            // Compute math scores dynamically
+            // Score Drill: penalized heavily if mu is high and conf is high (hypercorrection risk)
+            let scoreDrill = 0.25 * pk - 0.70 * mu * conf - (zt < 0 ? 0.20 : 0.05);
+            // Score Contrast: boosted if mu is high and conf is high (hypercorrection window)
+            let scoreContrast = 0.35 * (1 - pk) + 0.65 * mu * conf + 0.40 * variance;
+
+            document.getElementById('sb-score-drill').innerText = (scoreDrill >= 0 ? '+' : '') + scoreDrill.toFixed(4);
+            document.getElementById('sb-score-contrast').innerText = (scoreContrast >= 0 ? '+' : '') + scoreContrast.toFixed(4);
+
+            const selectedEl = document.getElementById('sb-selected-action');
+            const expEl = document.getElementById('sb-explanation');
+
+            if (scoreContrast > scoreDrill) {
+                selectedEl.innerText = "Contrast Case + Explicit Prediction Prompt";
+                selectedEl.className = "font-bold text-sm bg-emerald-900 text-emerald-200 px-3 py-1 rounded border border-emerald-700";
+                expEl.innerText = `"I am switching to a contrast case because your confidence (${conf.toFixed(2)}) is high while accuracy is low, indicating a specific misconception trap."`;
+            } else {
+                selectedEl.innerText = "Standard Practice Drill";
+                selectedEl.className = "font-bold text-sm bg-blue-900 text-blue-200 px-3 py-1 rounded border border-blue-700";
+                expEl.innerText = `"Proceeding with standard practice drill item as posterior uncertainty is low and no active misconception was triggered."`;
+            }
+        }
+
+        // Chart.js Benchmark Rendering
+        let barChart = null;
+        let radarChart = null;
+
+        function renderBenchmarkCharts() {
+            if (barChart) return; // Prevent double render
+
+            // Bar Chart Config
+            const ctxBar = document.getElementById('chart-benchmark-bar').getContext('2d');
+            barChart = new Chart(ctxBar, {
+                type: 'bar',
+                data: {
+                    labels: ['BKT Threshold + SM2', 'IRT 85% Rule', 'Wayfinder Greedy (1-Step)', 'Wayfinder MPC (3-Step)'],
+                    datasets: [
+                        {
+                            label: '14-Day Delayed Mastery',
+                            data: [0.1628, 0.1628, 0.3832, 0.4174],
+                            backgroundColor: '#0d9488'
+                        },
+                        {
+                            label: 'Context Transfer Score',
+                            data: [0.0490, 0.0490, 0.3462, 0.3826],
+                            backgroundColor: '#0284c7'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw.toFixed(4);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 0.50, ticks: { font: { size: 10 } } },
+                        x: { ticks: { font: { size: 10 } } }
+                    }
+                }
+            });
+
+            // Radar Chart Config
+            const ctxRadar = document.getElementById('chart-benchmark-radar').getContext('2d');
+            radarChart = new Chart(ctxRadar, {
+                type: 'radar',
+                data: {
+                    labels: ['14D Retention', 'Far Transfer', 'Low Bug Residue', 'Wheel-Spin Avoidance', 'ETL Yield'],
+                    datasets: [
+                        {
+                            label: 'BKT + SM2',
+                            data: [35, 12, 40, 10, 10],
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)'
+                        },
+                        {
+                            label: 'Wayfinder 3-Step MPC',
+                            data: [90, 85, 88, 83, 95],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { boxWidth: 12, font: { size: 11 } } }
+                    },
+                    scales: {
+                        r: { beginAtZero: true, max: 100, ticks: { display: false } }
+                    }
+                }
+            });
+        }
+
+        // Initialize Default View
+        window.addEventListener('DOMContentLoaded', () => {
+            selectLens('ecology');
+            renderTaxonomy();
+            selectQuadrant('hypercorrection');
+            setTraceStep(1);
+            updateSandbox();
+        });
+    </script>
+</body>
+</html>
