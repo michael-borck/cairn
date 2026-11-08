@@ -56,6 +56,8 @@ packages/
   ui/           shared React components
 content-packs/
   docker-fundamentals/
+research/
+  ledgers/      evidence-weighted model and replay harness
 docs/
   adr/          architecture decisions
   spec/         product, pack schema, engine contract
@@ -69,10 +71,13 @@ docs/
 - [Product spec](docs/spec/product.md)
 - [Pack schema v0.1](docs/spec/pack-schema-v0.1.md)
 - [Engine contract v0.1](docs/spec/engine-contract-v0.1.md)
+- [Adaptive methods audit](docs/spec/adaptive-methods-audit.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Roadmap](docs/roadmap.md)
 - [Future work](docs/future-work.md)
 - [Interactive fiction with Ink](docs/ideas/interactive-fiction-ink.md)
+- [Adaptive model research log](docs/research/2026-11-09-adaptive-model-design.md)
+- [Ledgers research prototype](research/ledgers/README.md)
 
 ## Contributing
 

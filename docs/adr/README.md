@@ -14,5 +14,6 @@ Small, numbered records of decisions that are expensive to reverse. Accepted ADR
 | [0008](0008-credentials-deferred.md) | Credentials deferred, local completion record first | Accepted |
 | [0009](0009-no-free-form-prompts-in-packs.md) | No free-form prompts in content packs | Accepted |
 | [0010](0010-ai-optional-deterministic-off.md) | AI optional, deterministic off mode | Accepted |
+| [0011](0011-incorporate-ledgers-research-prototype.md) | Incorporate Ledgers as a research prototype | Accepted |
 
 Template: [template.md](template.md)

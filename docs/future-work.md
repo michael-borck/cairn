@@ -34,6 +34,7 @@ Uncommitted ideas. Each item needs a trigger before it becomes roadmap work.
 | Contextual bandits or RL | Hard to explain and easy to mis-tune | Explainable policy is stable and data supports it |
 | FSRS review scheduling | More parameters than v1 needs | Review data shows Leitner is too coarse |
 | Federated or local model training | Complex and expensive | Privacy-preserving personalization becomes a priority |
+| [Three Ledgers prototype](../research/ledgers/README.md) | Research code and offline harness | Real-log prediction, then a randomised pilot |
 
 ## Product ideas
 
