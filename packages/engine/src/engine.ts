@@ -45,6 +45,15 @@ const HALF_LIFE_MIN_DAYS = 0.25;
 const HALF_LIFE_MAX_DAYS = 180;
 const SESSION_GAP_MS = 30 * 60 * 1000;
 
+export const ENGINE_MODEL = {
+  bkt: DEFAULT_BKT_PARAMS,
+  evidenceHalfLifeDays: EVIDENCE_HALF_LIFE_DAYS,
+  halfLifeInitDays: HALF_LIFE_INIT_DAYS,
+  halfLifeMinDays: HALF_LIFE_MIN_DAYS,
+  halfLifeMaxDays: HALF_LIFE_MAX_DAYS,
+  sessionGapMs: SESSION_GAP_MS,
+};
+
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }

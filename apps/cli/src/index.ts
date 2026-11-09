@@ -1,7 +1,9 @@
+import { readFile, writeFile } from "node:fs/promises";
 import { parseArgs } from "node:util";
 
 import { validatePack, type ContentPack } from "@cairn/content";
 
+import { toLedgersBundle, type CairnExportInput } from "./ledgers-export";
 import { loadPack, packLabel } from "./pack";
 import { simulate } from "./simulate";
 
@@ -13,6 +15,7 @@ Usage:
   cairn inspect <pack.json|pack-dir>
   cairn simulate --pack <pack.json|pack-dir> [--learners 20] [--seed 1]
                  [--max-steps 400] [--json]
+  cairn ledgers <cairn-export.json...> [--out bundle.json]
 
 A pack path can be a single JSON file or a directory containing
 manifest.json, curriculum.json, items.json, rubrics.json,
@@ -107,6 +110,7 @@ async function main(): Promise<number> {
       learners: { type: "string" },
       seed: { type: "string" },
       "max-steps": { type: "string" },
+      out: { type: "string" },
       json: { type: "boolean" },
       strict: { type: "boolean" },
       help: { type: "boolean", short: "h" },
@@ -170,6 +174,44 @@ async function main(): Promise<number> {
           .join(", ")}`
       );
     }
+    return 0;
+  }
+
+  if (command === "ledgers") {
+    const files = parsed.positionals.slice(1);
+    if (files.length === 0) {
+      usage();
+      return 1;
+    }
+    const exports = await Promise.all(
+      files.map(async (file) =>
+        JSON.parse(await readFile(file, "utf8")) as CairnExportInput
+      )
+    );
+    const packId = exports[0].pack.manifest.id;
+    if (exports.some((entry) => entry.pack.manifest.id !== packId)) {
+      throw new Error("All exports must use the same pack.");
+    }
+    const data: CairnExportInput = {
+      schemaVersion: exports[0].schemaVersion,
+      exportedAt: new Date().toISOString(),
+      pack: exports[0].pack,
+      events: exports.flatMap((entry) => entry.events),
+      decisions: exports.flatMap((entry) => entry.decisions ?? []),
+      model: exports[0].model,
+      policy: exports[0].policy,
+    };
+    const bundle = toLedgersBundle(data);
+    const out =
+      parsed.values.out ??
+      files[0].replace(/\.json$/i, ".ledgers.json");
+    await writeFile(out, JSON.stringify(bundle, null, 2) + "\n");
+    console.log(
+      `Wrote ${out}: ${bundle.skills.length} skills, ${bundle.items.length} items, ${bundle.attempts.length} attempts from ${files.length} export(s).`
+    );
+    console.log(
+      "Prediction is available. Policy comparison needs propensities, which Cairn does not log yet."
+    );
     return 0;
   }
 

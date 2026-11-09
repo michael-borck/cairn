@@ -1,6 +1,6 @@
 # Adaptive v0.2 implementation plan
 
-- Status: Phase 2 complete, Phase 3 next
+- Status: Phase 3 in progress
 - Date: 2026-11-09
 - Related: [Adaptive methods audit](../spec/adaptive-methods-audit.md), [Ledgers prototype](../../research/ledgers/README.md), [Research log](../research/2026-11-09-adaptive-model-design.md)
 
@@ -97,3 +97,7 @@ The learner should notice three things:
 - [x] Mastery gate uses evidence, applied pass, and delayed success.
 - [x] Review cap and dwell added to the policy.
 - [x] Prerequisite readiness separated from mastery threshold.
+- [x] Cairn export includes pack, learner, events, decisions, model, and policy.
+- [x] CLI converter writes a Ledgers prediction bundle.
+- [ ] Export a real Cairn log and run the prediction report.
+- [ ] Add propensity logging before policy comparison.

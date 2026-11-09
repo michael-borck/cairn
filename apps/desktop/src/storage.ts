@@ -74,6 +74,11 @@ export function createLocalStorage(): AppStorage {
     async loadDecision(decisionId) {
       return readStore().decisions[decisionId] ?? null;
     },
+    async listDecisions(learnerId) {
+      return Object.values(readStore().decisions)
+        .filter((decision) => decision.learnerId === learnerId)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    },
     async reset(learnerId) {
       const store = readStore();
       delete store.learners[learnerId];
@@ -150,6 +155,13 @@ function createSqlStorage(db: Database): AppStorage {
         [decisionId]
       );
       return rows[0] ? (JSON.parse(rows[0].payload) as Decision) : null;
+    },
+    async listDecisions(learnerId) {
+      const rows = await db.select<{ payload: string }[]>(
+        "SELECT payload FROM decisions WHERE learner_id = $1 ORDER BY created_at DESC",
+        [learnerId]
+      );
+      return rows.map((row) => JSON.parse(row.payload) as Decision);
     },
     async reset(learnerId) {
       await db.execute("DELETE FROM events WHERE learner_id = $1", [learnerId]);

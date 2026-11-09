@@ -34,5 +34,11 @@ export function createMemoryStorage(): StorageAdapter {
       const decision = decisions.get(decisionId);
       return decision ? structuredClone(decision) : null;
     },
+    async listDecisions(learnerId) {
+      return [...decisions.values()]
+        .filter((decision) => decision.learnerId === learnerId)
+        .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        .map((decision) => structuredClone(decision));
+    },
   };
 }

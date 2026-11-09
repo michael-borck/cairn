@@ -54,6 +54,7 @@ import {
 import { extractMaterial, packFromMaterial } from "./material-import";
 import { computeBadges } from "./badges";
 import { buildReviewCalendar } from "./review-calendar";
+import { buildCairnExport, saveCairnExport } from "./export";
 import { createPersistentStorage, type AppStorage } from "./storage";
 
 const LEARNER_ID = "local";
@@ -337,6 +338,7 @@ function App() {
         evidenceSource:
           input.evidenceSource ?? (selfReported ? "self" : "learner"),
         action: decision.action,
+        decisionId: decision.id,
         misconceptionIds: input.misconceptionIds,
       };
       const result = await engine.record(event);
@@ -670,6 +672,35 @@ function App() {
     }
   }
 
+  async function exportLearnerData(): Promise<void> {
+    if (!active || !learner) return;
+    setBusy(true);
+    setError(false);
+    try {
+      const storage = await getStorage();
+      const events = await storage.listEvents(LEARNER_ID);
+      const decisions = await storage.listDecisions(LEARNER_ID);
+      const saved = await saveCairnExport(
+        buildCairnExport({
+          pack: active.pack,
+          learner,
+          events,
+          decisions,
+        })
+      );
+      setMessage(
+        saved
+          ? `Exported ${events.length} events and ${decisions.length} decisions.`
+          : "Export cancelled."
+      );
+    } catch (cause) {
+      setError(true);
+      setMessage(cause instanceof Error ? cause.message : String(cause));
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function resetProgress(): Promise<void> {
     if (!engine) return;
     const storage = await getStorage();
@@ -780,6 +811,15 @@ function App() {
             }}
           />
         </label>
+
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => void exportLearnerData()}
+          disabled={!active || !learner || busy}
+        >
+          Export data
+        </button>
 
         <button
           type="button"

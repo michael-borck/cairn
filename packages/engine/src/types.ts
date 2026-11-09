@@ -99,6 +99,7 @@ export interface EvidenceEvent {
   durationMs: number;
   evidenceSource: "learner" | "ai" | "lab" | "self";
   action?: DecisionAction;
+  decisionId?: string;
   misconceptionIds?: string[];
 }
 
@@ -252,6 +253,7 @@ export interface StorageAdapter {
   listEvents(learnerId: LearnerId): Promise<EvidenceEvent[]>;
   saveDecision(decision: Decision): Promise<void>;
   loadDecision(decisionId: string): Promise<Decision | null>;
+  listDecisions(learnerId: LearnerId): Promise<Decision[]>;
 }
 
 export interface EngineConfig {

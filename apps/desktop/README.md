@@ -30,6 +30,8 @@ Built:
   reflection, and learner-run labs.
 - Mastery map, badges, optional skill challenges, due-review panel, 14-day
   review calendar, recent activity, and "why this?" decision panel.
+- Export data writes a self-contained research bundle with the pack, learner,
+  events, decisions, model parameters, and policy.
 - Hint ladder on activities, with hint use recorded as evidence.
 - Easier, harder, more help, and less help overrides.
 - SQLite storage through `tauri-plugin-sql`, with local-storage fallback in the

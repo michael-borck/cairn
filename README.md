@@ -4,7 +4,7 @@ A local-first adaptive learning engine for people who learn on their own.
 
 Cairn imports your notes, textbooks, and labs, builds a skill map, diagnoses where you are, and adapts difficulty, help, and review. Every decision is visible and overridable. AI is optional.
 
-Status: adaptive v0.2 Phase 2 complete: evidence count, half-life retention, item-difficulty evidence, mastery gate, review cap, dwell, and working Auto/Manual adaptation. Pilot packaging and evaluation are next.
+Status: adaptive v0.2 Phase 3 in progress: evidence count, retention, mastery gates, review controls, real-log export, and Ledgers bundle conversion are in place. Prediction on real logs is next.
 
 ## What is built
 
@@ -73,6 +73,7 @@ docs/
 - [Engine contract v0.1](docs/spec/engine-contract-v0.1.md)
 - [Adaptive methods audit](docs/spec/adaptive-methods-audit.md)
 - [Adaptive v0.2 implementation plan](docs/plans/adaptive-v0.2.md)
+- [Research export format](docs/spec/export-format.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Roadmap](docs/roadmap.md)
 - [Future work](docs/future-work.md)

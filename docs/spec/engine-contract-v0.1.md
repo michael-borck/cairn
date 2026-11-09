@@ -92,6 +92,7 @@ interface EvidenceEvent {
   durationMs: number;
   evidenceSource: "learner" | "ai" | "lab" | "self";
   action?: DecisionAction;
+  decisionId?: string;
   misconceptionIds?: string[];
 }
 
@@ -229,6 +230,7 @@ interface StorageAdapter {
   listEvents(learnerId: LearnerId): Promise<EvidenceEvent[]>;
   saveDecision(decision: Decision): Promise<void>;
   loadDecision(decisionId: string): Promise<Decision | null>;
+  listDecisions(learnerId: LearnerId): Promise<Decision[]>;
 }
 
 interface AIAdapter {
