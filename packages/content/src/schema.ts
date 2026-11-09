@@ -260,6 +260,7 @@ export const policySchema = z.object({
   targetSuccessMax: z.number().min(0).max(1),
   masteryThreshold: z.number().min(0).max(1),
   reviewIntervalsDays: z.array(z.number().int().positive()).min(1),
+  reviewCap: z.number().min(0).max(1).default(0.5),
   hysteresis: z.object({
     observations: z.number().int().positive(),
     minItemsBetweenChanges: z.number().int().nonnegative(),

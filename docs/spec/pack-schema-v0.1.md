@@ -358,6 +358,7 @@ Pack-level policy overrides. Keep it small and versioned.
   "targetSuccessMax": 0.85,
   "masteryThreshold": 0.9,
   "reviewIntervalsDays": [1, 3, 7, 21, 60],
+  "reviewCap": 0.5,
   "hysteresis": {
     "observations": 2,
     "minItemsBetweenChanges": 3

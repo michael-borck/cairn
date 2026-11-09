@@ -10,6 +10,7 @@ import {
   createMemoryStorage,
   evidenceWeight,
   helpLevelFor,
+  isMastered,
   scheduleReview,
   selectItem,
   updateMastery,
@@ -172,6 +173,89 @@ describe("policy", () => {
     expect(helpLevelFor(state, 0.8, 4)).toBe(4);
   });
 
+  it("requires evidence and retention passes for mastery", () => {
+    const state = createInitialState(pack, "learner-1");
+    const skill = pack.curriculum.skills[0];
+    const skillState = state.skills[skill.id];
+    skillState.mastery = 0.95;
+    skillState.evidenceCount = 2;
+    skillState.hardPasses = 0;
+    skillState.delayedPasses = 0;
+    expect(isMastered(skill, state, pack)).toBe(false);
+    skillState.evidenceCount = 8;
+    skillState.hardPasses = 1;
+    skillState.delayedPasses = 1;
+    expect(isMastered(skill, state, pack)).toBe(true);
+  });
+
+  it("caps review once the session review share is reached", () => {
+    const state = createInitialState(pack, "learner-1");
+    const skillState = state.skills["container-basics"];
+    skillState.mastery = 0.5;
+    skillState.evidenceCount = 3;
+    skillState.halfLifeDays = 3;
+    skillState.lastSeenAt = "2025-12-20T00:00:00.000Z";
+    skillState.nextReviewAt = "2025-12-21T00:00:00.000Z";
+    state.session = {
+      items: 10,
+      reviewItems: 6,
+      dwell: 0,
+      currentSkillId: "container-basics",
+      lastAt: now.toISOString(),
+    };
+    const decision = chooseNextDecision(decisionInput(state));
+    expect(decision.action).not.toBe("review");
+  });
+
+  it("updates evidence, half-life, and retention review after an attempt", async () => {
+    const engine = createEngine({
+      pack,
+      storage: createMemoryStorage(),
+      now: () => now,
+      idFactory: () => "decision-1",
+    });
+    await engine.record({
+      id: "event-1",
+      learnerId: "learner-1",
+      packId: pack.manifest.id,
+      packVersion: pack.manifest.version,
+      itemId: "container-explain",
+      skillIds: ["container-basics"],
+      timestamp: now.toISOString(),
+      response: "read",
+      correct: true,
+      hintsUsed: 0,
+      attempts: 1,
+      durationMs: 1000,
+      evidenceSource: "learner",
+      action: "explain",
+    });
+    const second = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+    await engine.record({
+      id: "event-2",
+      learnerId: "learner-1",
+      packId: pack.manifest.id,
+      packVersion: pack.manifest.version,
+      itemId: "container-mcq",
+      skillIds: ["container-basics"],
+      timestamp: second.toISOString(),
+      response: "a",
+      correct: true,
+      hintsUsed: 0,
+      attempts: 1,
+      durationMs: 1000,
+      evidenceSource: "learner",
+      action: "practice",
+    });
+    const state = await engine.getState("learner-1");
+    const skillState = state.skills["container-basics"];
+    expect(skillState.evidenceCount).toBeGreaterThan(0);
+    expect(skillState.halfLifeDays).toBeGreaterThan(3);
+    expect(skillState.delayedPasses).toBe(1);
+    expect(skillState.nextReviewAt).toBeTruthy();
+    expect(state.session.items).toBe(1);
+  });
+
   it("applies the more-help override to the next decision", async () => {
     const engine = createEngine({
       pack,
@@ -195,7 +279,7 @@ describe("policy", () => {
 
   it("steps back to a prerequisite when one is weak", () => {
     const state = createInitialState(pack, "learner-1");
-    state.skills["container-basics"].mastery = 0.6;
+    state.skills["container-basics"].mastery = 0.4;
     state.skills["port-mapping"].mastery = 0.2;
     const decision = chooseNextDecision({
       ...decisionInput(state),

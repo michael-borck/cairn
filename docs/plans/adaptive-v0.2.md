@@ -1,6 +1,6 @@
 # Adaptive v0.2 implementation plan
 
-- Status: Phase 1 complete, Phase 2 next
+- Status: Phase 2 complete, Phase 3 next
 - Date: 2026-11-09
 - Related: [Adaptive methods audit](../spec/adaptive-methods-audit.md), [Ledgers prototype](../../research/ledgers/README.md), [Research log](../research/2026-11-09-adaptive-model-design.md)
 
@@ -92,3 +92,8 @@ The learner should notice three things:
 - [x] Adaptive Auto and Manual modes in the app.
 - [x] Hint ladder respects the decision help level.
 - [x] Tests and build verification.
+- [x] Evidence count and half-life added to skill state.
+- [x] Item difficulty influences evidence weight.
+- [x] Mastery gate uses evidence, applied pass, and delayed success.
+- [x] Review cap and dwell added to the policy.
+- [x] Prerequisite readiness separated from mastery threshold.

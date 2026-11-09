@@ -39,6 +39,10 @@ export interface SkillState {
   lastSeenAt?: string;
   nextReviewAt?: string;
   reviewIntervalDays: number;
+  evidenceCount: number;
+  halfLifeDays: number;
+  hardPasses: number;
+  delayedPasses: number;
   misconceptions: Record<string, number>;
   difficultyElo: number;
   consecutiveWrong: number;
@@ -59,6 +63,15 @@ export interface LearnerHistory {
   recentItemIds: string[];
 }
 
+export interface SessionState {
+  startedAt?: string;
+  lastAt?: string;
+  items: number;
+  reviewItems: number;
+  currentSkillId?: SkillId;
+  dwell: number;
+}
+
 export interface LearnerState {
   learnerId: LearnerId;
   packId: string;
@@ -66,6 +79,7 @@ export interface LearnerState {
   preferences: LearnerPreferences;
   calibration: CalibrationState;
   history: LearnerHistory;
+  session: SessionState;
 }
 
 export interface EvidenceEvent {
@@ -84,6 +98,7 @@ export interface EvidenceEvent {
   attempts: number;
   durationMs: number;
   evidenceSource: "learner" | "ai" | "lab" | "self";
+  action?: DecisionAction;
   misconceptionIds?: string[];
 }
 

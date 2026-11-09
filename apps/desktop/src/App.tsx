@@ -6,6 +6,7 @@ import {
   createEngine,
   ENGINE_VERSION,
   helpLevelFor,
+  isMastered,
   type AdaptiveEngine,
   type Decision,
   type EvidenceEvent,
@@ -308,7 +309,7 @@ function App() {
     misconceptionIds?: string[];
     evidenceSource?: EvidenceEvent["evidenceSource"];
   }): Promise<void> {
-    if (!engine || !active || !currentItem) return;
+    if (!engine || !active || !currentItem || !decision) return;
     setBusy(true);
     setError(false);
     try {
@@ -335,6 +336,7 @@ function App() {
         durationMs: Math.max(1000, Date.now() - activityStartedAt.current),
         evidenceSource:
           input.evidenceSource ?? (selfReported ? "self" : "learner"),
+        action: decision.action,
         misconceptionIds: input.misconceptionIds,
       };
       const result = await engine.record(event);
@@ -1405,11 +1407,17 @@ function MasteryMap({
             const skill = pack.curriculum.skills.find((item) => item.id === skillId);
             if (!skill) return null;
             const mastery = learner?.skills[skill.id]?.mastery ?? 0;
+            const mastered = learner
+              ? isMastered(skill, learner, pack)
+              : false;
             return (
               <div key={skill.id} className="skill-row">
                 <div className="skill-label">
                   <span>{skill.title}</span>
-                  <span>{percent(mastery)}</span>
+                  <span>
+                    {percent(mastery)}
+                    {mastered ? " · mastered" : ""}
+                  </span>
                 </div>
                 <div className="skill-bar">
                   <div style={{ width: percent(mastery) }} />
@@ -1469,13 +1477,12 @@ function ChallengePanel({
   busy: boolean;
   onChallenge: (skillId: string) => void;
 }) {
-  const threshold = pack.policy.masteryThreshold;
   const skills = pack.curriculum.skills
+    .filter((skill) => (learner ? isMastered(skill, learner, pack) : false))
     .map((skill) => ({
       skill,
       mastery: learner?.skills[skill.id]?.mastery ?? 0,
     }))
-    .filter((entry) => entry.mastery >= threshold)
     .sort((a, b) => b.mastery - a.mastery)
     .slice(0, 5);
 

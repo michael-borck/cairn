@@ -1,6 +1,7 @@
 import type { SkillState } from "./types";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
+export const REVIEW_TARGET_RETENTION = 0.8;
 
 export interface ReviewSchedule {
   reviewIntervalDays: number;
@@ -23,6 +24,31 @@ export function scheduleReview(
   return {
     reviewIntervalDays: interval,
     nextReviewAt: new Date(now.getTime() + interval * DAY_MS).toISOString(),
+  };
+}
+
+export function retrievability(state: SkillState, now: Date): number {
+  if (!state.lastSeenAt) return 1;
+  const days = Math.max(
+    0,
+    (now.getTime() - new Date(state.lastSeenAt).getTime()) / DAY_MS
+  );
+  return Math.pow(2, -days / Math.max(0.25, state.halfLifeDays));
+}
+
+export function scheduleRetentionReview(
+  state: SkillState,
+  now: Date,
+  targetRetention = REVIEW_TARGET_RETENTION
+): ReviewSchedule {
+  const days = Math.max(
+    0.25,
+    Math.max(0.25, state.halfLifeDays) *
+      Math.log2(1 / Math.min(0.99, Math.max(0.5, targetRetention)))
+  );
+  return {
+    reviewIntervalDays: days,
+    nextReviewAt: new Date(now.getTime() + days * DAY_MS).toISOString(),
   };
 }
 

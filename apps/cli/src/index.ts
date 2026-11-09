@@ -12,7 +12,7 @@ Usage:
   cairn validate <pack.json|pack-dir> [--strict]
   cairn inspect <pack.json|pack-dir>
   cairn simulate --pack <pack.json|pack-dir> [--learners 20] [--seed 1]
-                 [--max-steps 120] [--json]
+                 [--max-steps 400] [--json]
 
 A pack path can be a single JSON file or a directory containing
 manifest.json, curriculum.json, items.json, rubrics.json,
@@ -150,7 +150,7 @@ async function main(): Promise<number> {
     const report = await simulate(pack, {
       learners: readInt(parsed.values.learners, 20, "learners"),
       seed: readInt(parsed.values.seed, 1, "seed", 0),
-      maxSteps: readInt(parsed.values["max-steps"], 120, "max-steps"),
+      maxSteps: readInt(parsed.values["max-steps"], 400, "max-steps"),
     });
     if (parsed.values.json) {
       console.log(JSON.stringify(report, null, 2));

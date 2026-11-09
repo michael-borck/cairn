@@ -54,8 +54,33 @@ export function masteryOf(state: LearnerState, skillId: SkillId): number {
   return state.skills[skillId]?.mastery ?? 0;
 }
 
+const READINESS_THRESHOLD = 0.6;
+const MIN_DWELL = 2;
+const MAX_DWELL = 8;
+
 export function thresholdFor(skill: Skill, pack: ContentPack): number {
   return skill.masteryThreshold ?? pack.policy.masteryThreshold;
+}
+
+export function isMastered(
+  skill: Skill,
+  state: LearnerState,
+  pack: ContentPack
+): boolean {
+  const skillState = state.skills[skill.id];
+  if (!skillState) return false;
+  return (
+    skillState.mastery >= thresholdFor(skill, pack) &&
+    skillState.evidenceCount >= 8 &&
+    skillState.hardPasses >= 1 &&
+    skillState.delayedPasses >= 1
+  );
+}
+
+function reviewCapReached(state: LearnerState, pack: ContentPack): boolean {
+  const items = state.session?.items ?? 0;
+  const reviews = state.session?.reviewItems ?? 0;
+  return items >= 4 && reviews / items >= (pack.policy.reviewCap ?? 0.5);
 }
 
 export function difficultyBias(state: LearnerState): number {
@@ -87,7 +112,10 @@ function prerequisitesMet(
 ): boolean {
   return (skill.prerequisites ?? []).every((id) => {
     const prerequisite = pack.curriculum.skills.find((item) => item.id === id);
-    return masteryOf(state, id) >= (prerequisite ? thresholdFor(prerequisite, pack) : 0.5);
+    return (
+      masteryOf(state, id) >=
+      (prerequisite ? READINESS_THRESHOLD : READINESS_THRESHOLD)
+    );
   });
 }
 
@@ -99,7 +127,7 @@ function firstPrerequisiteGap(
   for (const id of skill.prerequisites ?? []) {
     const prerequisite = pack.curriculum.skills.find((item) => item.id === id);
     if (!prerequisite) continue;
-    if (masteryOf(state, id) < thresholdFor(prerequisite, pack)) {
+    if (masteryOf(state, id) < READINESS_THRESHOLD) {
       return prerequisite;
     }
   }
@@ -212,19 +240,39 @@ function targetSkill(
     ? ordered.filter((skill) => goalSkillIds.includes(skill.id))
     : [];
   const pool = goals.length > 0 ? goals : ordered;
+  const session = state.session;
+  const current = session?.currentSkillId
+    ? pool.find((skill) => skill.id === session.currentSkillId)
+    : undefined;
+  if (
+    current &&
+    !isMastered(current, state, pack) &&
+    prerequisitesMet(current, state, pack) &&
+    (session?.dwell ?? 0) < MIN_DWELL
+  ) {
+    return current;
+  }
+
   const unmastered = pool.filter(
-    (skill) => masteryOf(state, skill.id) < thresholdFor(skill, pack)
+    (skill) =>
+      !isMastered(skill, state, pack) &&
+      !(
+        session?.dwell >= MAX_DWELL &&
+        skill.id === session.currentSkillId
+      )
   );
   const ready = unmastered.find((skill) => prerequisitesMet(skill, state, pack));
   if (ready) return ready;
   if (unmastered.length > 0) return unmastered[0];
+  if (current && !isMastered(current, state, pack)) return current;
   return undefined;
 }
 
 function actionForMastery(
   mastery: number,
   threshold: number,
-  consecutiveWrong: number
+  consecutiveWrong: number,
+  gateMet: boolean
 ): { action: DecisionAction; reasonCode: ReasonCode; reason: string } {
   if (consecutiveWrong >= 2) {
     return {
@@ -254,6 +302,14 @@ function actionForMastery(
       reason: "You are close. Practise without leaning on hints.",
     };
   }
+  if (!gateMet) {
+    return {
+      action: "practice",
+      reasonCode: "independent_practice",
+      reason:
+        "Mastery is high. Collect a hard item and a delayed success before review.",
+    };
+  }
   return {
     action: "review",
     reasonCode: "retention_check",
@@ -280,6 +336,7 @@ function makeDecision(
         `mastery=${mastery.toFixed(2)}`,
         `threshold=${thresholdFor(skill, input.pack).toFixed(2)}`,
         `attempts=${state.skills[skill.id]?.attempts ?? 0}`,
+        `evidence=${(state.skills[skill.id]?.evidenceCount ?? 0).toFixed(1)}`,
       ]
     : ["all skills mastered"];
   return {
@@ -305,7 +362,7 @@ export function chooseNextDecision(input: PolicyInput): Decision {
   const { pack, state, now } = input;
   const bias = difficultyBias(state);
   const review = dueReview(pack, state, now);
-  if (review) {
+  if (review && !reviewCapReached(state, pack)) {
     return makeDecision(
       input,
       "review",
@@ -377,7 +434,12 @@ export function chooseNextDecision(input: PolicyInput): Decision {
     }
   }
 
-  let choice = actionForMastery(mastery, threshold, consecutiveWrong);
+  let choice = actionForMastery(
+    mastery,
+    threshold,
+    consecutiveWrong,
+    isMastered(target, state, pack)
+  );
   let item = selectItem(
     pack,
     target.id,
@@ -468,7 +530,7 @@ export function diagnoseDecisions(input: PolicyInput, maxItems = 5): Decision[] 
     ? ordered.filter((skill) => input.session.goalSkillIds?.includes(skill.id))
     : ordered;
   const targets = goals
-    .filter((skill) => masteryOf(state, skill.id) < thresholdFor(skill, pack))
+    .filter((skill) => !isMastered(skill, state, pack))
     .slice(0, maxItems);
 
   const decisions: Decision[] = [];

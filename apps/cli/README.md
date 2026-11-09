@@ -24,7 +24,7 @@ Commands:
 cairn validate <pack.json|pack-dir> [--strict]
 cairn inspect <pack.json|pack-dir>
 cairn simulate --pack <pack.json|pack-dir> [--learners 20] [--seed 1]
-               [--max-steps 120] [--json]
+               [--max-steps 400] [--json]
 ```
 
 A pack path can be a single JSON file or a directory containing

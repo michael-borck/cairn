@@ -13,6 +13,36 @@ The active adaptive core is coherent enough for a pilot. It also has configurati
 
 The main risk is not the algorithms. It is that the app promises more agency and more policy than the engine currently implements. The Easier, Harder, More help, and Less help controls are the clearest example.
 
+
+## Status update, 2026-11-09
+
+Adaptive v0.2 Phase 1 and Phase 2 are implemented.
+
+Now wired:
+
+- Difficulty preference changes item difficulty.
+- Help preference changes `helpLevel`.
+- More help and less help change the next decision.
+- Auto and manual adaptive modes.
+- Evidence count and half-life retention.
+- Item difficulty influences evidence weight.
+- Mastery gate requires evidence, an applied pass, and a delayed success.
+- Review cap and dwell.
+- Prerequisite readiness is separate from mastery threshold.
+
+Still unwired or legacy:
+
+- `targetSuccessMin` and `targetSuccessMax`.
+- `hysteresis` policy fields. Dwell and the mastery gate provide partial hysteresis.
+- `help` policy timing fields. The learner preference is wired, the policy timing is not.
+- `confidenceSampleRate`. Confidence is still offered by the UI.
+- `difficultyElo`. It is updated but not used for selection.
+- `availableMinutes` and `pathMode` in the policy.
+- `wrongStreak.similarItem`.
+- `reviewIntervalsDays` is now legacy; the engine uses half-life retention.
+
+Do not claim these are active until they are wired and tested.
+
 ## Methods that are active
 
 | Method | What it does |

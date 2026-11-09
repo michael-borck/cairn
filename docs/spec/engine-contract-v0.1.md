@@ -26,6 +26,16 @@ interface LearnerState {
   preferences: LearnerPreferences;
   calibration: CalibrationState;
   history: LearnerHistory;
+  session: SessionState;
+}
+
+interface SessionState {
+  startedAt?: string;
+  lastAt?: string;
+  items: number;
+  reviewItems: number;
+  currentSkillId?: SkillId;
+  dwell: number;
 }
 
 interface SkillState {
@@ -36,6 +46,10 @@ interface SkillState {
   lastSeenAt?: string;
   nextReviewAt?: string;
   reviewIntervalDays: number;
+  evidenceCount: number;
+  halfLifeDays: number;
+  hardPasses: number;
+  delayedPasses: number;
   misconceptions: Record<string, number>;
   difficultyElo: number;
   consecutiveWrong: number;
@@ -77,6 +91,7 @@ interface EvidenceEvent {
   attempts: number;
   durationMs: number;
   evidenceSource: "learner" | "ai" | "lab" | "self";
+  action?: DecisionAction;
   misconceptionIds?: string[];
 }
 

@@ -16,7 +16,10 @@ import {
   reviewQueueFor,
   selectItem,
 } from "./policy";
-import { earliestReviewAt, scheduleReview } from "./review";
+import {
+  earliestReviewAt,
+  scheduleRetentionReview,
+} from "./review";
 import {
   DEFAULT_PREFERENCES,
   ENGINE_VERSION,
@@ -35,6 +38,17 @@ import {
   type SkillState,
 } from "./types";
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+const EVIDENCE_HALF_LIFE_DAYS = 30;
+const HALF_LIFE_INIT_DAYS = 3;
+const HALF_LIFE_MIN_DAYS = 0.25;
+const HALF_LIFE_MAX_DAYS = 180;
+const SESSION_GAP_MS = 30 * 60 * 1000;
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
+}
+
 function blankSkill(): SkillState {
   return {
     mastery: DEFAULT_BKT_PARAMS.prior,
@@ -42,6 +56,10 @@ function blankSkill(): SkillState {
     attempts: 0,
     correct: 0,
     reviewIntervalDays: 0,
+    evidenceCount: 0,
+    halfLifeDays: HALF_LIFE_INIT_DAYS,
+    hardPasses: 0,
+    delayedPasses: 0,
     misconceptions: {},
     difficultyElo: 1000,
     consecutiveWrong: 0,
@@ -72,6 +90,11 @@ export function createInitialState(
       sessions: 0,
       totalMinutes: 0,
       recentItemIds: [],
+    },
+    session: {
+      items: 0,
+      reviewItems: 0,
+      dwell: 0,
     },
   };
 }
@@ -131,6 +154,16 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
     if (existing && existing.packId === pack.manifest.id) {
       if (!Array.isArray(existing.history.recentItemIds)) {
         existing.history.recentItemIds = [];
+      }
+      existing.session ??= { items: 0, reviewItems: 0, dwell: 0 };
+      for (const skill of Object.values(existing.skills)) {
+        skill.evidenceCount ??= skill.attempts ?? 0;
+        skill.halfLifeDays ??= Math.max(
+          HALF_LIFE_MIN_DAYS,
+          skill.reviewIntervalDays || HALF_LIFE_INIT_DAYS
+        );
+        skill.hardPasses ??= 0;
+        skill.delayedPasses ??= 0;
       }
       return existing;
     }
@@ -246,9 +279,30 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
         }
       }
 
+      const eventNow = new Date(event.timestamp);
       for (const skillId of skillIds) {
         const skillState = state.skills[skillId] ?? blankSkill();
+        const gapDays = skillState.lastSeenAt
+          ? Math.max(
+              0,
+              (eventNow.getTime() - new Date(skillState.lastSeenAt).getTime()) /
+                DAY_MS
+            )
+          : 0;
+        const difficulty = item?.difficulty ?? 3;
+        const difficultyFactor =
+          observed === undefined
+            ? 1
+            : observed
+              ? Math.min(1, 0.6 + difficulty * 0.1)
+              : Math.max(0.4, 1.1 - difficulty * 0.15);
+        const effectiveWeight = clamp(weight * difficultyFactor, 0, 1);
+
         skillState.attempts += 1;
+        skillState.evidenceCount =
+          (skillState.evidenceCount ?? 0) *
+            Math.pow(2, -gapDays / EVIDENCE_HALF_LIFE_DAYS) +
+          (observed !== undefined ? effectiveWeight : 0);
         skillState.lastSeenAt = event.timestamp;
 
         if (observed !== undefined) {
@@ -256,7 +310,7 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
           skillState.mastery = applyEvidence(
             skillState.mastery,
             observed,
-            weight
+            effectiveWeight
           );
           skillState.consecutiveWrong = observed
             ? 0
@@ -266,22 +320,44 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
             : 0;
           skillState.difficultyElo = updateElo(
             skillState.difficultyElo,
-            item?.difficulty ?? 3,
+            difficulty,
             observed
           );
-          const schedule = scheduleReview(
-            skillState,
-            observed,
-            now(),
-            pack.policy.reviewIntervalsDays
-          );
+          if (observed) {
+            const growth = gapDays >= 0.5 ? 1.8 : 1.2;
+            skillState.halfLifeDays = clamp(
+              skillState.halfLifeDays *
+                (1 + (growth - 1) * effectiveWeight),
+              HALF_LIFE_MIN_DAYS,
+              HALF_LIFE_MAX_DAYS
+            );
+            const appliedPass =
+              difficulty >= 3 ||
+              item?.type === "short_answer" ||
+              item?.type === "teach_back" ||
+              item?.type === "lab" ||
+              Boolean(item?.tags?.includes("transfer"));
+            if (appliedPass) {
+              skillState.hardPasses += 1;
+            }
+            if (gapDays >= 1) {
+              skillState.delayedPasses += 1;
+            }
+          } else {
+            skillState.halfLifeDays = clamp(
+              skillState.halfLifeDays * (1 - 0.4 * effectiveWeight),
+              HALF_LIFE_MIN_DAYS,
+              HALF_LIFE_MAX_DAYS
+            );
+          }
+          const schedule = scheduleRetentionReview(skillState, eventNow);
           skillState.reviewIntervalDays = schedule.reviewIntervalDays;
           skillState.nextReviewAt = schedule.nextReviewAt;
         }
 
         skillState.confidence = Math.min(
           1,
-          skillState.attempts / 5
+          (skillState.evidenceCount ?? 0) / 8
         );
         for (const misconceptionId of misconceptionIds) {
           skillState.misconceptions[misconceptionId] =
@@ -289,6 +365,37 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
         }
         state.skills[skillId] = skillState;
       }
+
+      const session = state.session ?? {
+        items: 0,
+        reviewItems: 0,
+        dwell: 0,
+      };
+      const previousSessionAt = session.lastAt
+        ? new Date(session.lastAt).getTime()
+        : null;
+      if (
+        previousSessionAt !== null &&
+        eventNow.getTime() - previousSessionAt > SESSION_GAP_MS
+      ) {
+        session.items = 0;
+        session.reviewItems = 0;
+        session.currentSkillId = undefined;
+        session.dwell = 0;
+        session.startedAt = event.timestamp;
+        state.history.sessions += 1;
+      }
+      session.items += 1;
+      if (event.action === "review") session.reviewItems += 1;
+      const primarySkillId = skillIds[0];
+      if (primarySkillId && session.currentSkillId === primarySkillId) {
+        session.dwell += 1;
+      } else {
+        session.currentSkillId = primarySkillId;
+        session.dwell = primarySkillId ? 1 : 0;
+      }
+      session.lastAt = event.timestamp;
+      state.session = session;
 
       if (event.confidence && observed !== undefined) {
         const probability =

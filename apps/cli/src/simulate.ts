@@ -129,7 +129,11 @@ export async function simulateLearner(
     };
     await engine.record(event);
 
-    current = new Date(current.getTime() + 5 * 60 * 1000);
+    const sessionBoundary = (steps + 1) % 10 === 0;
+    current = new Date(
+      current.getTime() +
+        (sessionBoundary ? 24 * 60 * 60 * 1000 : 5 * 60 * 1000)
+    );
   }
 
   const state = await engine.getState(learnerId);
