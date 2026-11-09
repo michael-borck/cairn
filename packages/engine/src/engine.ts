@@ -10,6 +10,8 @@ import {
 import {
   chooseNextDecision,
   diagnoseDecisions,
+  difficultyBias,
+  helpLevelFor,
   masteryOf,
   reviewQueueFor,
   selectItem,
@@ -101,6 +103,11 @@ function decisionForItem(
     reason: skill ? `${reason} (${skill.title})` : reason,
     evidence: [`skill=${skillId}`, `mastery=${mastery.toFixed(2)}`],
     confidence: mastery,
+    helpLevel: helpLevelFor(
+      state,
+      mastery,
+      state.skills[skillId]?.consecutiveWrong ?? 0
+    ),
     alternatives: [],
     packVersion: pack.manifest.version,
     policyVersion: pack.policy.id,
@@ -201,7 +208,8 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
         skill.id,
         "challenge",
         masteryOf(state, skill.id),
-        state.history.recentItemIds
+        state.history.recentItemIds,
+        difficultyBias(state)
       );
       if (!item) throw new Error(`No challenge item for ${skill.title}`);
       const decision = decisionForItem(
@@ -372,7 +380,8 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
           skillId,
           action,
           masteryOf(state, skillId),
-          state.history.recentItemIds
+          state.history.recentItemIds,
+          difficultyBias(state)
         );
         if (!item) {
           const next = chooseNextDecision({

@@ -58,6 +58,28 @@ export function thresholdFor(skill: Skill, pack: ContentPack): number {
   return skill.masteryThreshold ?? pack.policy.masteryThreshold;
 }
 
+export function difficultyBias(state: LearnerState): number {
+  if (state.preferences.difficulty === "gentle") return -1;
+  if (state.preferences.difficulty === "challenge") return 1;
+  return 0;
+}
+
+export function helpLevelFor(
+  state: LearnerState,
+  mastery: number,
+  consecutiveWrong: number
+): number {
+  const preference = state.preferences.help;
+  if (preference === "none") return 0;
+  if (preference === "nudge") return 1;
+  if (preference === "hint") return 2;
+  if (preference === "walkthrough") return 3;
+  if (consecutiveWrong >= 4) return 4;
+  if (consecutiveWrong >= 2 || mastery < 0.4) return 2;
+  if (mastery < 0.7) return 1;
+  return 0;
+}
+
 function prerequisitesMet(
   skill: Skill,
   state: LearnerState,
@@ -120,7 +142,8 @@ export function selectItem(
   skillId: SkillId,
   action: DecisionAction,
   mastery: number,
-  recentItemIds: string[] = []
+  recentItemIds: string[] = [],
+  difficultyOffset = 0
 ): Item | undefined {
   const all = itemsForSkill(pack, skillId);
   if (all.length === 0) return undefined;
@@ -130,7 +153,10 @@ export function selectItem(
   const pool = preferred.length > 0 ? preferred : all;
   const fresh = pool.filter((item) => !recentItemIds.includes(item.id));
   const candidates = fresh.length > 0 ? fresh : pool;
-  const targetDifficulty = 1 + mastery * 4;
+  const targetDifficulty = Math.min(
+    5,
+    Math.max(1, 1 + mastery * 4 + difficultyOffset)
+  );
 
   return [...candidates].sort((a, b) => {
     const distance =
@@ -168,7 +194,8 @@ function dueReview(
       entry.skill.id,
       "review",
       entry.itemState.mastery,
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      difficultyBias(state)
     );
     if (item) return { skill: entry.skill, item };
   }
@@ -244,6 +271,9 @@ function makeDecision(
 ): Decision {
   const state = input.state;
   const mastery = skill ? masteryOf(state, skill.id) : 0;
+  const helpLevel = skill
+    ? helpLevelFor(state, mastery, state.skills[skill.id]?.consecutiveWrong ?? 0)
+    : 0;
   const evidence = skill
     ? [
         `skill=${skill.id}`,
@@ -262,6 +292,7 @@ function makeDecision(
     reason: skill ? `${reason} (${skill.title})` : reason,
     evidence,
     confidence: mastery,
+    helpLevel,
     alternatives: [],
     packVersion: input.pack.manifest.version,
     policyVersion: input.pack.policy.id,
@@ -272,6 +303,7 @@ function makeDecision(
 
 export function chooseNextDecision(input: PolicyInput): Decision {
   const { pack, state, now } = input;
+  const bias = difficultyBias(state);
   const review = dueReview(pack, state, now);
   if (review) {
     return makeDecision(
@@ -303,7 +335,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
       gap.id,
       "remediate",
       masteryOf(state, gap.id),
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      bias
     );
     if (item) {
       return makeDecision(
@@ -329,7 +362,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
       target.id,
       "remediate",
       mastery,
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      bias
     );
     if (item) {
       return makeDecision(
@@ -349,7 +383,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
     target.id,
     choice.action,
     mastery,
-    state.history.recentItemIds
+    state.history.recentItemIds,
+    bias
   );
   if (
     item &&
@@ -361,7 +396,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
       target.id,
       "practice",
       mastery,
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      bias
     );
     if (practice) {
       item = practice;
@@ -378,7 +414,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
       target.id,
       "practice",
       mastery,
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      bias
     );
   }
   if (!item) {
@@ -390,7 +427,8 @@ export function chooseNextDecision(input: PolicyInput): Decision {
         skill.id,
         "practice",
         masteryOf(state, skill.id),
-        state.history.recentItemIds
+        state.history.recentItemIds,
+        bias
       );
       if (fallback) {
         return makeDecision(
@@ -440,7 +478,8 @@ export function diagnoseDecisions(input: PolicyInput, maxItems = 5): Decision[] 
       skill.id,
       "diagnose",
       masteryOf(state, skill.id),
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      difficultyBias(state)
     );
     if (!item) continue;
     decisions.push(
@@ -478,7 +517,8 @@ export function reviewQueueFor(
       entry.skill.id,
       "review",
       entry.itemState.mastery,
-      state.history.recentItemIds
+      state.history.recentItemIds,
+      difficultyBias(state)
     );
       return {
         skillId: entry.skill.id,

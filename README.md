@@ -72,6 +72,7 @@ docs/
 - [Pack schema v0.1](docs/spec/pack-schema-v0.1.md)
 - [Engine contract v0.1](docs/spec/engine-contract-v0.1.md)
 - [Adaptive methods audit](docs/spec/adaptive-methods-audit.md)
+- [Adaptive v0.2 implementation plan](docs/plans/adaptive-v0.2.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Roadmap](docs/roadmap.md)
 - [Future work](docs/future-work.md)

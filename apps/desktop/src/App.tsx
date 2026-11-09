@@ -4,6 +4,8 @@ import { invoke } from "@tauri-apps/api/core";
 import type { ContentPack, Item, Lab, MCQItem, Rubric } from "@cairn/content";
 import {
   createEngine,
+  ENGINE_VERSION,
+  helpLevelFor,
   type AdaptiveEngine,
   type Decision,
   type EvidenceEvent,
@@ -66,6 +68,7 @@ const ACTION_LABEL: Record<Decision["action"], string> = {
 };
 
 type ShellStatus = "connecting" | "ready" | "error";
+type AdaptiveMode = "auto" | "manual";
 type Confidence = "" | "guess" | "unsure" | "sure";
 
 interface Pending {
@@ -128,6 +131,9 @@ function App() {
   const [aiHint, setAiHint] = useState<string | null>(null);
   const [aiError, setAiError] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
+  const [adaptiveMode, setAdaptiveMode] = useState<AdaptiveMode>(() =>
+    localStorage.getItem("cairn.adaptive.v1") === "manual" ? "manual" : "auto"
+  );
   const [decision, setDecision] = useState<Decision | null>(null);
   const [explanation, setExplanation] = useState<Explanation | null>(null);
   const [pending, setPending] = useState<Pending | null>(null);
@@ -209,8 +215,61 @@ function App() {
     }
   }
 
+  function updateAdaptiveMode(mode: AdaptiveMode): void {
+    setAdaptiveMode(mode);
+    localStorage.setItem("cairn.adaptive.v1", mode);
+    setDecision(null);
+    setExplanation(null);
+    resetActivity();
+    setMessage(
+      mode === "manual"
+        ? "Manual mode: choose an activity from the pack."
+        : "Auto mode: the engine will choose the next activity."
+    );
+  }
+
+  function startManualItem(item: Item): void {
+    if (!active) return;
+    const skillId = item.skillIds[0] ?? "";
+    const mastery = learner?.skills[skillId]?.mastery ?? 0;
+    const helpLevel = learner
+      ? helpLevelFor(
+          learner,
+          mastery,
+          learner.skills[skillId]?.consecutiveWrong ?? 0
+        )
+      : 0;
+    setDecision({
+      id: newId(),
+      learnerId: LEARNER_ID,
+      action: "practice",
+      itemId: item.id,
+      skillIds: item.skillIds,
+      reasonCode: "learner_override",
+      reason: "You chose this activity in manual mode.",
+      evidence: ["manual selection"],
+      confidence: mastery,
+      helpLevel,
+      alternatives: [],
+      packVersion: active.pack.manifest.version,
+      policyVersion: active.pack.policy.id,
+      engineVersion: ENGINE_VERSION,
+      createdAt: new Date().toISOString(),
+    });
+    setExplanation(null);
+    resetActivity();
+    setMessage("Manual activity selected.");
+  }
+
   async function startSession(): Promise<void> {
     if (!engine) return;
+    if (adaptiveMode === "manual") {
+      setDecision(null);
+      setExplanation(null);
+      resetActivity();
+      setMessage("Manual mode: choose an activity from the pack.");
+      return;
+    }
     setBusy(true);
     setError(false);
     try {
@@ -280,6 +339,13 @@ function App() {
       };
       const result = await engine.record(event);
       setLearner(result.state);
+      if (adaptiveMode === "manual") {
+        await refresh(engine);
+        resetActivity();
+        setDecision(null);
+        setMessage("Recorded. Choose another activity.");
+        return;
+      }
       await advance(engine);
       setMessage("Recorded. The engine chose the next activity.");
     } catch (cause) {
@@ -792,6 +858,18 @@ function App() {
                 <p className="lede">{active.pack.manifest.description}</p>
               </div>
               <div className="pack-actions">
+                <label className="mode-select">
+                  Adaptive
+                  <select
+                    value={adaptiveMode}
+                    onChange={(event) =>
+                      updateAdaptiveMode(event.target.value as AdaptiveMode)
+                    }
+                  >
+                    <option value="auto">Auto</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </label>
                 <button
                   type="button"
                   className="ghost-button"
@@ -814,11 +892,15 @@ function App() {
             <div className="workspace">
               <section className="session-card">
                 {!decision ? (
-                  <PackOverview
-                    pack={active.pack}
-                    busy={busy}
-                    onStart={() => void startSession()}
-                  />
+                  adaptiveMode === "manual" ? (
+                    <ManualPicker pack={active.pack} onPick={startManualItem} />
+                  ) : (
+                    <PackOverview
+                      pack={active.pack}
+                      busy={busy}
+                      onStart={() => void startSession()}
+                    />
+                  )
                 ) : decision.action === "complete" ? (
                   <div className="complete">
                     <p className="eyebrow">Path complete</p>
@@ -845,6 +927,7 @@ function App() {
                     selectedOption={selectedOption}
                     textAnswer={textAnswer}
                     confidence={confidence}
+                    helpLevel={decision.helpLevel}
                     busy={busy}
                     aiMode={aiSettings.mode}
                     aiHint={aiHint}
@@ -1166,6 +1249,71 @@ function PackOverview({
   );
 }
 
+function ManualPicker({
+  pack,
+  onPick,
+}: {
+  pack: ContentPack;
+  onPick: (item: Item) => void;
+}) {
+  const [skillId, setSkillId] = useState(
+    pack.curriculum.skills[0]?.id ?? ""
+  );
+  const skill =
+    pack.curriculum.skills.find((entry) => entry.id === skillId) ??
+    pack.curriculum.skills[0];
+  const items = pack.items.filter((item) =>
+    item.skillIds.includes(skill?.id ?? "")
+  );
+
+  return (
+    <div className="manual-picker">
+      <p className="eyebrow">Manual mode</p>
+      <h2>Choose an activity</h2>
+      <p className="muted">
+        The engine still records evidence, but it will not choose the path for
+        you.
+      </p>
+      {pack.curriculum.skills.length === 0 ? (
+        <p>This pack has no skills.</p>
+      ) : (
+        <>
+          <label className="field-label">
+            Skill
+            <select
+              value={skill?.id ?? ""}
+              onChange={(event) => setSkillId(event.target.value)}
+            >
+              {pack.curriculum.skills.map((entry) => (
+                <option key={entry.id} value={entry.id}>
+                  {entry.title}
+                </option>
+              ))}
+            </select>
+          </label>
+          <div className="manual-list">
+            {items.length === 0 ? (
+              <p>No activities for this skill.</p>
+            ) : (
+              items.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className="manual-item"
+                  onClick={() => onPick(item)}
+                >
+                  <span className="manual-item-type">{item.type}</span>
+                  <span>{item.prompt}</span>
+                </button>
+              ))
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
 function WhyPanel({
   decision,
   explanation,
@@ -1181,7 +1329,7 @@ function WhyPanel({
     <div className="panel">
       <div className="panel-head">
         <h2>Why this?</h2>
-        {decision && <span>{percent(decision.confidence)}</span>}
+        {decision && <span>{percent(decision.confidence)} · help {decision.helpLevel}</span>}
       </div>
       {decision ? (
         <>
@@ -1603,6 +1751,7 @@ function ActivityView({
   selectedOption,
   textAnswer,
   confidence,
+  helpLevel,
   busy,
   aiMode,
   aiHint,
@@ -1624,6 +1773,7 @@ function ActivityView({
   selectedOption: string | null;
   textAnswer: string;
   confidence: Confidence;
+  helpLevel: number;
   busy: boolean;
   aiMode: AIMode;
   aiHint: string | null;
@@ -1639,7 +1789,9 @@ function ActivityView({
   onHintUsed: () => void;
 }) {
   const [visibleHints, setVisibleHints] = useState(0);
-  const hints = item.hints ?? [];
+  const hints = (item.hints ?? []).filter(
+    (hint) => hint.level <= helpLevel
+  );
   const hintBlock =
     hints.length > 0 ? (
       <div className="hints">

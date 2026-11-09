@@ -9,6 +9,7 @@ import {
   createInitialState,
   createMemoryStorage,
   evidenceWeight,
+  helpLevelFor,
   scheduleReview,
   selectItem,
   updateMastery,
@@ -123,6 +124,73 @@ describe("policy", () => {
       ["container-mcq"]
     );
     expect(chosen?.id).toBe("container-mcq-2");
+  });
+
+  it("changes item difficulty with the difficulty preference", () => {
+    const custom = clone(pack) as any;
+    custom.items.push({
+      ...custom.items[1],
+      id: "easy-mcq",
+      difficulty: 1,
+      prompt: "Easy item",
+    });
+    custom.items.push({
+      ...custom.items[1],
+      id: "hard-mcq",
+      difficulty: 5,
+      prompt: "Hard item",
+    });
+    const easy = selectItem(
+      custom,
+      "container-basics",
+      "practice",
+      0.5,
+      [],
+      -1
+    );
+    const hard = selectItem(
+      custom,
+      "container-basics",
+      "practice",
+      0.5,
+      [],
+      1
+    );
+    expect(easy?.difficulty).toBeLessThan(hard?.difficulty ?? 0);
+  });
+
+  it("computes help level from preference and wrong streak", () => {
+    const state = createInitialState(pack, "learner-1");
+    state.preferences.help = "none";
+    expect(helpLevelFor(state, 0.2, 3)).toBe(0);
+    state.preferences.help = "walkthrough";
+    expect(helpLevelFor(state, 0.2, 3)).toBe(3);
+    state.preferences.help = "auto";
+    expect(helpLevelFor(state, 0.2, 0)).toBe(2);
+    expect(helpLevelFor(state, 0.5, 0)).toBe(1);
+    expect(helpLevelFor(state, 0.8, 0)).toBe(0);
+    expect(helpLevelFor(state, 0.8, 4)).toBe(4);
+  });
+
+  it("applies the more-help override to the next decision", async () => {
+    const engine = createEngine({
+      pack,
+      storage: createMemoryStorage(),
+      now: () => now,
+      idFactory: () => "decision-1",
+    });
+    const first = await engine.next({
+      learnerId: "learner-1",
+      session: { availableMinutes: 25, mode: "auto" },
+    });
+    const next = await engine.override({
+      learnerId: "learner-1",
+      decisionId: first.id,
+      choice: { type: "more_help" },
+    });
+    expect(next.helpLevel).toBe(3);
+    const state = await engine.getState("learner-1");
+    expect(state.preferences.help).toBe("walkthrough");
   });
 
   it("steps back to a prerequisite when one is weak", () => {

@@ -134,6 +134,8 @@ export interface Decision {
   reason: string;
   evidence: string[];
   confidence: number;
+  /** Suggested help level: 0 none, 1 nudge, 2 hint, 3 walkthrough, 4 full solution. */
+  helpLevel: number;
   alternatives: DecisionAlternative[];
   packVersion: string;
   policyVersion: string;

@@ -112,6 +112,7 @@ interface Decision {
   reason: string;
   evidence: string[];
   confidence: number;
+  helpLevel: number;
   alternatives: {
     action: DecisionAction;
     itemId?: ItemId;
