@@ -14,7 +14,6 @@ This file records the prior art and the projects that shaped the design.
 - **Spaced repetition**: the review tradition behind Anki, SuperMemo, FSRS, and Leitner boxes. Cairn uses a half-life retention model and a review cap.
 - **Lorekeeper and Lorekeeper Packs**: the static, PR-curated pack library pattern. Cairn's planned community library follows the same shape: submissions, validation, review, signing, and a local library that is the source of truth.
 - **Three Ledgers and the Ledgers research prototype**: the evidence-weighted learner model and replay harness in `research/ledgers`.
-- **Gemini Deep Research**: the external Cognitive Foraging and Wayfinder synthesis in `research/external`. It is an idea source, not evidence.
 
 ## Open-source projects worth knowing
 
