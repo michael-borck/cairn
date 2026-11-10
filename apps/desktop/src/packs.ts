@@ -55,6 +55,10 @@ export interface Catalog {
 export const DEFAULT_CATALOG_URL =
   "https://michael-borck.github.io/cairn-packs/catalog/index.json";
 
+const TRUSTED_CATALOG_PUBLIC_KEYS = [
+  "auHW8t8qc/0I71xd4P9r42kQItG6j35e/P3YTPm1f+k=",
+];
+
 const INSTALLED_PACKS_KEY = "cairn.installed-packs.v1";
 const LEGACY_IMPORTED_PACK_KEY = "cairn.imported-pack.v1";
 
@@ -208,6 +212,9 @@ export async function loadCatalog(
     !Array.isArray(data.revoked)
   ) {
     throw new Error("This is not a signed Cairn pack catalog.");
+  }
+  if (!TRUSTED_CATALOG_PUBLIC_KEYS.includes(data.publicKey)) {
+    throw new Error("The catalog signing key is not trusted by this build.");
   }
   return { url, catalog: data as Catalog };
 }
