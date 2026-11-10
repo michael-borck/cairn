@@ -11,6 +11,7 @@ type CairnEvent = {
   confidence?: "guess" | "unsure" | "sure";
   durationMs: number;
   decisionId?: string;
+  scaffoldId?: string;
 };
 
 export interface CairnExportInput {
@@ -109,8 +110,10 @@ export function toLedgersBundle(input: CairnExportInput): LedgersBundle {
       model: input.model,
       policy: input.policy,
       cairnDecisionCount: input.decisions?.length ?? 0,
+      cairnScaffoldAttempts: input.events.filter((event) => event.scaffoldId)
+        .length,
       note:
-        "Cairn decisions are omitted because they lack Ledgers propensities. Prediction is available; policy comparison is not until propensities are logged.",
+        "Cairn decisions are omitted because they lack Ledgers propensities. Prediction is available; policy comparison is not until propensities are logged. Scaffold attempts are attributed to their parent item.",
     },
   };
 }

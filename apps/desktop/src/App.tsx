@@ -1,7 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 
-import type { ContentPack, Item, Lab, MCQItem, Rubric } from "@cairn/content";
+import {
+  findScaffold,
+  type ContentPack,
+  type Item,
+  type Lab,
+  type MCQItem,
+  type Rubric,
+} from "@cairn/content";
 import {
   createEngine,
   ENGINE_VERSION,
@@ -56,7 +63,7 @@ import { computeBadges } from "./badges";
 import { buildReviewCalendar } from "./review-calendar";
 import { buildCairnExport, saveCairnExport } from "./export";
 import { createPersistentStorage, type AppStorage } from "./storage";
-import { ScaffoldPanel } from "./ScaffoldPanel";
+import { ScaffoldActivity, ScaffoldPanel } from "./ScaffoldPanel";
 
 const LEARNER_ID = "local";
 const ACTION_LABEL: Record<Decision["action"], string> = {
@@ -67,6 +74,7 @@ const ACTION_LABEL: Record<Decision["action"], string> = {
   review: "Review",
   remediate: "Repair",
   challenge: "Challenge",
+  scaffold: "Smaller step",
   complete: "Complete",
 };
 
@@ -159,6 +167,10 @@ function App() {
     active && decision?.itemId
       ? (active.pack.items.find((item) => item.id === decision.itemId) ?? null)
       : null;
+  const currentScaffold =
+    currentItem && decision?.scaffoldId
+      ? findScaffold(currentItem.scaffolds ?? [], decision.scaffoldId)
+      : undefined;
   const currentLab = active ? labFor(active.pack, currentItem) : undefined;
   const currentRubric = active ? rubricFor(active.pack, currentItem) : undefined;
 
@@ -316,6 +328,7 @@ function App() {
     setError(false);
     try {
       const selfReported =
+        !decision.scaffoldId &&
         currentItem.type !== "mcq" &&
         !(
           currentItem.type === "short_answer" &&
@@ -340,6 +353,7 @@ function App() {
           input.evidenceSource ?? (selfReported ? "self" : "learner"),
         action: decision.action,
         decisionId: decision.id,
+        scaffoldId: decision.scaffoldId,
         misconceptionIds: input.misconceptionIds,
       };
       const result = await engine.record(event);
@@ -960,6 +974,15 @@ function App() {
                       Reset progress
                     </button>
                   </div>
+                ) : currentItem && currentScaffold ? (
+                  <ScaffoldActivity
+                    key={decision.id}
+                    scaffold={currentScaffold}
+                    parentPrompt={currentItem.prompt}
+                    busy={busy}
+                    onHelpUsed={() => setHintsUsed((count) => count + 1)}
+                    onSubmit={(result) => void record(result)}
+                  />
                 ) : currentItem ? (
                   <ActivityView
                     key={decision.id}
@@ -1919,9 +1942,9 @@ function ActivityView({
     ) : null;
 
   const scaffoldBlock =
-    item.scaffolds.length > 0 ? (
+    (item.scaffolds ?? []).length > 0 ? (
       <ScaffoldPanel
-        scaffolds={item.scaffolds}
+        scaffolds={item.scaffolds ?? []}
         onHelpUsed={onHintUsed}
         defaultOpen={helpLevel >= 3}
       />

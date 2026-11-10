@@ -27,6 +27,14 @@ interface LearnerState {
   calibration: CalibrationState;
   history: LearnerHistory;
   session: SessionState;
+  scaffolds: Record<string, ScaffoldState>;
+}
+
+interface ScaffoldState {
+  attempts: number;
+  correct: number;
+  consecutiveWrong: number;
+  lastAt?: string;
 }
 
 interface SessionState {
@@ -93,6 +101,7 @@ interface EvidenceEvent {
   evidenceSource: "learner" | "ai" | "lab" | "self";
   action?: DecisionAction;
   decisionId?: string;
+  scaffoldId?: string;
   misconceptionIds?: string[];
 }
 
@@ -116,6 +125,7 @@ type DecisionAction =
   | "review"
   | "remediate"
   | "challenge"
+  | "scaffold"
   | "complete";
 
 interface Decision {
@@ -123,6 +133,8 @@ interface Decision {
   learnerId: LearnerId;
   action: DecisionAction;
   itemId?: ItemId;
+  scaffoldId?: string;
+  scaffoldPath?: string[];
   skillIds: SkillId[];
   reasonCode: string;
   reason: string;
@@ -157,8 +169,20 @@ type ReasonCode =
   | "challenge_passed"
   | "learner_override"
   | "session_goal_met"
-  | "fatigue_detected";
+  | "fatigue_detected"
+  | "scaffold_step";
 ```
+
+## Scaffold selection
+
+When a skill reaches `policy.wrongStreak.switchRepresentation` misses in a row, the engine looks for a parent item with a scaffold tree. It returns a `scaffold` decision whose `itemId` is the parent item, `scaffoldId` is the selected node, and `scaffoldPath` is the path from the root.
+
+- The first unseen scaffold at the shallowest level is selected.
+- A missed scaffold selects its first unseen child, if one exists.
+- A correct scaffold does not select its children.
+- Scaffold progress is stored in `learner.scaffolds` under `${itemId}::${scaffoldId}`.
+- Scaffold evidence updates the parent skill and is logged with `scaffoldId`.
+- If no scaffold remains, the normal wrong-streak remediation path continues.
 
 ## Engine API
 

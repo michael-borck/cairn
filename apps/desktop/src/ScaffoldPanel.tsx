@@ -70,6 +70,141 @@ export function ScaffoldPanel({
   );
 }
 
+export function ScaffoldActivity({
+  scaffold,
+  parentPrompt,
+  busy,
+  onHelpUsed,
+  onSubmit,
+}: {
+  scaffold: Scaffold;
+  parentPrompt: string;
+  busy: boolean;
+  onHelpUsed: () => void;
+  onSubmit: (result: {
+    correct: boolean;
+    score: number;
+    response: unknown;
+  }) => void;
+}) {
+  const [answer, setAnswer] = useState("");
+  const [selected, setSelected] = useState<string | null>(null);
+  const [pending, setPending] = useState<{
+    correct: boolean;
+    score: number;
+    response: unknown;
+  } | null>(null);
+  const [visibleHints, setVisibleHints] = useState(0);
+  const hints = (scaffold.hints ?? []).slice(0, visibleHints);
+
+  function check(): void {
+    if (pending) return;
+    const correct =
+      scaffold.kind === "mcq"
+        ? selected === scaffold.correctOptionId
+        : answerMatches(answer, scaffold.answer ?? "");
+    setPending({
+      correct,
+      score: correct ? 1 : 0,
+      response: scaffold.kind === "mcq" ? selected : answer,
+    });
+  }
+
+  return (
+    <div className="activity scaffold-activity">
+      <p className="eyebrow">Smaller step</p>
+      <h2>{scaffold.prompt}</h2>
+      <p className="scaffold-parent">From: {parentPrompt}</p>
+
+      {scaffold.kind === "mcq" ? (
+        <div className="options">
+          {(scaffold.options ?? []).map((option) => (
+            <button
+              key={option.id}
+              type="button"
+              className={`option ${selected === option.id ? "selected" : ""}`}
+              onClick={() => setSelected(option.id)}
+              disabled={busy || Boolean(pending)}
+            >
+              {option.text}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <input
+          className="scaffold-answer"
+          value={answer}
+          onChange={(event) => setAnswer(event.target.value)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              if (pending) onSubmit(pending);
+              else check();
+            }
+          }}
+          placeholder="Your answer"
+          aria-label={scaffold.prompt}
+          disabled={busy || Boolean(pending)}
+        />
+      )}
+
+      {!pending && (
+        <button
+          type="button"
+          className="button"
+          onClick={check}
+          disabled={
+            busy || (scaffold.kind === "mcq" ? !selected : !answer.trim())
+          }
+        >
+          Check
+        </button>
+      )}
+
+      {(scaffold.hints ?? []).length > 0 && (
+        <div className="hints">
+          {hints.map((hint, index) => (
+            <p key={`${hint.level}-${index}`}>
+              <strong>Hint {index + 1}</strong> {hint.text}
+            </p>
+          ))}
+          {visibleHints < (scaffold.hints ?? []).length && (
+            <button
+              type="button"
+              className="ghost-button small"
+              onClick={() => {
+                setVisibleHints((count) => count + 1);
+                onHelpUsed();
+              }}
+              disabled={busy || Boolean(pending)}
+            >
+              Show hint {visibleHints + 1}
+            </button>
+          )}
+        </div>
+      )}
+
+      {pending && (
+        <div className={`feedback ${pending.correct ? "good" : "bad"}`}>
+          <p>
+            {pending.correct
+              ? "Correct. Keep going."
+              : "Not quite. The next step will be smaller if this one has a sub-step."}
+          </p>
+          <button
+            type="button"
+            className="button"
+            onClick={() => onSubmit(pending)}
+            disabled={busy}
+          >
+            Continue
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ScaffoldStep({
   scaffold,
   depth,
@@ -85,7 +220,7 @@ function ScaffoldStep({
   const [visibleHints, setVisibleHints] = useState(0);
   const [done, setDone] = useState(false);
 
-  const hints = scaffold.hints.slice(0, visibleHints);
+  const hints = (scaffold.hints ?? []).slice(0, visibleHints);
 
   function check(): void {
     if (done) return;
@@ -167,14 +302,14 @@ function ScaffoldStep({
         </p>
       )}
 
-      {!done && scaffold.hints.length > 0 && (
+      {!done && (scaffold.hints ?? []).length > 0 && (
         <div className="scaffold-hints">
           {hints.map((hint, index) => (
             <p key={`${hint.level}-${index}`}>
               <strong>Hint {index + 1}</strong> {hint.text}
             </p>
           ))}
-          {visibleHints < scaffold.hints.length && (
+          {visibleHints < (scaffold.hints ?? []).length && (
             <button
               type="button"
               className="ghost-button small"
@@ -199,10 +334,10 @@ function ScaffoldStep({
         </button>
       )}
 
-      {result === "wrong" && scaffold.scaffolds.length > 0 && (
+      {result === "wrong" && (scaffold.scaffolds ?? []).length > 0 && (
         <div className="scaffold-children">
           <p>Try a smaller step:</p>
-          {scaffold.scaffolds.map((child) => (
+          {(scaffold.scaffolds ?? []).map((child) => (
             <ScaffoldStep
               key={child.id}
               scaffold={child}

@@ -49,6 +49,13 @@ export interface SkillState {
   consecutiveCorrect: number;
 }
 
+export interface ScaffoldState {
+  attempts: number;
+  correct: number;
+  consecutiveWrong: number;
+  lastAt?: string;
+}
+
 export interface CalibrationState {
   answered: number;
   brierScore: number;
@@ -80,6 +87,7 @@ export interface LearnerState {
   calibration: CalibrationState;
   history: LearnerHistory;
   session: SessionState;
+  scaffolds: Record<string, ScaffoldState>;
 }
 
 export interface EvidenceEvent {
@@ -100,6 +108,7 @@ export interface EvidenceEvent {
   evidenceSource: "learner" | "ai" | "lab" | "self";
   action?: DecisionAction;
   decisionId?: string;
+  scaffoldId?: string;
   misconceptionIds?: string[];
 }
 
@@ -117,6 +126,7 @@ export type DecisionAction =
   | "review"
   | "remediate"
   | "challenge"
+  | "scaffold"
   | "complete";
 
 export type ReasonCode =
@@ -132,7 +142,8 @@ export type ReasonCode =
   | "challenge_passed"
   | "learner_override"
   | "session_goal_met"
-  | "fatigue_detected";
+  | "fatigue_detected"
+  | "scaffold_step";
 
 export interface DecisionAlternative {
   action: DecisionAction;
@@ -145,6 +156,8 @@ export interface Decision {
   learnerId: LearnerId;
   action: DecisionAction;
   itemId?: ItemId;
+  scaffoldId?: string;
+  scaffoldPath?: string[];
   skillIds: SkillId[];
   reasonCode: ReasonCode;
   reason: string;

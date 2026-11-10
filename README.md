@@ -6,7 +6,7 @@ Website: https://cairn.borck.education
 
 Cairn imports your notes, textbooks, and labs, builds a skill map, diagnoses where you are, and adapts difficulty, help, and review. Every decision is visible and overridable. AI is optional.
 
-Status: adaptive v0.2 Phase 3 in progress: evidence count, retention, mastery gates, review controls, real-log export, and Ledgers bundle conversion are in place. Prediction on real logs is next.
+Status: adaptive v0.2 Phase 3 in progress: evidence count, retention, mastery gates, review controls, engine-selected scaffold steps, real-log export, and Ledgers bundle conversion are in place. Prediction on real logs is next.
 
 ## What is built
 

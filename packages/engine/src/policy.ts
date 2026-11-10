@@ -1,4 +1,10 @@
-import type { ContentPack, Item, Skill, SkillId } from "@cairn/content";
+import type {
+  ContentPack,
+  Item,
+  Scaffold,
+  Skill,
+  SkillId,
+} from "@cairn/content";
 
 import { isReviewDue, overdueDays } from "./review";
 import {
@@ -162,31 +168,38 @@ const TYPE_ORDER: Record<DecisionAction, string[]> = {
   ],
   remediate: ["explain", "worked_example", "mcq"],
   challenge: ["mcq", "short_answer", "lab", "teach_back"],
+  scaffold: [
+    "explain",
+    "worked_example",
+    "mcq",
+    "short_answer",
+    "teach_back",
+    "lab",
+    "reflection",
+  ],
   complete: [],
 };
 
-export function selectItem(
-  pack: ContentPack,
-  skillId: SkillId,
+function pickItem(
+  candidates: Item[],
   action: DecisionAction,
   mastery: number,
-  recentItemIds: string[] = [],
-  difficultyOffset = 0
+  recentItemIds: string[],
+  difficultyOffset: number
 ): Item | undefined {
-  const all = itemsForSkill(pack, skillId);
-  if (all.length === 0) return undefined;
+  if (candidates.length === 0) return undefined;
 
   const order = TYPE_ORDER[action];
-  const preferred = all.filter((item) => order.includes(item.type));
-  const pool = preferred.length > 0 ? preferred : all;
+  const preferred = candidates.filter((item) => order.includes(item.type));
+  const pool = preferred.length > 0 ? preferred : candidates;
   const fresh = pool.filter((item) => !recentItemIds.includes(item.id));
-  const candidates = fresh.length > 0 ? fresh : pool;
+  const items = fresh.length > 0 ? fresh : pool;
   const targetDifficulty = Math.min(
     5,
     Math.max(1, 1 + mastery * 4 + difficultyOffset)
   );
 
-  return [...candidates].sort((a, b) => {
+  return [...items].sort((a, b) => {
     const distance =
       Math.abs(a.difficulty - targetDifficulty) -
       Math.abs(b.difficulty - targetDifficulty);
@@ -196,6 +209,72 @@ export function selectItem(
     if (typeDistance !== 0) return typeDistance;
     return a.id.localeCompare(b.id);
   })[0];
+}
+
+export function selectItem(
+  pack: ContentPack,
+  skillId: SkillId,
+  action: DecisionAction,
+  mastery: number,
+  recentItemIds: string[] = [],
+  difficultyOffset = 0
+): Item | undefined {
+  return pickItem(
+    itemsForSkill(pack, skillId),
+    action,
+    mastery,
+    recentItemIds,
+    difficultyOffset
+  );
+}
+
+function selectScaffoldParent(
+  pack: ContentPack,
+  skillId: SkillId,
+  mastery: number,
+  recentItemIds: string[] = [],
+  difficultyOffset = 0
+): Item | undefined {
+  return pickItem(
+    itemsForSkill(pack, skillId).filter(
+      (item) => (item.scaffolds ?? []).length > 0
+    ),
+    "scaffold",
+    mastery,
+    recentItemIds,
+    difficultyOffset
+  );
+}
+
+interface ScaffoldChoice {
+  scaffold: Scaffold;
+  path: string[];
+}
+
+function chooseScaffold(
+  itemId: string,
+  scaffolds: Scaffold[],
+  state: LearnerState,
+  path: string[] = []
+): ScaffoldChoice | undefined {
+  for (const scaffold of scaffolds) {
+    const key = `${itemId}::${scaffold.id}`;
+    const progress = state.scaffolds?.[key];
+    const nodePath = [...path, scaffold.id];
+    if (!progress?.attempts) {
+      return { scaffold, path: nodePath };
+    }
+    if (progress.consecutiveWrong > 0) {
+      const child = chooseScaffold(
+        itemId,
+        scaffold.scaffolds ?? [],
+        state,
+        nodePath
+      );
+      if (child) return child;
+    }
+  }
+  return undefined;
 }
 
 function dueReview(
@@ -323,13 +402,16 @@ function makeDecision(
   item: Item | undefined,
   skill: Skill | undefined,
   reasonCode: ReasonCode,
-  reason: string
+  reason: string,
+  scaffold?: ScaffoldChoice
 ): Decision {
   const state = input.state;
   const mastery = skill ? masteryOf(state, skill.id) : 0;
-  const helpLevel = skill
+  const baseHelpLevel = skill
     ? helpLevelFor(state, mastery, state.skills[skill.id]?.consecutiveWrong ?? 0)
     : 0;
+  const helpLevel =
+    action === "scaffold" ? Math.max(3, baseHelpLevel) : baseHelpLevel;
   const evidence = skill
     ? [
         `skill=${skill.id}`,
@@ -339,11 +421,17 @@ function makeDecision(
         `evidence=${(state.skills[skill.id]?.evidenceCount ?? 0).toFixed(1)}`,
       ]
     : ["all skills mastered"];
+  if (scaffold) {
+    evidence.push(`scaffold=${scaffold.path.join(".")}`);
+    if (item) evidence.push(`parent=${item.id}`);
+  }
   return {
     id: input.idFactory(),
     learnerId: state.learnerId,
     action,
     itemId: item?.id,
+    scaffoldId: scaffold?.scaffold.id,
+    scaffoldPath: scaffold?.path,
     skillIds: skill ? [skill.id] : [],
     reasonCode,
     reason: skill ? `${reason} (${skill.title})` : reason,
@@ -412,6 +500,34 @@ export function chooseNextDecision(input: PolicyInput): Decision {
   const threshold = thresholdFor(target, pack);
   const mastery = skillState?.mastery ?? 0;
   const consecutiveWrong = skillState?.consecutiveWrong ?? 0;
+
+  if (consecutiveWrong >= pack.policy.wrongStreak.switchRepresentation) {
+    const parent = selectScaffoldParent(
+      pack,
+      target.id,
+      mastery,
+      state.history.recentItemIds,
+      bias
+    );
+    if (parent) {
+      const scaffold = chooseScaffold(
+        parent.id,
+        parent.scaffolds ?? [],
+        state
+      );
+      if (scaffold) {
+        return makeDecision(
+          input,
+          "scaffold",
+          parent,
+          target,
+          "scaffold_step",
+          "A smaller step can help here.",
+          scaffold
+        );
+      }
+    }
+  }
 
   if (consecutiveWrong >= pack.policy.wrongStreak.prerequisite) {
     const item = selectItem(

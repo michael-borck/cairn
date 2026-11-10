@@ -1071,6 +1071,22 @@ select:focus {
   margin: 12px 0;
 }
 
+.scaffold-parent {
+  margin: -8px 0 14px !important;
+  color: var(--muted) !important;
+  font-size: 12px !important;
+}
+
+.scaffold-answer {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #10100f;
+  color: var(--text);
+}
+
 .scaffold-body {
   margin-top: 10px;
   padding: 12px;

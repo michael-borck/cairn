@@ -1,4 +1,4 @@
-import type { ContentPack } from "@cairn/content";
+import { findScaffold, type ContentPack } from "@cairn/content";
 import {
   createEngine,
   createMemoryStorage,
@@ -94,11 +94,15 @@ export async function simulateLearner(
 
     const item = pack.items.find((entry) => entry.id === decision.itemId);
     if (!item) break;
+    const scaffold = decision.scaffoldId
+      ? findScaffold(item.scaffolds ?? [], decision.scaffoldId)
+      : undefined;
 
     const reading =
-      item.type === "explain" ||
-      item.type === "worked_example" ||
-      item.type === "reflection";
+      !scaffold &&
+      (item.type === "explain" ||
+        item.type === "worked_example" ||
+        item.type === "reflection");
     const correct = reading
       ? true
       : rng() < successProbability(ability, item.difficulty);
@@ -126,6 +130,8 @@ export async function simulateLearner(
       attempts: 1,
       durationMs: 30000,
       evidenceSource: reading ? "self" : "learner",
+      action: decision.action,
+      scaffoldId: decision.scaffoldId,
     };
     await engine.record(event);
 

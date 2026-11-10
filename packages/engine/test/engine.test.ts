@@ -127,6 +127,50 @@ describe("policy", () => {
     expect(chosen?.id).toBe("container-mcq-2");
   });
 
+  it("selects a scaffold after a wrong streak", () => {
+    const state = createInitialState(pack, "learner-1");
+    state.skills["container-basics"].consecutiveWrong = 2;
+    state.skills["container-basics"].mastery = 0.3;
+    const decision = chooseNextDecision(decisionInput(state));
+    expect(decision.action).toBe("scaffold");
+    expect(decision.itemId).toBe("container-explain");
+    expect(decision.scaffoldId).toBe("container-kernel");
+    expect(decision.scaffoldPath).toEqual(["container-kernel"]);
+    expect(decision.helpLevel).toBeGreaterThanOrEqual(3);
+  });
+
+  it("selects a child scaffold after a missed scaffold", () => {
+    const state = createInitialState(pack, "learner-1");
+    state.skills["container-basics"].consecutiveWrong = 2;
+    state.skills["container-basics"].mastery = 0.3;
+    state.scaffolds["container-explain::container-kernel"] = {
+      attempts: 1,
+      correct: 0,
+      consecutiveWrong: 1,
+    };
+    const decision = chooseNextDecision(decisionInput(state));
+    expect(decision.action).toBe("scaffold");
+    expect(decision.scaffoldId).toBe("container-share");
+    expect(decision.scaffoldPath).toEqual([
+      "container-kernel",
+      "container-share",
+    ]);
+  });
+
+  it("skips a scaffold's children after a correct scaffold", () => {
+    const state = createInitialState(pack, "learner-1");
+    state.skills["container-basics"].consecutiveWrong = 2;
+    state.skills["container-basics"].mastery = 0.3;
+    state.scaffolds["container-explain::container-kernel"] = {
+      attempts: 1,
+      correct: 1,
+      consecutiveWrong: 0,
+    };
+    const decision = chooseNextDecision(decisionInput(state));
+    expect(decision.action).toBe("scaffold");
+    expect(decision.scaffoldId).toBe("container-image");
+  });
+
   it("changes item difficulty with the difficulty preference", () => {
     const custom = clone(pack) as any;
     custom.items.push({
@@ -334,6 +378,39 @@ describe("engine", () => {
     const explanation = await engine.explain(decision.id);
     expect(explanation.short).toContain("Start with an explanation");
     expect(explanation.evidence.some((entry) => entry.startsWith("skill="))).toBe(true);
+  });
+
+  it("records scaffold progress and evidence", async () => {
+    const engine = createEngine({
+      pack,
+      storage: createMemoryStorage(),
+      now: () => now,
+      idFactory: () => "decision-1",
+    });
+    await engine.record({
+      id: "event-1",
+      learnerId: "learner-1",
+      packId: pack.manifest.id,
+      packVersion: pack.manifest.version,
+      itemId: "container-explain",
+      skillIds: ["container-basics"],
+      timestamp: now.toISOString(),
+      response: "no",
+      correct: true,
+      hintsUsed: 0,
+      attempts: 1,
+      durationMs: 1000,
+      evidenceSource: "learner",
+      action: "scaffold",
+      scaffoldId: "container-kernel",
+    });
+    const state = await engine.getState("learner-1");
+    expect(state.scaffolds["container-explain::container-kernel"]).toMatchObject({
+      attempts: 1,
+      correct: 1,
+      consecutiveWrong: 0,
+    });
+    expect(state.skills["container-basics"].attempts).toBe(1);
   });
 
   it("returns a challenge decision for a known skill", async () => {

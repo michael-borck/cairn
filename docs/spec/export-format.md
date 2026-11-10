@@ -26,6 +26,8 @@ The model block records the BKT defaults, half-life constants, evidence half-lif
 
 Every attempt should carry a `decisionId` when it came from a selected decision. Manual activities also create a decision record.
 
+Scaffold attempts also carry `scaffoldId`. The parent item remains `itemId`, so the attempt is attributed to the same skill and item in the Ledgers bundle. The learner state stores scaffold progress under `${itemId}::${scaffoldId}`.
+
 ## Ledgers bundle conversion
 
 ```bash
@@ -43,6 +45,7 @@ The converter maps:
 - Cairn events to Ledgers attempts. `correct` falls back to `score >= 0.6`. Confidence is mapped from guess, unsure, and sure to 0.33, 0.65, and 0.95.
 - `durationMs` to `latencyMs`.
 - `decisionId` is carried through.
+- `scaffoldId` is retained in the Cairn export. Ledgers attempts stay attributed to the parent item; the bundle meta records the scaffold attempt count.
 
 ## Important limitation
 

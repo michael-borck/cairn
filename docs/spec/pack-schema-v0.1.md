@@ -225,7 +225,7 @@ interface ReflectionItem extends ItemBase {
 
 ### Example scaffold tree
 
-Scaffolds are recursive. A learner can open a smaller step from any item, and a missed scaffold can reveal its own sub-scaffolds. The app opens the tree automatically at walkthrough help levels.
+Scaffolds are recursive. A learner can open a smaller step from any item, and a missed scaffold can reveal its own sub-scaffolds. The app opens the tree automatically at walkthrough help levels, and the engine can select a scaffold step as the next activity after a wrong streak.
 
 ```json
 {

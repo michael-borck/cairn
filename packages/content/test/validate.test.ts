@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { validatePack } from "../src";
+import { findScaffold, validatePack } from "../src";
 import { validPack } from "./fixtures";
 
 function clone<T>(value: T): T {
@@ -20,6 +20,15 @@ describe("validatePack", () => {
     expect(result.ok).toBe(true);
     expect(result.pack?.items[0].scaffolds).toHaveLength(2);
     expect(result.pack?.items[0].scaffolds[0].scaffolds).toHaveLength(1);
+  });
+
+  it("finds a nested scaffold by id", () => {
+    const result = validatePack(validPack);
+    const scaffold = findScaffold(
+      result.pack?.items[0].scaffolds ?? [],
+      "container-share"
+    );
+    expect(scaffold?.answer).toBe("kernel");
   });
 
   it("rejects a check scaffold without an answer", () => {

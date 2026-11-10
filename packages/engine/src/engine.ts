@@ -105,6 +105,7 @@ export function createInitialState(
       reviewItems: 0,
       dwell: 0,
     },
+    scaffolds: {},
   };
 }
 
@@ -165,6 +166,7 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
         existing.history.recentItemIds = [];
       }
       existing.session ??= { items: 0, reviewItems: 0, dwell: 0 };
+      existing.scaffolds ??= {};
       for (const skill of Object.values(existing.skills)) {
         skill.evidenceCount ??= skill.attempts ?? 0;
         skill.halfLifeDays ??= Math.max(
@@ -375,6 +377,27 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
         state.skills[skillId] = skillState;
       }
 
+      state.scaffolds ??= {};
+      if (event.scaffoldId) {
+        const key = `${event.itemId}::${event.scaffoldId}`;
+        const scaffoldState = state.scaffolds[key] ?? {
+          attempts: 0,
+          correct: 0,
+          consecutiveWrong: 0,
+        };
+        scaffoldState.attempts += 1;
+        if (observed !== undefined) {
+          if (observed) {
+            scaffoldState.correct += 1;
+            scaffoldState.consecutiveWrong = 0;
+          } else {
+            scaffoldState.consecutiveWrong += 1;
+          }
+        }
+        scaffoldState.lastAt = event.timestamp;
+        state.scaffolds[key] = scaffoldState;
+      }
+
       const session = state.session ?? {
         items: 0,
         reviewItems: 0,
@@ -568,6 +591,7 @@ export function createEngine(config: EngineConfig): AdaptiveEngine {
       if (data.schemaVersion !== "0.1") {
         throw new Error(`Unsupported learner export ${data.schemaVersion}`);
       }
+      data.state.scaffolds ??= {};
       await storage.saveLearner(data.state);
       return data.state;
     },

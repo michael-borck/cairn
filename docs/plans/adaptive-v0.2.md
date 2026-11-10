@@ -99,5 +99,6 @@ The learner should notice three things:
 - [x] Prerequisite readiness separated from mastery threshold.
 - [x] Cairn export includes pack, learner, events, decisions, model, and policy.
 - [x] CLI converter writes a Ledgers prediction bundle.
+- [x] Recursive scaffold tree and engine-selected scaffold steps.
 - [ ] Export a real Cairn log and run the prediction report.
 - [ ] Add propensity logging before policy comparison.
