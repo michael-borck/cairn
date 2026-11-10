@@ -14,7 +14,22 @@
         "text": "Look for the hidden .git directory."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "repo-commit",
+        "kind": "check",
+        "prompt": "What does a commit record?",
+        "answer": "snapshot",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It records the state of the tree at a point in time."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "repo-mcq-1",
@@ -117,7 +132,22 @@
         "text": "There are three places: working tree, index, and history."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "status-diff",
+        "kind": "check",
+        "prompt": "Which command shows unstaged changes?",
+        "answer": "git diff",
+        "hints": [
+          {
+            "level": 1,
+            "text": "`git status` shows files; `git diff` shows lines."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "status-mcq-1",
@@ -203,7 +233,22 @@
         "text": "A branch is a label that moves."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "branch-pointer",
+        "kind": "check",
+        "prompt": "What is a branch, in one word?",
+        "answer": "pointer",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It points at a commit and moves as you commit."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "branch-mcq-1",
@@ -430,7 +475,22 @@
         "text": "The markers show both sides. You choose the final content."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "conflict-status",
+        "kind": "check",
+        "prompt": "Which command shows which files are conflicted?",
+        "answer": "git status",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Git marks conflicts in the working tree and status."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "conflict-mcq-1",
@@ -630,7 +690,22 @@
         "text": "The first push often needs the upstream flag."
       }
     ],
-    "estimatedSeconds": 150
+    "estimatedSeconds": 150,
+    "scaffolds": [
+      {
+        "id": "push-origin",
+        "kind": "check",
+        "prompt": "Which remote does `origin` usually name?",
+        "answer": "url",
+        "hints": [
+          {
+            "level": 1,
+            "text": "`origin` is a name for a remote URL."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "push-mcq-1",
@@ -733,7 +808,22 @@
         "text": "A pull request is a review and merge request."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "pr-github",
+        "kind": "check",
+        "prompt": "Where does a pull request live?",
+        "answer": "github",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is a GitHub collaboration feature."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "pr-mcq-1",
@@ -816,7 +906,22 @@
         "text": "Ignoring and untracking are different."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "gitignore-tracked",
+        "kind": "check",
+        "prompt": "Does `.gitignore` untrack a file that is already tracked?",
+        "answer": "no",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It only affects untracked files."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "gitignore-mcq-1",
@@ -898,7 +1003,22 @@
         "text": "Prefer revert on shared history."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "undo-log",
+        "kind": "check",
+        "prompt": "Which command shows recent commits and HEAD?",
+        "answer": "git log",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Use `git log` to inspect history."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "undo-mcq-1",

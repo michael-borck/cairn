@@ -147,7 +147,22 @@
         "text": "The command that creates and starts is not the same as the command that lists."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "run-container-command",
+        "kind": "check",
+        "prompt": "Which command starts a container from an image?",
+        "answer": "docker run",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is `docker` plus the verb for starting a container."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "run-container-mcq-1",
@@ -229,7 +244,36 @@
         "text": "An image is a template. A container is an instance."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "images-layer",
+        "kind": "mcq",
+        "prompt": "Which part of an image changes when you add a layer?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The filesystem"
+          },
+          {
+            "id": "b",
+            "text": "The kernel"
+          },
+          {
+            "id": "c",
+            "text": "The hostname"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Layers are filesystem changes."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "images-mcq-1",
@@ -485,7 +529,22 @@
         "text": "A named volume is not the same as a host directory."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "volumes-host",
+        "kind": "check",
+        "prompt": "Where does a named volume store its data?",
+        "answer": "host",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It lives outside the container lifecycle, on the host."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "volumes-mcq-1",
@@ -567,7 +626,22 @@
         "text": "Docker has a DNS service on user-defined networks."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "network-dns",
+        "kind": "check",
+        "prompt": "Can containers on the same user-defined network resolve each other by name?",
+        "answer": "yes",
+        "hints": [
+          {
+            "level": 1,
+            "text": "User-defined networks provide name resolution."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "network-mcq-1",
@@ -667,7 +741,22 @@
         "text": "The base image must come before COPY."
       }
     ],
-    "estimatedSeconds": 150
+    "estimatedSeconds": 150,
+    "scaffolds": [
+      {
+        "id": "dockerfile-from",
+        "kind": "check",
+        "prompt": "Which Dockerfile instruction sets the base image?",
+        "answer": "FROM",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is usually the first instruction."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "dockerfile-mcq-1",
@@ -749,7 +838,36 @@
         "text": "Compose is a convenience, not a whole platform."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "compose-file",
+        "kind": "mcq",
+        "prompt": "Which file usually defines a Compose stack?",
+        "options": [
+          {
+            "id": "a",
+            "text": "compose.yaml"
+          },
+          {
+            "id": "b",
+            "text": "Dockerfile"
+          },
+          {
+            "id": "c",
+            "text": "package.json"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is the Compose file name."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "compose-mcq-1",
@@ -832,7 +950,22 @@
         "text": "Look for the evidence before you change anything."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "scaffolds": [
+      {
+        "id": "troubleshoot-logs",
+        "kind": "check",
+        "prompt": "Which command shows a container's logs?",
+        "answer": "docker logs",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Use `docker` plus the logs subcommand."
+          }
+        ],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "troubleshoot-mcq-1",

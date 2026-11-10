@@ -100,5 +100,6 @@ The learner should notice three things:
 - [x] Cairn export includes pack, learner, events, decisions, model, and policy.
 - [x] CLI converter writes a Ledgers prediction bundle.
 - [x] Recursive scaffold tree and engine-selected scaffold steps.
+- [x] Every built-in skill has a scaffold-bearing explanatory item.
 - [ ] Export a real Cairn log and run the prediction report.
 - [ ] Add propensity logging before policy comparison.
