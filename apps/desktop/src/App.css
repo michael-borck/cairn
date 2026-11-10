@@ -1352,3 +1352,150 @@ pre {
     display: flex;
   }
 }
+
+.catalog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(0 0 0 / 62%);
+  backdrop-filter: blur(4px);
+}
+
+.catalog-panel {
+  width: min(860px, 100%);
+  max-height: min(760px, 90vh);
+  overflow: auto;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 40%);
+}
+
+.catalog-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.catalog-head h2 {
+  margin: 0;
+  font-size: 26px;
+}
+
+.catalog-intro {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.catalog-note,
+.catalog-source {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.catalog-error {
+  margin: 14px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgb(226 125 111 / 45%);
+  border-radius: 8px;
+  color: var(--danger);
+  background: rgb(226 125 111 / 7%);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.catalog-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.catalog-card {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel-2);
+}
+
+.catalog-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.catalog-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.catalog-meta {
+  margin: 4px 0 0;
+  color: var(--accent-2);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.catalog-trust {
+  flex: none;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.catalog-description {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.catalog-stats {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.catalog-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.catalog-tags {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.catalog-source {
+  overflow-wrap: anywhere;
+}
+
+.catalog-source a {
+  color: var(--accent-2);
+}
+
+@media (max-width: 620px) {
+  .catalog-overlay {
+    padding: 12px;
+  }
+
+  .catalog-panel {
+    padding: 18px;
+  }
+}

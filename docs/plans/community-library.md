@@ -20,7 +20,7 @@ The store is discovery. The app is the runtime. A downloaded pack is copied into
 - [x] Catalog verifier and submission validator.
 - [x] CI validation workflow.
 - [x] Static catalog site.
-- [ ] Cairn catalog fetch and install flow.
+- [x] Cairn catalog fetch and install flow (SHA-256 verified, local install).
 - [ ] Signing and revocation.
 - [ ] Open submissions.
 
@@ -44,7 +44,7 @@ cairn-packs/
 └── .github/workflows/validate.yml
 ```
 
-The catalog is static JSON. The app fetches it, downloads a pack, verifies the hash and signature, then installs it locally.
+The catalog is static JSON. The app fetches it, downloads a pack, verifies the SHA-256 hash, validates the pack, then installs it locally. Signatures are still future work.
 
 ## Submission flow
 

@@ -52,9 +52,10 @@ import {
   choosePackDirectory,
   entryForPack,
   loadBuiltinPacks,
-  loadImportedPack,
+  loadInstalledPacks,
   loadPack,
   readPackFile,
+  removeInstalledPack,
   saveImportedPack,
   type PackEntry,
 } from "./packs";
@@ -64,6 +65,7 @@ import { buildReviewCalendar } from "./review-calendar";
 import { buildCairnExport, saveCairnExport } from "./export";
 import { createPersistentStorage, type AppStorage } from "./storage";
 import { ScaffoldActivity, ScaffoldPanel } from "./ScaffoldPanel";
+import { CatalogPanel } from "./CatalogPanel";
 
 const LEARNER_ID = "local";
 const ACTION_LABEL: Record<Decision["action"], string> = {
@@ -158,6 +160,7 @@ function App() {
   );
   const [error, setError] = useState(false);
   const [authoring, setAuthoring] = useState(false);
+  const [catalogOpen, setCatalogOpen] = useState(false);
   const [draft, setDraft] = useState("");
   const [draftResult, setDraftResult] = useState<DraftResult | null>(null);
   const [draftMessage, setDraftMessage] = useState("");
@@ -183,6 +186,33 @@ function App() {
     setAiHint(null);
     setAiError(false);
     activityStartedAt.current = Date.now();
+  }
+
+  function rememberInstalledPack(
+    pack: ContentPack,
+    persist = true
+  ): PackEntry {
+    if (persist) saveImportedPack(pack);
+    const entry = entryForPack(pack, "local");
+    setPacks((current) => [
+      entry,
+      ...current.filter((item) => item.id !== entry.id),
+    ]);
+    return entry;
+  }
+
+  async function refreshPackList(): Promise<PackEntry[]> {
+    const builtins = await loadBuiltinPacks();
+    const installed = loadInstalledPacks().map((pack) =>
+      entryForPack(pack, "local")
+    );
+    const installedIds = new Set(installed.map((entry) => entry.id));
+    const list = [
+      ...installed,
+      ...builtins.filter((entry) => !installedIds.has(entry.id)),
+    ];
+    setPacks(list);
+    return list;
   }
 
   async function getStorage(): Promise<AppStorage> {
@@ -585,12 +615,7 @@ function App() {
   async function saveDraft(): Promise<void> {
     const result = validateDraft();
     if (!result.pack) return;
-    saveImportedPack(result.pack);
-    const entry = entryForPack(result.pack, "local");
-    setPacks((current) => [
-      entry,
-      ...current.filter((item) => item.id !== entry.id),
-    ]);
+    const entry = rememberInstalledPack(result.pack);
     await openPack(entry);
     setAuthoring(false);
     setMessage(`Saved ${result.pack.manifest.title} to the local library.`);
@@ -648,12 +673,7 @@ function App() {
         setMessage("Folder import cancelled.");
         return;
       }
-      saveImportedPack(pack);
-      const entry = entryForPack(pack, "local");
-      setPacks((current) => [
-        entry,
-        ...current.filter((item) => item.id !== entry.id),
-      ]);
+      const entry = rememberInstalledPack(pack);
       await openPack(entry);
       setMessage(`Imported ${pack.manifest.title}.`);
     } catch (cause) {
@@ -671,12 +691,7 @@ function App() {
     setMessage("Validating pack...");
     try {
       const pack = await readPackFile(file);
-      saveImportedPack(pack);
-      const entry = entryForPack(pack, "local");
-      setPacks((current) => [
-        entry,
-        ...current.filter((item) => item.id !== entry.id),
-      ]);
+      const entry = rememberInstalledPack(pack);
       await openPack(entry);
       setMessage(`Imported ${pack.manifest.title}.`);
     } catch (cause) {
@@ -729,19 +744,35 @@ function App() {
     setMessage("Progress reset for this pack.");
   }
 
+  function removeActivePack(): void {
+    if (!active || active.entry.source !== "local") return;
+    if (
+      !window.confirm(
+        `Remove ${active.entry.title} from the local library?`
+      )
+    ) {
+      return;
+    }
+    removeInstalledPack(active.entry.id);
+    setActive(null);
+    setEngine(null);
+    setLearner(null);
+    setReviewQueue([]);
+    setHistory([]);
+    setDecision(null);
+    setExplanation(null);
+    resetActivity();
+    void refreshPackList();
+    setMessage(`Removed ${active.entry.title} from the local library.`);
+  }
+
   useEffect(() => {
     invoke<string>("health")
       .then(() => setShell("ready"))
       .catch(() => setShell("error"));
 
     void (async () => {
-      const builtins = await loadBuiltinPacks();
-      const imported = loadImportedPack();
-      const local = imported ? entryForPack(imported, "local") : null;
-      const list = local
-        ? [local, ...builtins.filter((entry) => entry.id !== local.id)]
-        : builtins;
-      setPacks(list);
+      const list = await refreshPackList();
       if (list.length === 0) {
         setMessage("No packs found. Import a .json pack to begin.");
       }
@@ -809,6 +840,15 @@ function App() {
           disabled={busy}
         >
           Import folder
+        </button>
+
+        <button
+          type="button"
+          className="ghost-button"
+          onClick={() => setCatalogOpen(true)}
+          disabled={busy}
+        >
+          Browse catalog
         </button>
 
         <label
@@ -927,6 +967,16 @@ function App() {
                     <option value="manual">Manual</option>
                   </select>
                 </label>
+                {active.entry.source === "local" && (
+                  <button
+                    type="button"
+                    className="ghost-button"
+                    onClick={removeActivePack}
+                    disabled={busy}
+                  >
+                    Remove
+                  </button>
+                )}
                 <button
                   type="button"
                   className="ghost-button"
@@ -1054,6 +1104,22 @@ function App() {
           <span>Tauri 2 · React · TypeScript</span>
         </footer>
       </main>
+
+      {catalogOpen && (
+        <CatalogPanel
+          installed={Object.fromEntries(
+            packs
+              .filter((entry) => entry.source === "local")
+              .map((entry) => [entry.id, entry.version])
+          )}
+          onInstalled={(pack) => {
+            const entry = rememberInstalledPack(pack, false);
+            setCatalogOpen(false);
+            void openPack(entry);
+          }}
+          onClose={() => setCatalogOpen(false)}
+        />
+      )}
     </div>
   );
 }
