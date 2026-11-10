@@ -68,11 +68,15 @@ docs/
 
 ## Documentation
 
+- [Acknowledgments](ACKNOWLEDGMENTS.md)
+- [Prior art](docs/prior-art.md)
 - [Product spec](docs/spec/product.md)
 - [Pack schema v0.1](docs/spec/pack-schema-v0.1.md)
 - [Engine contract v0.1](docs/spec/engine-contract-v0.1.md)
 - [Adaptive methods audit](docs/spec/adaptive-methods-audit.md)
 - [Adaptive v0.2 implementation plan](docs/plans/adaptive-v0.2.md)
+- [Community library plan](docs/plans/community-library.md)
+- [Landing page plan](docs/plans/landing-page.md)
 - [Research export format](docs/spec/export-format.md)
 - [Architecture decisions](docs/adr/README.md)
 - [Roadmap](docs/roadmap.md)
