@@ -1,7 +1,7 @@
 # Landing page plan
 
 - Domain: `cairn.borck.education`
-- Status: Drafted; deployment workflow added
+- Status: Live at https://cairn.borck.education
 - Build: static page, separate from the app
 
 ## Verdict
