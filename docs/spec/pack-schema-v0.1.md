@@ -2,6 +2,8 @@
 
 A `.learnpack` is a zip containing a manifest, curriculum, items, rubrics, misconceptions, labs, policy, media, and licence.
 
+The Cairn app exports `.learnpack` archives with the required JSON files, a generated `LICENSE`, a generated `CHANGELOG.md`, and a generated `README.md`. It can import both `.learnpack` archives and single-file `.json` packs.
+
 ## Layout
 
 ```

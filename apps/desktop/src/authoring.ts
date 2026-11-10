@@ -163,23 +163,81 @@ export function formatPackText(text: string): string {
   return JSON.stringify(JSON.parse(text), null, 2);
 }
 
+function licenseText(pack: ContentPack): string {
+  const author = pack.manifest.author?.name ?? "the pack author";
+  const source = pack.manifest.source
+    ? `\nSource: ${pack.manifest.source}\n`
+    : "";
+  return `${pack.manifest.title}
+Copyright (c) ${new Date().getFullYear()} ${author}
+
+Licensed under ${pack.manifest.license}.${source}
+`;
+}
+
+function changelogText(pack: ContentPack): string {
+  return `# Changelog
+
+## ${pack.manifest.version} - ${new Date().toISOString().slice(0, 10)}
+- Exported from Cairn.
+`;
+}
+
+function readmeText(pack: ContentPack): string {
+  return `# ${pack.manifest.title}
+
+${pack.manifest.description}
+
+Licence: ${pack.manifest.license}
+`;
+}
+
+export async function buildLearnpack(pack: ContentPack): Promise<Blob> {
+  const { default: JSZip } = await import("jszip");
+  const zip = new JSZip();
+  const files: Record<string, unknown> = {
+    "manifest.json": pack.manifest,
+    "curriculum.json": pack.curriculum,
+    "items.json": pack.items,
+    "rubrics.json": pack.rubrics,
+    "misconceptions.json": pack.misconceptions,
+    "labs.json": pack.labs,
+    "policy.json": pack.policy,
+  };
+  for (const [name, value] of Object.entries(files)) {
+    zip.file(name, JSON.stringify(value, null, 2) + "\n");
+  }
+  zip.file("LICENSE", licenseText(pack));
+  zip.file("CHANGELOG.md", changelogText(pack));
+  zip.file("README.md", readmeText(pack));
+  return zip.generateAsync({
+    type: "blob",
+    compression: "DEFLATE",
+    compressionOptions: { level: 6 },
+  });
+}
+
 export async function exportPack(pack: ContentPack): Promise<boolean> {
-  const contents = JSON.stringify(pack, null, 2);
+  const blob = await buildLearnpack(pack);
+  const defaultPath = `${pack.manifest.id}-${pack.manifest.version}.learnpack`;
   try {
     const { save } = await import("@tauri-apps/plugin-dialog");
     const path = await save({
-      defaultPath: `${pack.manifest.id}-${pack.manifest.version}.json`,
-      filters: [{ name: "Cairn pack", extensions: ["json"] }],
+      defaultPath,
+      filters: [{ name: "Cairn pack", extensions: ["learnpack"] }],
     });
     if (!path) return false;
-    await invoke("write_text_file", { path, contents });
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    await invoke("write_binary_file", {
+      path,
+      contents: Array.from(bytes),
+    });
     return true;
   } catch {
-    const blob = new Blob([contents], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `${pack.manifest.id}-${pack.manifest.version}.json`;
+    link.download = defaultPath;
     link.click();
     URL.revokeObjectURL(url);
     return true;

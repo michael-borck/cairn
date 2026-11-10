@@ -164,6 +164,9 @@ export function removeInstalledPack(packId: string): void {
 }
 
 export async function readPackFile(file: File): Promise<ContentPack> {
+  if (file.name.toLowerCase().endsWith(".learnpack")) {
+    return readPackArchive(await file.arrayBuffer());
+  }
   const text = await file.text();
   return requirePack(JSON.parse(text));
 }
@@ -268,6 +271,21 @@ async function readZipJson(zip: ZipLike, name: string): Promise<unknown> {
   return JSON.parse(await file.async("text"));
 }
 
+export async function readPackArchive(buffer: ArrayBuffer): Promise<ContentPack> {
+  const { default: JSZip } = await import("jszip");
+  const zip = (await JSZip.loadAsync(buffer)) as unknown as ZipLike;
+  const pack = {
+    manifest: await readZipJson(zip, "manifest.json"),
+    curriculum: await readZipJson(zip, "curriculum.json"),
+    items: await readZipJson(zip, "items.json"),
+    rubrics: await readZipJson(zip, "rubrics.json"),
+    misconceptions: await readZipJson(zip, "misconceptions.json"),
+    labs: await readZipJson(zip, "labs.json"),
+    policy: await readZipJson(zip, "policy.json"),
+  };
+  return requirePack(pack);
+}
+
 export async function installCatalogPack(
   entry: CatalogPack,
   catalogUrl = DEFAULT_CATALOG_URL,
@@ -298,18 +316,7 @@ export async function installCatalogPack(
     throw new Error("The pack signature does not verify.");
   }
 
-  const { default: JSZip } = await import("jszip");
-  const zip = (await JSZip.loadAsync(buffer)) as unknown as ZipLike;
-  const pack = {
-    manifest: await readZipJson(zip, "manifest.json"),
-    curriculum: await readZipJson(zip, "curriculum.json"),
-    items: await readZipJson(zip, "items.json"),
-    rubrics: await readZipJson(zip, "rubrics.json"),
-    misconceptions: await readZipJson(zip, "misconceptions.json"),
-    labs: await readZipJson(zip, "labs.json"),
-    policy: await readZipJson(zip, "policy.json"),
-  };
-  const validated = requirePack(pack);
+  const validated = await readPackArchive(buffer);
   if (
     validated.manifest.id !== entry.id ||
     validated.manifest.version !== entry.version

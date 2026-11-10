@@ -825,7 +825,7 @@ function App() {
           Import pack
           <input
             type="file"
-            accept=".json,application/json"
+            accept=".json,.learnpack,application/json,application/zip"
             onChange={(event) => {
               const file = event.target.files?.[0];
               void importPack(file);
@@ -1222,7 +1222,7 @@ function AuthoringView({
               onClick={onExport}
               disabled={busy}
             >
-              Export
+              Export .learnpack
             </button>
             <button
               type="button"

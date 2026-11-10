@@ -39,7 +39,7 @@ cairn-packs/
 │   ├── pack.learnpack
 │   └── submission.json
 ├── templates/submission.json
-├── scripts/validate_pack.mjs
+├── scripts/validate-submission.mjs
 ├── POLICY.md
 ├── CONTRIBUTING.md
 └── .github/workflows/validate.yml
@@ -50,9 +50,9 @@ The catalog is static JSON. The app fetches it, downloads a pack, verifies the S
 ## Submission flow
 
 1. Author builds a pack in Cairn.
-2. Export the `.learnpack` and run local validation.
+2. Use Cairn's **Export .learnpack** action and run local validation.
 3. Add `submissions/<pack-id>/pack.learnpack` and `submission.json`.
-4. Run `node scripts/validate_pack.mjs`.
+4. Run `npm run validate`.
 5. Open a pull request. CI runs the same validator.
 6. A maintainer reviews licence, provenance, safety, accuracy, and accessibility.
 7. The pack is signed and added to the catalog.
