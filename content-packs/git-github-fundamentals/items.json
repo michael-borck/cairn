@@ -299,10 +299,52 @@
       }
     ],
     "estimatedSeconds": 150,
-    "checkpoint": {
-      "prompt": "Which branch receives the merge: the one you switch to, or the one you merge?",
-      "answer": "the one you switch to"
-    }
+    "scaffolds": [
+      {
+        "id": "merge-target",
+        "kind": "check",
+        "prompt": "Which branch receives the merge?",
+        "answer": "the one you switch to",
+        "hints": [
+          {
+            "level": 1,
+            "text": "You switch to the branch that should receive the merge."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "merge-main",
+            "kind": "check",
+            "prompt": "In `git switch main`, which branch receives the merge?",
+            "answer": "main",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "merge-command",
+        "kind": "mcq",
+        "prompt": "After switching to main, which command merges feature into it?",
+        "options": [
+          {
+            "id": "a",
+            "text": "git merge feature"
+          },
+          {
+            "id": "b",
+            "text": "git merge main"
+          },
+          {
+            "id": "c",
+            "text": "git switch feature"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "merge-mcq-1",
@@ -471,10 +513,29 @@
       }
     ],
     "estimatedSeconds": 120,
-    "check": {
-      "prompt": "What is `origin` a name for? (one word)",
-      "answer": "URL"
-    }
+    "scaffolds": [
+      {
+        "id": "remote-branch",
+        "kind": "check",
+        "prompt": "Is `origin` a branch?",
+        "answer": "no",
+        "hints": [
+          {
+            "level": 1,
+            "text": "`origin` names a URL, not a branch."
+          }
+        ],
+        "scaffolds": []
+      },
+      {
+        "id": "remote-url",
+        "kind": "check",
+        "prompt": "What is `origin` a name for?",
+        "answer": "url",
+        "hints": [],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "remote-mcq-1",

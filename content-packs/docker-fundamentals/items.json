@@ -15,10 +15,48 @@
       }
     ],
     "estimatedSeconds": 120,
-    "check": {
-      "prompt": "What does a container share with the host?",
-      "answer": "kernel"
-    }
+    "scaffolds": [
+      {
+        "id": "container-kernel",
+        "kind": "check",
+        "prompt": "Does a container bring its own kernel?",
+        "answer": "no",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Think about what the container shares with the host."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "container-share",
+            "kind": "check",
+            "prompt": "What does a container share with the host?",
+            "answer": "kernel",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "container-image",
+        "kind": "mcq",
+        "prompt": "Which is the read-only template: the image or the container?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The image"
+          },
+          {
+            "id": "b",
+            "text": "The container"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "what-is-container-mcq-1",
@@ -295,10 +333,51 @@
       }
     ],
     "estimatedSeconds": 150,
-    "checkpoint": {
-      "prompt": "Which side of `-p 8080:80` is the host port?",
-      "answer": "left"
-    }
+    "scaffolds": [
+      {
+        "id": "port-order",
+        "kind": "check",
+        "prompt": "In `-p 8080:80`, which port is on the left?",
+        "answer": "host",
+        "hints": [
+          {
+            "level": 1,
+            "text": "The left side is the port you use on your machine."
+          }
+        ],
+        "scaffolds": []
+      },
+      {
+        "id": "port-container",
+        "kind": "check",
+        "prompt": "Which port does nginx listen on inside the container?",
+        "answer": "80",
+        "hints": [],
+        "scaffolds": []
+      },
+      {
+        "id": "port-flag",
+        "kind": "mcq",
+        "prompt": "Which flag publishes a container port?",
+        "options": [
+          {
+            "id": "a",
+            "text": "-p"
+          },
+          {
+            "id": "b",
+            "text": "-v"
+          },
+          {
+            "id": "c",
+            "text": "-e"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [],
+        "scaffolds": []
+      }
+    ]
   },
   {
     "id": "port-mcq-1",

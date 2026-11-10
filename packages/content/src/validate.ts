@@ -1,4 +1,9 @@
-import { contentPackSchema, type ContentPack, type Item } from "./schema";
+import {
+  contentPackSchema,
+  type ContentPack,
+  type Item,
+  type Scaffold,
+} from "./schema";
 
 export interface ValidationResult {
   ok: boolean;
@@ -84,6 +89,93 @@ function checkHints(item: Item, errors: string[], warnings: string[]): void {
   }
 }
 
+function checkScaffoldHints(
+  itemId: string,
+  path: string,
+  scaffold: Scaffold,
+  errors: string[],
+  warnings: string[]
+): void {
+  const levels = new Set<number>();
+  for (const hint of scaffold.hints) {
+    if (levels.has(hint.level)) {
+      warnings.push(
+        `item ${itemId}: scaffold ${path}: duplicate hint level ${hint.level}`
+      );
+    }
+    levels.add(hint.level);
+    if (hint.level === 1 && hint.revealsAnswer) {
+      errors.push(
+        `item ${itemId}: scaffold ${path}: hint level 1 must not reveal the answer`
+      );
+    }
+  }
+}
+
+function checkScaffoldTree(
+  itemId: string,
+  scaffolds: Scaffold[],
+  errors: string[],
+  warnings: string[]
+): void {
+  const ids = new Set<string>();
+
+  const visit = (scaffold: Scaffold, path: string): void => {
+    if (ids.has(scaffold.id)) {
+      errors.push(`item ${itemId}: duplicate scaffold id ${scaffold.id}`);
+    }
+    ids.add(scaffold.id);
+    checkScaffoldHints(itemId, path, scaffold, errors, warnings);
+
+    if (scaffold.kind === "check") {
+      if (!scaffold.answer) {
+        errors.push(`item ${itemId}: scaffold ${path}: check needs an answer`);
+      }
+      if (scaffold.options?.length || scaffold.correctOptionId) {
+        warnings.push(
+          `item ${itemId}: scaffold ${path}: check ignores options and correctOptionId`
+        );
+      }
+    } else {
+      const options = scaffold.options ?? [];
+      if (options.length < 2) {
+        errors.push(
+          `item ${itemId}: scaffold ${path}: mcq needs at least 2 options`
+        );
+      }
+      const optionIds = new Set<string>();
+      for (const option of options) {
+        if (optionIds.has(option.id)) {
+          errors.push(
+            `item ${itemId}: scaffold ${path}: duplicate option id ${option.id}`
+          );
+        }
+        optionIds.add(option.id);
+      }
+      if (!scaffold.correctOptionId) {
+        errors.push(
+          `item ${itemId}: scaffold ${path}: mcq needs a correctOptionId`
+        );
+      } else if (!optionIds.has(scaffold.correctOptionId)) {
+        errors.push(
+          `item ${itemId}: scaffold ${path}: correctOptionId does not match an option`
+        );
+      }
+      if (scaffold.answer) {
+        warnings.push(
+          `item ${itemId}: scaffold ${path}: mcq ignores the answer field`
+        );
+      }
+    }
+
+    for (const child of scaffold.scaffolds) {
+      visit(child, `${path}.${child.id}`);
+    }
+  };
+
+  for (const scaffold of scaffolds) visit(scaffold, scaffold.id);
+}
+
 function checkItems(
   pack: ContentPack,
   skillIds: Set<string>,
@@ -110,6 +202,7 @@ function checkItems(
     }
     checkMedia(item, errors);
     checkHints(item, errors, warnings);
+    checkScaffoldTree(item.id, item.scaffolds, errors, warnings);
 
     if (item.type === "mcq") {
       const optionIds = new Set<string>();

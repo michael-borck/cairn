@@ -339,6 +339,215 @@ export function SkillsForm({ data, update }: { data: PackData; update: Update })
   );
 }
 
+function ScaffoldEditor({
+  scaffolds,
+  onChange,
+}: {
+  scaffolds: any[];
+  onChange: (next: any[]) => void;
+}) {
+  function updateAt(index: number, mutator: (scaffold: any) => void) {
+    const next = structuredClone(scaffolds);
+    mutator(next[index]);
+    onChange(next);
+  }
+
+  function addScaffold() {
+    const ids = new Set(scaffolds.map((scaffold: any) => scaffold.id));
+    let number = scaffolds.length + 1;
+    while (ids.has(`scaffold-${number}`)) number += 1;
+    onChange([
+      ...scaffolds,
+      {
+        id: `scaffold-${number}`,
+        kind: "check",
+        prompt: "New scaffold",
+        answer: "",
+        hints: [],
+        scaffolds: [],
+      },
+    ]);
+  }
+
+  return (
+    <div className="form-wide">
+      <div className="form-card-head">
+        <span>Scaffold tree</span>
+        <button type="button" className="ghost-button small" onClick={addScaffold}>
+          Add scaffold
+        </button>
+      </div>
+      {scaffolds.length === 0 && (
+        <p className="hint">
+          Add smaller steps here. A learner can open them when the main question
+          is too large.
+        </p>
+      )}
+      {scaffolds.map((scaffold: any, index: number) => {
+        const kind = scaffold.kind ?? "check";
+        return (
+          <div className="sub-card" key={index}>
+            <div className="form-card-head">
+              <strong>{scaffold.id || "Scaffold"}</strong>
+              <button
+                type="button"
+                className="ghost-button small"
+                onClick={() =>
+                  onChange(scaffolds.filter((_: any, i: number) => i !== index))
+                }
+              >
+                Remove
+              </button>
+            </div>
+            <div className="form-grid">
+              <Field
+                label="Scaffold id"
+                value={scaffold.id}
+                onChange={(value) =>
+                  updateAt(index, (draft) => {
+                    draft.id = value;
+                  })
+                }
+              />
+              <Select
+                label="Kind"
+                value={kind}
+                options={[
+                  { value: "check", label: "Short check" },
+                  { value: "mcq", label: "Multiple choice" },
+                ]}
+                onChange={(value) =>
+                  updateAt(index, (draft) => {
+                    draft.kind = value;
+                    if (value === "mcq") {
+                      draft.options = draft.options?.length
+                        ? draft.options
+                        : [
+                            { id: "a", text: "Correct answer" },
+                            { id: "b", text: "Distractor" },
+                          ];
+                      draft.correctOptionId =
+                        draft.correctOptionId ?? draft.options[0]?.id ?? "a";
+                      delete draft.answer;
+                    } else {
+                      draft.answer = draft.answer ?? "";
+                      delete draft.options;
+                      delete draft.correctOptionId;
+                    }
+                  })
+                }
+              />
+              <Area
+                label="Prompt"
+                value={scaffold.prompt}
+                onChange={(value) =>
+                  updateAt(index, (draft) => {
+                    draft.prompt = value;
+                  })
+                }
+              />
+              {kind === "check" ? (
+                <Field
+                  label="Answer"
+                  value={scaffold.answer}
+                  onChange={(value) =>
+                    updateAt(index, (draft) => {
+                      draft.answer = value;
+                    })
+                  }
+                />
+              ) : (
+                <div className="form-wide">
+                  <div className="form-card-head">
+                    <span>Options</span>
+                    <button
+                      type="button"
+                      className="ghost-button small"
+                      onClick={() =>
+                        updateAt(index, (draft) => {
+                          draft.options = draft.options ?? [];
+                          const next = draft.options.length + 1;
+                          draft.options.push({ id: `o${next}`, text: "New option" });
+                          draft.correctOptionId =
+                            draft.correctOptionId ?? draft.options[0]?.id;
+                        })
+                      }
+                    >
+                      Add option
+                    </button>
+                  </div>
+                  {(scaffold.options ?? []).map(
+                    (option: any, optionIndex: number) => (
+                      <div className="option-edit" key={optionIndex}>
+                        <input
+                          type="radio"
+                          name={`scaffold-correct-${scaffold.id}`}
+                          checked={scaffold.correctOptionId === option.id}
+                          onChange={() =>
+                            updateAt(index, (draft) => {
+                              draft.correctOptionId = option.id;
+                            })
+                          }
+                          aria-label="Correct scaffold option"
+                        />
+                        <Field
+                          label="Option id"
+                          value={option.id}
+                          onChange={(value) =>
+                            updateAt(index, (draft) => {
+                              draft.options[optionIndex].id = value;
+                            })
+                          }
+                        />
+                        <Field
+                          label="Text"
+                          value={option.text}
+                          onChange={(value) =>
+                            updateAt(index, (draft) => {
+                              draft.options[optionIndex].text = value;
+                            })
+                          }
+                        />
+                        <button
+                          type="button"
+                          className="ghost-button small"
+                          onClick={() =>
+                            updateAt(index, (draft) => {
+                              draft.options.splice(optionIndex, 1);
+                              if (
+                                !draft.options.some(
+                                  (entry: any) =>
+                                    entry.id === draft.correctOptionId
+                                )
+                              ) {
+                                draft.correctOptionId = draft.options[0]?.id;
+                              }
+                            })
+                          }
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
+            </div>
+            <ScaffoldEditor
+              scaffolds={scaffold.scaffolds ?? []}
+              onChange={(next) =>
+                updateAt(index, (draft) => {
+                  draft.scaffolds = next;
+                })
+              }
+            />
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export function ItemsForm({ data, update }: { data: PackData; update: Update }) {
   const items = data.items ?? [];
   const firstSkill = data.curriculum?.skills?.[0]?.id ?? "";
@@ -442,6 +651,15 @@ export function ItemsForm({ data, update }: { data: PackData; update: Update }) 
               label="Explanation"
               value={item.explanation}
               onChange={(value) => update((draft) => { draft.items[index].explanation = value; })}
+            />
+
+            <ScaffoldEditor
+              scaffolds={item.scaffolds ?? []}
+              onChange={(next) =>
+                update((draft) => {
+                  draft.items[index].scaffolds = next;
+                })
+              }
             />
 
             {item.type === "explain" && (

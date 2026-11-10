@@ -124,6 +124,21 @@ interface ItemBase {
   estimatedSeconds?: number;
   tags?: string[];
   variantOf?: string;
+  scaffolds?: Scaffold[];
+}
+
+interface Scaffold {
+  id: string;
+  prompt: string;
+  kind: "check" | "mcq";
+  answer?: string;
+  options?: {
+    id: string;
+    text: string;
+  }[];
+  correctOptionId?: string;
+  hints: Hint[];
+  scaffolds: Scaffold[];
 }
 
 interface Hint {
@@ -205,6 +220,49 @@ interface LabItem extends ItemBase {
 interface ReflectionItem extends ItemBase {
   type: "reflection";
   prompts: string[];
+}
+```
+
+### Example scaffold tree
+
+Scaffolds are recursive. A learner can open a smaller step from any item, and a missed scaffold can reveal its own sub-scaffolds. The app opens the tree automatically at walkthrough help levels.
+
+```json
+{
+  "id": "merge-worked",
+  "type": "worked_example",
+  "skillIds": ["merging"],
+  "difficulty": 2,
+  "prompt": "Merge feature into main.",
+  "steps": [
+    { "title": "Switch", "body": "Run `git switch main`." },
+    { "title": "Merge", "body": "Run `git merge feature`." }
+  ],
+  "hints": [],
+  "scaffolds": [
+    {
+      "id": "merge-target",
+      "kind": "check",
+      "prompt": "Which branch receives the merge?",
+      "answer": "the one you switch to",
+      "hints": [
+        {
+          "level": 1,
+          "text": "You switch to the branch that should receive the merge."
+        }
+      ],
+      "scaffolds": [
+        {
+          "id": "merge-main",
+          "kind": "check",
+          "prompt": "In `git switch main`, which branch receives the merge?",
+          "answer": "main",
+          "hints": [],
+          "scaffolds": []
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -401,6 +459,10 @@ Reject:
 - MCQ items with a missing `correctOptionId`.
 - Labs without checks or cleanup.
 - Hints that reveal the answer at level 1.
+- Duplicate scaffold IDs within an item.
+- Check scaffolds without an answer.
+- MCQ scaffolds without options or a valid `correctOptionId`.
+- Scaffold hints that reveal the answer at level 1.
 - External media URLs outside an allowlist.
 - Executable content in v1 labs.
 - Missing licence, changelog, or `minEngineVersion`.

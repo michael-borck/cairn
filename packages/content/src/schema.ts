@@ -46,6 +46,41 @@ export const hintSchema = z.object({
   revealsAnswer: z.boolean().optional(),
 });
 
+export type Hint = z.infer<typeof hintSchema>;
+
+export interface Scaffold {
+  id: string;
+  prompt: string;
+  kind: "check" | "mcq";
+  answer?: string;
+  options?: { id: string; text: string }[];
+  correctOptionId?: string;
+  hints: Hint[];
+  scaffolds: Scaffold[];
+}
+
+export const scaffoldSchema: z.ZodType<Scaffold, unknown> =
+  z.lazy(() =>
+    z.object({
+      id: idSchema,
+      prompt: z.string().min(1),
+      kind: z.enum(["check", "mcq"]).default("check"),
+      answer: z.string().min(1).optional(),
+      options: z
+        .array(
+          z.object({
+            id: z.string().min(1),
+            text: z.string().min(1),
+          })
+        )
+        .min(2)
+        .optional(),
+      correctOptionId: z.string().min(1).optional(),
+      hints: z.array(hintSchema).default([]),
+      scaffolds: z.array(scaffoldSchema).default([]),
+    })
+  );
+
 export const manifestSchema = z.object({
   schemaVersion: z.literal("0.1"),
   id: idSchema,
@@ -118,6 +153,7 @@ const itemBaseSchema = z.object({
   estimatedSeconds: z.number().int().positive().optional(),
   tags: z.array(z.string().min(1)).default([]),
   variantOf: idSchema.optional(),
+  scaffolds: z.array(scaffoldSchema).default([]),
 });
 
 export const explainItemSchema = itemBaseSchema.extend({

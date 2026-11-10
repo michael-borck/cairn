@@ -54,6 +54,32 @@ export const validPack = {
       prompt: "What is a container?",
       body: "A container packages an application and its dependencies.",
       hints: [],
+      scaffolds: [
+        {
+          id: "container-kernel",
+          kind: "check",
+          prompt: "Does a container bring its own kernel?",
+          answer: "no",
+          scaffolds: [
+            {
+              id: "container-share",
+              kind: "check",
+              prompt: "What does a container share with the host?",
+              answer: "kernel",
+            },
+          ],
+        },
+        {
+          id: "container-image",
+          kind: "mcq",
+          prompt: "Which is the read-only template?",
+          options: [
+            { id: "a", text: "The image" },
+            { id: "b", text: "The container" },
+          ],
+          correctOptionId: "a",
+        },
+      ],
     },
     {
       id: "container-mcq",

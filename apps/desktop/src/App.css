@@ -1067,6 +1067,116 @@ select:focus {
   color: var(--danger) !important;
 }
 
+.scaffold-panel {
+  margin: 12px 0;
+}
+
+.scaffold-body {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgb(127 183 163 / 6%);
+}
+
+.scaffold-intro {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.scaffold-step {
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #10100f;
+}
+
+.scaffold-step.done {
+  opacity: 0.72;
+}
+
+.scaffold-step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.scaffold-step-label {
+  color: var(--accent-2);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.scaffold-done {
+  color: var(--good);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.scaffold-prompt {
+  margin: 0 0 8px !important;
+  color: var(--text) !important;
+  font-size: 13px !important;
+}
+
+.scaffold-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.scaffold-options .option {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.scaffold-actions {
+  margin-top: 8px;
+}
+
+.scaffold-hints {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+}
+
+.scaffold-hints p {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.scaffold-hints p strong {
+  color: var(--accent);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.scaffold-children {
+  margin-top: 10px;
+  padding-left: 10px;
+  border-left: 2px solid var(--line);
+}
+
+.scaffold-children > p {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.button.small {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
 .hints {
   margin: 12px 0;
   padding: 12px;

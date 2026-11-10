@@ -56,6 +56,7 @@ import { computeBadges } from "./badges";
 import { buildReviewCalendar } from "./review-calendar";
 import { buildCairnExport, saveCairnExport } from "./export";
 import { createPersistentStorage, type AppStorage } from "./storage";
+import { ScaffoldPanel } from "./ScaffoldPanel";
 
 const LEARNER_ID = "local";
 const ACTION_LABEL: Record<Decision["action"], string> = {
@@ -1917,6 +1918,15 @@ function ActivityView({
       </div>
     ) : null;
 
+  const scaffoldBlock =
+    item.scaffolds.length > 0 ? (
+      <ScaffoldPanel
+        scaffolds={item.scaffolds}
+        onHelpUsed={onHintUsed}
+        defaultOpen={helpLevel >= 3}
+      />
+    ) : null;
+
   const feedback = pending ? (
     <div className={`feedback ${pending.correct === false ? "bad" : "good"}`}>
       <p>{pending.feedback}</p>
@@ -1974,6 +1984,7 @@ function ActivityView({
           disabled={Boolean(pending)}
         />
         {hintBlock}
+        {scaffoldBlock}
         {feedback}
         {aiBlock}
       </div>
@@ -1998,6 +2009,7 @@ function ActivityView({
         )}
         {rubric && <RubricView rubric={rubric} />}
         {hintBlock}
+        {scaffoldBlock}
         <textarea
           value={textAnswer}
           onChange={(event) => onTextChange(event.target.value)}
@@ -2028,6 +2040,7 @@ function ActivityView({
         <div className="prose">{item.body}</div>
         {item.check && checkpointBlock(item.check.prompt, item.check.answer)}
         {hintBlock}
+        {scaffoldBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
@@ -2052,6 +2065,7 @@ function ActivityView({
         {item.checkpoint &&
           checkpointBlock(item.checkpoint.prompt, item.checkpoint.answer)}
         {hintBlock}
+        {scaffoldBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
         </button>
@@ -2084,6 +2098,7 @@ function ActivityView({
           <p>Lab details are missing from this pack.</p>
         )}
         {hintBlock}
+        {scaffoldBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Mark complete
         </button>

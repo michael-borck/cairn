@@ -15,6 +15,51 @@ describe("validatePack", () => {
     expect(result.pack?.items.length).toBe(5);
   });
 
+  it("accepts a nested scaffold tree", () => {
+    const result = validatePack(validPack);
+    expect(result.ok).toBe(true);
+    expect(result.pack?.items[0].scaffolds).toHaveLength(2);
+    expect(result.pack?.items[0].scaffolds[0].scaffolds).toHaveLength(1);
+  });
+
+  it("rejects a check scaffold without an answer", () => {
+    const pack = clone(validPack) as any;
+    delete pack.items[0].scaffolds[0].answer;
+    const result = validatePack(pack);
+    expect(result.errors).toContain(
+      "item container-explain: scaffold container-kernel: check needs an answer"
+    );
+  });
+
+  it("rejects an mcq scaffold with an unknown correct option", () => {
+    const pack = clone(validPack) as any;
+    pack.items[0].scaffolds[1].correctOptionId = "z";
+    const result = validatePack(pack);
+    expect(result.errors).toContain(
+      "item container-explain: scaffold container-image: correctOptionId does not match an option"
+    );
+  });
+
+  it("rejects duplicate scaffold ids", () => {
+    const pack = clone(validPack) as any;
+    pack.items[0].scaffolds[0].scaffolds[0].id = "container-kernel";
+    const result = validatePack(pack);
+    expect(result.errors).toContain(
+      "item container-explain: duplicate scaffold id container-kernel"
+    );
+  });
+
+  it("rejects a level 1 scaffold hint that reveals the answer", () => {
+    const pack = clone(validPack) as any;
+    pack.items[0].scaffolds[0].hints = [
+      { level: 1, text: "It is a kernel.", revealsAnswer: true },
+    ];
+    const result = validatePack(pack);
+    expect(result.errors).toContain(
+      "item container-explain: scaffold container-kernel: hint level 1 must not reveal the answer"
+    );
+  });
+
   it("reports schema errors with paths", () => {
     const pack = clone(validPack) as any;
     pack.manifest.version = "one";
