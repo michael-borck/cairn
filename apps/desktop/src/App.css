@@ -1464,6 +1464,18 @@ pre {
   line-height: 1.6;
 }
 
+.catalog-revoked {
+  margin: 10px 0 0;
+  color: var(--danger);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.catalog-trust.revoked {
+  border-color: rgb(226 125 111 / 45%);
+  color: var(--danger);
+}
+
 .catalog-stats {
   margin: 8px 0 0;
   color: var(--muted);

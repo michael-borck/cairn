@@ -4,8 +4,10 @@ import type { ContentPack } from "@cairn/content";
 import {
   DEFAULT_CATALOG_URL,
   installCatalogPack,
+  isRevoked,
   loadCatalog,
   type CatalogPack,
+  type Revocation,
 } from "./packs";
 
 function minutes(value: number | undefined): string {
@@ -25,6 +27,8 @@ export function CatalogPanel({
 }) {
   const [entries, setEntries] = useState<CatalogPack[]>([]);
   const [catalogUrl, setCatalogUrl] = useState(DEFAULT_CATALOG_URL);
+  const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [revoked, setRevoked] = useState<Revocation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -35,6 +39,8 @@ export function CatalogPanel({
       .then(({ url, catalog }) => {
         if (cancelled) return;
         setCatalogUrl(url);
+        setPublicKey(catalog.publicKey);
+        setRevoked(catalog.revoked);
         setEntries(catalog.packs);
       })
       .catch((cause) => {
@@ -61,7 +67,12 @@ export function CatalogPanel({
     setBusyId(entry.id);
     setError(null);
     try {
-      const pack = await installCatalogPack(entry, catalogUrl);
+      const pack = await installCatalogPack(
+        entry,
+        catalogUrl,
+        publicKey ?? undefined,
+        revoked
+      );
       onInstalled(pack);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause));
@@ -104,6 +115,7 @@ export function CatalogPanel({
             const installedVersion = installed[entry.id];
             const isCurrent = installedVersion === entry.version;
             const isUpdate = Boolean(installedVersion) && !isCurrent;
+            const revocation = isRevoked(entry, revoked);
             return (
               <article className="catalog-card" key={entry.id}>
                 <div className="catalog-card-head">
@@ -113,9 +125,21 @@ export function CatalogPanel({
                       v{entry.version} · {entry.level} · {entry.trust}
                     </p>
                   </div>
-                  <span className="catalog-trust">{entry.trust}</span>
+                  <span
+                    className={`catalog-trust ${revocation ? "revoked" : ""}`}
+                  >
+                    {revocation ? "revoked" : entry.trust}
+                  </span>
                 </div>
                 <p className="catalog-description">{entry.description}</p>
+                {revocation && (
+                  <p className="catalog-revoked">
+                    Revoked: {revocation.reason}
+                    {revocation.replacement
+                      ? ` Use ${revocation.replacement} instead.`
+                      : ""}
+                  </p>
+                )}
                 <p className="catalog-stats">
                   {[
                     entry.skills ? `${entry.skills} skills` : "",
@@ -130,16 +154,20 @@ export function CatalogPanel({
                   <button
                     type="button"
                     className="button small"
-                    disabled={isCurrent || Boolean(busyId)}
+                    disabled={
+                      Boolean(revocation) || isCurrent || Boolean(busyId)
+                    }
                     onClick={() => void install(entry)}
                   >
-                    {isCurrent
-                      ? "Installed"
-                      : busyId === entry.id
-                        ? "Installing..."
-                        : isUpdate
-                          ? "Update"
-                          : "Install"}
+                    {revocation
+                      ? "Revoked"
+                      : isCurrent
+                        ? "Installed"
+                        : busyId === entry.id
+                          ? "Installing..."
+                          : isUpdate
+                            ? "Update"
+                            : "Install"}
                   </button>
                   {entry.tags && entry.tags.length > 0 && (
                     <span className="catalog-tags">

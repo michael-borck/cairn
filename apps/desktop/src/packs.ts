@@ -1,4 +1,5 @@
 import { invoke } from "@tauri-apps/api/core";
+import { ed25519 } from "@noble/curves/ed25519.js";
 import { validatePack, type ContentPack } from "@cairn/content";
 
 export type PackSource = "builtin" | "local";
@@ -27,15 +28,27 @@ export interface CatalogPack {
   labs: number;
   url: string;
   sha256: string;
+  signature?: string;
   trust: string;
   tags?: string[];
   updatedAt?: string;
 }
 
+export interface Revocation {
+  id: string;
+  version?: string;
+  reason: string;
+  revokedAt: string;
+  replacement?: string;
+}
+
 export interface Catalog {
   format: "cairn-catalog";
   version: number;
+  signatureAlgorithm: string;
+  publicKey: string;
   generated: string;
+  revoked: Revocation[];
   packs: CatalogPack[];
 }
 
@@ -187,8 +200,14 @@ export async function loadCatalog(
     throw new Error(`Catalog request failed (${response.status}).`);
   }
   const data = (await response.json()) as Partial<Catalog>;
-  if (data.format !== "cairn-catalog" || !Array.isArray(data.packs)) {
-    throw new Error("This is not a Cairn pack catalog.");
+  if (
+    data.format !== "cairn-catalog" ||
+    data.signatureAlgorithm !== "ed25519" ||
+    typeof data.publicKey !== "string" ||
+    !Array.isArray(data.packs) ||
+    !Array.isArray(data.revoked)
+  ) {
+    throw new Error("This is not a signed Cairn pack catalog.");
   }
   return { url, catalog: data as Catalog };
 }
@@ -198,6 +217,38 @@ async function sha256Hex(buffer: ArrayBuffer): Promise<string> {
   return Array.from(new Uint8Array(digest), (byte) =>
     byte.toString(16).padStart(2, "0")
   ).join("");
+}
+
+function base64Bytes(value: string): Uint8Array {
+  const binary = atob(value);
+  return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+}
+
+function signatureValid(
+  buffer: ArrayBuffer,
+  signature: string,
+  publicKey: string
+): boolean {
+  try {
+    return ed25519.verify(
+      base64Bytes(signature),
+      new Uint8Array(buffer),
+      base64Bytes(publicKey)
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function isRevoked(
+  entry: Pick<CatalogPack, "id" | "version">,
+  revoked: Revocation[]
+): Revocation | undefined {
+  return revoked.find(
+    (item) =>
+      item.id === entry.id &&
+      (item.version === undefined || item.version === entry.version)
+  );
 }
 
 interface ZipLike {
@@ -212,8 +263,17 @@ async function readZipJson(zip: ZipLike, name: string): Promise<unknown> {
 
 export async function installCatalogPack(
   entry: CatalogPack,
-  catalogUrl = DEFAULT_CATALOG_URL
+  catalogUrl = DEFAULT_CATALOG_URL,
+  publicKey?: string,
+  revoked: Revocation[] = []
 ): Promise<ContentPack> {
+  const revocation = isRevoked(entry, revoked);
+  if (revocation) {
+    throw new Error(`This pack version is revoked: ${revocation.reason}`);
+  }
+  if (!publicKey) {
+    throw new Error("The catalog has no signing key.");
+  }
   const artifactUrl = new URL(entry.url, catalogUrl).toString();
   const response = await fetch(artifactUrl);
   if (!response.ok) {
@@ -223,6 +283,12 @@ export async function installCatalogPack(
   const hash = await sha256Hex(buffer);
   if (hash !== entry.sha256) {
     throw new Error("The pack hash does not match the catalog.");
+  }
+  if (!entry.signature) {
+    throw new Error("The catalog entry is not signed.");
+  }
+  if (!signatureValid(buffer, entry.signature, publicKey)) {
+    throw new Error("The pack signature does not verify.");
   }
 
   const { default: JSZip } = await import("jszip");
