@@ -78,6 +78,7 @@ docs/
 - [Adaptive methods audit](docs/spec/adaptive-methods-audit.md)
 - [Adaptive v0.2 implementation plan](docs/plans/adaptive-v0.2.md)
 - [Community library plan](docs/plans/community-library.md)
+- [Cairn packs catalog](https://github.com/michael-borck/cairn-packs)
 - [Landing page plan](docs/plans/landing-page.md)
 - [Research export format](docs/spec/export-format.md)
 - [Architecture decisions](docs/adr/README.md)

@@ -1,6 +1,8 @@
 # Community library plan
 
-- Status: Planned after the pilot
+- Status: Started after the adaptive scaffold work
+- Catalog: https://github.com/michael-borck/cairn-packs
+- Site: https://michael-borck.github.io/cairn-packs/
 - Pattern: static catalog, PR submissions, local install
 - Reference: Lorekeeper Packs
 
@@ -9,6 +11,18 @@
 Let learners discover and install packs without an account, while keeping the local library as the source of truth.
 
 The store is discovery. The app is the runtime. A downloaded pack is copied into the local library and works offline afterwards.
+
+## First slice
+
+- [x] Separate `cairn-packs` repository.
+- [x] Static catalog with SHA-256 hashes.
+- [x] First-party Docker and Git `.learnpack` artifacts.
+- [x] Catalog verifier and submission validator.
+- [x] CI validation workflow.
+- [x] Static catalog site.
+- [ ] Cairn catalog fetch and install flow.
+- [ ] Signing and revocation.
+- [ ] Open submissions.
 
 ## Shape
 
