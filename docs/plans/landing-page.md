@@ -1,7 +1,7 @@
 # Landing page plan
 
 - Domain: `cairn.borck.education`
-- Status: Before public pilot
+- Status: Drafted; deployment workflow added
 - Build: static page, separate from the app
 
 ## Verdict
@@ -14,7 +14,9 @@ Do not build a full marketing site. One page and a trust page are enough.
 
 `cairn.borck.education` was added on 2026-11-09. The CNAME currently points at `michael-borck.github.io`. The site itself is not built yet.
 
-The next step is to add the landing page to the GitHub Pages site or point the CNAME at Cloudflare Pages.
+The landing page is drafted under `site/`. A GitHub Actions workflow deploys it to Pages. Enable **Settings → Pages → Source: GitHub Actions** and push a change under `site/`.
+
+The page follows the structure below.
 
 ## Page structure
 

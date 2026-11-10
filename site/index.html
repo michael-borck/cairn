@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cairn: a personal tutor that runs on your machine</title>
+    <meta
+      name="description"
+      content="Cairn is a local-first adaptive learning workbench. Bring your own notes, textbooks, and labs. See why the path changes. Keep your data. AI is optional."
+    />
+    <link rel="canonical" href="https://cairn.borck.education/" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta property="og:title" content="Cairn" />
+    <meta
+      property="og:description"
+      content="A local-first adaptive learning workbench for your own notes, textbooks, and labs."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://cairn.borck.education/" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Cairn home">
+        <span class="brand-mark">✦</span>
+        <span>Cairn</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="#why">Why</a>
+        <a href="#packs">Packs</a>
+        <a href="#how">How it works</a>
+        <a href="trust.html">Trust</a>
+        <a href="https://github.com/michael-borck/cairn">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Local-first adaptive learning</p>
+          <h1>A personal tutor that runs on your machine.</h1>
+          <p class="lede">
+            Bring your own notes, textbooks, and labs. Cairn builds a skill map,
+            adapts the next activity, and shows you why. Your data stays on your
+            device. AI is optional.
+          </p>
+          <div class="actions">
+            <a class="button primary" href="https://github.com/michael-borck/cairn/releases">
+              Download for macOS
+            </a>
+            <a class="button" href="https://github.com/michael-borck/cairn">
+              View source
+            </a>
+          </div>
+          <p class="fineprint">
+            macOS preview. Build from source for Windows or Linux. MIT licensed.
+          </p>
+        </div>
+
+        <div class="demo" aria-label="Illustrative Cairn session">
+          <div class="demo-head">
+            <span class="dot"></span>
+            <span>Git &amp; GitHub Fundamentals</span>
+            <span class="demo-tag">local</span>
+          </div>
+          <div class="demo-body">
+            <div class="demo-main">
+              <p class="eyebrow">Practice · port mapping</p>
+              <h2>Which flag publishes container port 80 on host port 8080?</h2>
+              <button class="option">-p 80:8080</button>
+              <button class="option selected">-p 8080:80</button>
+              <div class="demo-feedback">
+                <strong>Correct.</strong> The host port comes first.
+              </div>
+            </div>
+            <aside class="demo-side">
+              <p class="eyebrow">Why this?</p>
+              <p class="demo-reason">
+                You missed this skill twice, so Cairn switched to a worked
+                example. Your last answer was confident but wrong.
+              </p>
+              <div class="metric">
+                <span>Mastery</span>
+                <div class="bar"><i style="width: 68%"></i></div>
+                <b>68%</b>
+              </div>
+              <div class="metric">
+                <span>Help level</span>
+                <strong>Hint</strong>
+              </div>
+              <div class="metric">
+                <span>Next review</span>
+                <strong>3 days</strong>
+              </div>
+            </aside>
+          </div>
+          <p class="demo-note">Illustrative interface. Not a live session.</p>
+        </div>
+      </section>
+
+      <section id="why" class="section">
+        <p class="eyebrow">Why Cairn</p>
+        <h2>Adaptation you can own and inspect.</h2>
+        <p class="section-lede">
+          Most adaptive platforms own the path, the content, and the data. Cairn
+          takes the other position.
+        </p>
+        <div class="grid three">
+          <article class="card">
+            <h3>Private by default</h3>
+            <p>
+              No account. Learner data lives in a local SQLite database. AI off
+              is a complete mode, not a degraded one.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Your material</h3>
+            <p>
+              Import Markdown, HTML, DOCX, EPUB, and PDF. Bring Docker labs,
+              lecture notes, and textbooks. Build and export packs.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Visible adaptation</h3>
+            <p>
+              Every activity has a reason. Change difficulty, help, AI, or path.
+              Switch to manual mode when you want the wheel.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="packs" class="section">
+        <p class="eyebrow">Packs</p>
+        <h2>Start with a real subject.</h2>
+        <p class="section-lede">
+          Packs include explainers, practice, retention review, and
+          learner-run labs.
+        </p>
+        <div class="grid two">
+          <article class="pack-card">
+            <span class="pack-label">9 skills · 37 items · 5 labs</span>
+            <h3>Docker Fundamentals</h3>
+            <p>
+              Containers, images, ports, volumes, networks, Dockerfiles,
+              Compose, and troubleshooting.
+            </p>
+          </article>
+          <article class="pack-card">
+            <span class="pack-label">10 skills · 43 items · 7 labs</span>
+            <h3>Git &amp; GitHub Fundamentals</h3>
+            <p>
+              Commits, branches, merges, conflicts, remotes, pull requests,
+              ignores, and recovery.
+            </p>
+          </article>
+        </div>
+        <p class="fineprint">
+          A community library is planned after the pilot. The local library is
+          always the source of truth.
+        </p>
+      </section>
+
+      <section id="how" class="section">
+        <p class="eyebrow">How it works</p>
+        <h2>Import, practise, see why, steer.</h2>
+        <div class="steps">
+          <div class="step">
+            <span>01</span>
+            <h3>Bring material</h3>
+            <p>Import notes, textbooks, or a lab repository.</p>
+          </div>
+          <div class="step">
+            <span>02</span>
+            <h3>Start a session</h3>
+            <p>Cairn diagnoses, then chooses an activity and explains why.</p>
+          </div>
+          <div class="step">
+            <span>03</span>
+            <h3>Adjust</h3>
+            <p>Change difficulty, help, AI, or switch to manual mode.</p>
+          </div>
+          <div class="step">
+            <span>04</span>
+            <h3>Review</h3>
+            <p>Retention reviews return when they are useful, with a cap.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section callout">
+        <div>
+          <p class="eyebrow">Trust</p>
+          <h2>Your learning data is not the product.</h2>
+          <p>
+            No account, no learner database in the cloud, no telemetry by
+            default. Export everything. Delete everything. Turn AI off.
+          </p>
+        </div>
+        <a class="button" href="trust.html">Read the trust page</a>
+      </section>
+
+      <section class="section status">
+        <p class="eyebrow">Status</p>
+        <h2>Pilot-ready, not finished.</h2>
+        <p>
+          Cairn v0.2 is a research-grade prototype. The adaptive model, retention
+          controls, packs, authoring, and local export are working. A public
+          pilot and a signed release are next. The adaptive methods are
+          inherited from established work. The local-first, learner-owned
+          workflow is the contribution.
+        </p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/michael-borck/cairn/issues/new?title=Pilot%20interest">
+            Join the pilot
+          </a>
+          <a class="button" href="https://github.com/michael-borck/cairn">
+            Follow on GitHub
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>Cairn</strong>
+        <span>A local-first adaptive learning workbench.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="https://github.com/michael-borck/cairn">GitHub</a>
+        <a href="https://github.com/michael-borck/cairn/tree/main/docs">Docs</a>
+        <a href="https://github.com/michael-borck/cairn/blob/main/ACKNOWLEDGMENTS.md">Acknowledgments</a>
+        <a href="https://github.com/michael-borck/cairn/blob/main/LICENSE">MIT</a>
+      </nav>
+    </footer>
+  </body>
+</html>

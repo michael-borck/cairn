@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trust and data flow · Cairn</title>
+    <meta
+      name="description"
+      content="How Cairn handles learner data, AI, packs, exports, and deletion."
+    />
+    <link rel="canonical" href="https://cairn.borck.education/trust.html" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Cairn home">
+        <span class="brand-mark">✦</span>
+        <span>Cairn</span>
+      </a>
+      <nav aria-label="Primary">
+        <a href="./#why">Why</a>
+        <a href="./#packs">Packs</a>
+        <a href="./#how">How it works</a>
+        <a href="trust.html" aria-current="page">Trust</a>
+        <a href="https://github.com/michael-borck/cairn">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="main" class="trust-page">
+      <p class="eyebrow">Trust</p>
+      <h1>Your learning data is not the product.</h1>
+      <p class="lede">
+        Cairn is local-first. Your learner data stays on your machine. AI is
+        optional. Nothing is uploaded to a Cairn account because there is no
+        Cairn account.
+      </p>
+
+      <h2>What stays local</h2>
+      <ul>
+        <li>Your learner profile and mastery estimates.</li>
+        <li>Answers, confidence, hint use, and review history.</li>
+        <li>Imported notes, textbooks, and packs.</li>
+        <li>The local library and pack exports.</li>
+      </ul>
+
+      <h2>What leaves the machine</h2>
+      <p>
+        Only what you explicitly choose. There are three cases.
+      </p>
+
+      <div class="panel">
+        <div class="flow">
+          <div><strong>AI off</strong>Nothing leaves the machine.</div>
+          <div><strong>Local Ollama</strong>Prompts go to your local model only.</div>
+          <div><strong>Cloud AI</strong>The prompt goes to the provider you selected.</div>
+        </div>
+        <p>
+          The app shows the AI mode. It does not silently switch to cloud AI.
+          Pack downloads use the catalog host, but learner data is not sent with
+          the request.
+        </p>
+      </div>
+
+      <h2>No account, no telemetry by default</h2>
+      <p>
+        Cairn does not require an account. There is no default telemetry. If
+        optional diagnostics are added later, they will be opt-in, visible, and
+        documented here before release.
+      </p>
+
+      <h2>Export and delete</h2>
+      <p>
+        You can export your learner data and delete progress from the app. The
+        export includes your pack, learner state, events, decisions, model
+        parameters, and policy. It is your file.
+      </p>
+
+      <h2>Packs</h2>
+      <p>
+        A pack is content, not learner data. The planned community library is a
+        static catalog. Adding a pack copies it into your local library. The
+        store does not receive your progress.
+      </p>
+
+      <h2>AI is not the policy</h2>
+      <p>
+        AI can generate hints, feedback, and draft practice. It does not choose
+        the learning path. The adaptive policy is deterministic and
+        explainable.
+      </p>
+
+      <h2>Open source</h2>
+      <p>
+        Cairn is MIT licensed. The code, decision logic, and data format are
+        public. You can audit them, run them offline, and fork them.
+      </p>
+
+      <h2>Security</h2>
+      <p>
+        Report security issues privately to the maintainer rather than opening a
+        public issue with learner data.
+      </p>
+
+      <p class="fineprint">
+        This page describes the current implementation. It will change as the
+        app changes. The source and release notes are the authoritative record.
+      </p>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>Cairn</strong>
+        <span>Local-first adaptive learning.</span>
+      </div>
+      <nav aria-label="Footer">
+        <a href="./">Home</a>
+        <a href="https://github.com/michael-borck/cairn">GitHub</a>
+        <a href="https://github.com/michael-borck/cairn/blob/main/LICENSE">MIT</a>
+      </nav>
+    </footer>
+  </body>
+</html>
