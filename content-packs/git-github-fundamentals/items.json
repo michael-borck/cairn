@@ -298,7 +298,11 @@
         "text": "The branch you switch to is the one that gets the merge."
       }
     ],
-    "estimatedSeconds": 150
+    "estimatedSeconds": 150,
+    "checkpoint": {
+      "prompt": "Which branch receives the merge: the one you switch to, or the one you merge?",
+      "answer": "the one you switch to"
+    }
   },
   {
     "id": "merge-mcq-1",
@@ -466,7 +470,11 @@
         "text": "origin is a name for a URL, not a branch."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "check": {
+      "prompt": "What is `origin` a name for? (one word)",
+      "answer": "URL"
+    }
   },
   {
     "id": "remote-mcq-1",

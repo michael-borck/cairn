@@ -14,7 +14,11 @@
         "text": "Think about what the container shares with the host."
       }
     ],
-    "estimatedSeconds": 120
+    "estimatedSeconds": 120,
+    "check": {
+      "prompt": "What does a container share with the host?",
+      "answer": "kernel"
+    }
   },
   {
     "id": "what-is-container-mcq-1",
@@ -290,7 +294,11 @@
         "text": "The host port is the one you type in the browser."
       }
     ],
-    "estimatedSeconds": 150
+    "estimatedSeconds": 150,
+    "checkpoint": {
+      "prompt": "Which side of `-p 8080:80` is the host port?",
+      "answer": "left"
+    }
   },
   {
     "id": "port-mcq-1",

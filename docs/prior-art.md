@@ -21,7 +21,7 @@ Cairn sits in a long lineage. This document records what is borrowed, what is di
 OATutor is the closest open-source adaptive tutor. Cairn should learn from it without copying its product shape.
 
 1. **Hint and scaffold hierarchy**
-   OATutor supports a problem, hints, scaffolds, and sub-scaffolds. Cairn has a hint ladder but no scaffold tree. Add optional scaffold steps that break a problem into smaller subproblems.
+   OATutor supports a problem, hints, scaffolds, and sub-scaffolds. Cairn has a hint ladder and an optional inline checkpoint on explain and worked-example items. A full scaffold tree is still future work.
 
 2. **Skill and problem pools**
    OATutor tags problems by skill and selects from a pool. Cairn already has skills and items, but could add explicit problem pools per skill and difficulty band.

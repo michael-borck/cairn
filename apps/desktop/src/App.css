@@ -1025,6 +1025,48 @@ select:focus {
   border-color: var(--accent);
 }
 
+.checkpoint {
+  margin: 14px 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+}
+
+.checkpoint p {
+  margin: 0 0 8px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.checkpoint-row {
+  display: flex;
+  gap: 8px;
+}
+
+.checkpoint-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #10100f;
+  color: var(--text);
+}
+
+.checkpoint-result {
+  margin: 8px 0 0 !important;
+  font-size: 12px !important;
+}
+
+.checkpoint-result.correct {
+  color: var(--good) !important;
+}
+
+.checkpoint-result.wrong {
+  color: var(--danger) !important;
+}
+
 .hints {
   margin: 12px 0;
   padding: 12px;

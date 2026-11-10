@@ -1836,9 +1836,63 @@ function ActivityView({
   onHintUsed: () => void;
 }) {
   const [visibleHints, setVisibleHints] = useState(0);
+  const [checkAnswer, setCheckAnswer] = useState("");
+  const [checkResult, setCheckResult] = useState<"correct" | "wrong" | null>(
+    null
+  );
   const hints = (item.hints ?? []).filter(
     (hint) => hint.level <= helpLevel
   );
+
+  const checkpointBlock = (prompt: string, answer: string) => {
+    const check = () => {
+      const normalized = (value: string) =>
+        value.trim().toLowerCase().replace(/[.,!?]/g, "");
+      const expected = normalized(answer);
+      setCheckResult(
+        normalized(checkAnswer).includes(expected) ? "correct" : "wrong"
+      );
+    };
+
+    return (
+      <div className="checkpoint">
+        <p className="eyebrow">Quick check</p>
+        <p>{prompt}</p>
+        <div className="checkpoint-row">
+          <input
+            value={checkAnswer}
+            onChange={(event) => {
+              setCheckAnswer(event.target.value);
+              setCheckResult(null);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                check();
+              }
+            }}
+            placeholder="Your answer"
+            aria-label={prompt}
+          />
+          <button
+            type="button"
+            className="ghost-button small"
+            disabled={!checkAnswer.trim()}
+            onClick={check}
+          >
+            Check
+          </button>
+        </div>
+        {checkResult && (
+          <p className={`checkpoint-result ${checkResult}`}>
+            {checkResult === "correct"
+              ? "Correct."
+              : "Not quite. Re-read the section and try again."}
+          </p>
+        )}
+      </div>
+    );
+  };
   const hintBlock =
     hints.length > 0 ? (
       <div className="hints">
@@ -1972,6 +2026,7 @@ function ActivityView({
         <p className="eyebrow">{item.skillIds.join(" · ")}</p>
         <h2>{item.prompt}</h2>
         <div className="prose">{item.body}</div>
+        {item.check && checkpointBlock(item.check.prompt, item.check.answer)}
         {hintBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
@@ -1994,6 +2049,8 @@ function ActivityView({
             </li>
           ))}
         </ol>
+        {item.checkpoint &&
+          checkpointBlock(item.checkpoint.prompt, item.checkpoint.answer)}
         {hintBlock}
         <button type="button" className="button" onClick={onSelfComplete} disabled={busy}>
           Continue
