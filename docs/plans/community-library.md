@@ -24,6 +24,8 @@ The store is discovery. The app is the runtime. A downloaded pack is copied into
 - [x] Ed25519 artifact signatures and catalog revocations.
 - [x] App pins the official catalog public key.
 - [x] Open submissions with a sample pack, PR checklist, validator, and local approval script.
+- [x] Submission review status and approval gate.
+- [x] Catalog key IDs and rotation-ready re-signing.
 
 ## Shape
 

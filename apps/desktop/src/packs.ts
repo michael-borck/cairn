@@ -47,6 +47,7 @@ export interface Catalog {
   version: number;
   signatureAlgorithm: string;
   publicKey: string;
+  keyId?: string;
   generated: string;
   revoked: Revocation[];
   packs: CatalogPack[];
@@ -56,6 +57,7 @@ export const DEFAULT_CATALOG_URL =
   "https://michael-borck.github.io/cairn-packs/catalog/index.json";
 
 const TRUSTED_CATALOG_PUBLIC_KEYS = [
+  // Add the next key here and ship an app update before rotating the catalog.
   "auHW8t8qc/0I71xd4P9r42kQItG6j35e/P3YTPm1f+k=",
 ];
 
