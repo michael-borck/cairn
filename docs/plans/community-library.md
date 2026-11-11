@@ -23,7 +23,7 @@ The store is discovery. The app is the runtime. A downloaded pack is copied into
 - [x] Cairn catalog fetch and install flow (SHA-256 and Ed25519 verified, local install).
 - [x] Ed25519 artifact signatures and catalog revocations.
 - [x] App pins the official catalog public key.
-- [ ] Open submissions.
+- [x] Open submissions with a sample pack, PR checklist, validator, and local approval script.
 
 ## Shape
 
