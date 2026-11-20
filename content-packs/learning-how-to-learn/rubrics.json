@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rubric-teach-testing",
+    "title": "Explain the testing effect",
+    "criteria": [
+      {
+        "id": "names-effect",
+        "label": "Names the testing effect or retrieval practice",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "recall-mechanism",
+        "label": "Explains what recall does that rereading does not",
+        "weight": 0.35,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial: mentions recall is harder",
+          "2": "Clear: recall reconstructs and strengthens the trace"
+        }
+      },
+      {
+        "id": "evidence-honest",
+        "label": "Cites evidence accurately without overclaiming",
+        "weight": 0.35,
+        "levels": {
+          "0": "Missing or invented",
+          "1": "Vague ('studies say')",
+          "2": "Specific and accurate, e.g. Roediger and Karpicke 2006, with honest scope"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-illusions",
+    "title": "Explain recognition versus recall",
+    "criteria": [
+      {
+        "id": "two-abilities",
+        "label": "Distinguishes recognition from recall",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: seeing the right answer vs producing it cold"
+        }
+      },
+      {
+        "id": "false-feeling",
+        "label": "Explains why familiarity feels like mastery",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: rereading and highlighting build familiarity, which is mistaken for knowledge"
+        }
+      },
+      {
+        "id": "fix",
+        "label": "Gives the fix: closed-book production",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: close the book and attempt to produce"
+        }
+      }
+    ]
+  }
+]

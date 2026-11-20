@@ -1,0 +1,205 @@
+[
+  {
+    "id": "lab-two-lists",
+    "title": "The two-list experiment",
+    "skillIds": ["retrieval-practice", "memory-and-forgetting"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "printf 'anchor\\nbronze\\ncomet\\ndrum\\nflint\\n' > cairn-list-a.txt",
+      "printf 'gravel\\nhinge\\nivory\\njade\\nkelp\\n' > cairn-list-b.txt"
+    ],
+    "task": "Study list A by rereading it three times. Study list B by reading it once, covering it, writing the words you recall, then checking - and repeating that loop twice. Tomorrow, recall both lists from memory and compare the counts.",
+    "commands": [
+      "echo two-list experiment started",
+      "cat cairn-list-a.txt",
+      "cat cairn-list-b.txt"
+    ],
+    "checks": [
+      {
+        "id": "list-b-method",
+        "type": "manual",
+        "prompt": "For list B, did you read once, cover it, write your recall, then check - and repeat that loop twice?",
+        "answer": "yes"
+      },
+      {
+        "id": "delayed-recall",
+        "type": "manual",
+        "prompt": "The next day, did you write down what you recalled from each list before looking at either file?",
+        "answer": "yes"
+      },
+      {
+        "id": "counts-recorded",
+        "type": "manual",
+        "prompt": "Did you record how many words survived from list A and from list B?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The comparison only means something if each list gets a different method and roughly equal attention."
+      },
+      {
+        "level": 2,
+        "text": "Recall attempts during study are the entire difference between the two lists."
+      }
+    ],
+    "solution": "Read list A three times. For list B: read once, cover, recall, check - twice. Tomorrow: recall both cold, count the survivors, compare.",
+    "cleanup": ["rm -f cairn-list-a.txt cairn-list-b.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-highlight-audit",
+    "title": "Audit your highlights",
+    "skillIds": ["illusion-of-knowing"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "touch cairn-recall-notes.txt"
+    ],
+    "task": "Pick a chapter you highlighted at least a week ago. With the book closed, write everything you remember in cairn-recall-notes.txt. Then reopen the chapter and check your highlights against what you wrote.",
+    "commands": [
+      "echo highlight audit started",
+      "cat cairn-recall-notes.txt"
+    ],
+    "checks": [
+      {
+        "id": "recall-first",
+        "type": "manual",
+        "prompt": "Did you write your recall before reopening the chapter?",
+        "answer": "yes"
+      },
+      {
+        "id": "survival-counted",
+        "type": "manual",
+        "prompt": "Did you mark which highlights match things you produced from memory, and which do not?",
+        "answer": "yes"
+      },
+      {
+        "id": "verdict-written",
+        "type": "manual",
+        "prompt": "Did you write one line estimating what share of the highlighted material actually survived?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The audit measures the highlights, not you. Whatever number you get is the finding."
+      },
+      {
+        "level": 2,
+        "text": "If most highlights mark things you did not recall, the highlighting trained recognition, not recall."
+      }
+    ],
+    "solution": "Recall first with notes closed, then check against the highlights, then write your survival estimate.",
+    "cleanup": ["rm -f cairn-recall-notes.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-spacing-audit",
+    "title": "Spacing audit",
+    "skillIds": ["spaced-repetition"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "touch cairn-spacing-log.txt"
+    ],
+    "task": "For one week, log every contact you have with the material you are learning in cairn-spacing-log.txt: the date, and whether the contact was new learning, rereading, or recall from memory. At the end of the week, audit the pattern.",
+    "commands": [
+      "echo spacing audit started",
+      "date",
+      "cat cairn-spacing-log.txt"
+    ],
+    "checks": [
+      {
+        "id": "gap-check",
+        "type": "manual",
+        "prompt": "Were there gaps of at least one day between some contacts, or did everything happen in the same evening?",
+        "answer": "yes"
+      },
+      {
+        "id": "recall-share",
+        "type": "manual",
+        "prompt": "Did you count how many contacts were recall from memory rather than rereading?",
+        "answer": "yes"
+      },
+      {
+        "id": "next-dates",
+        "type": "manual",
+        "prompt": "Did you write the next two review dates, at expanding intervals?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Same-day sessions cluster. The spacing effect lives in the gaps between days."
+      },
+      {
+        "level": 2,
+        "text": "A log entry is one line: date, material, and whether you recalled or re-exposed."
+      }
+    ],
+    "solution": "Log date, material, and contact type for a week, then audit the gaps and the share of recall contacts, then set two expanding review dates.",
+    "cleanup": ["rm -f cairn-spacing-log.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-teach-one-thing",
+    "title": "Teach one thing back",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "touch cairn-teach-notes.txt"
+    ],
+    "task": "Pick one thing you learned this week. With notes closed, explain it aloud for two minutes as if teaching it, then draw a quick sketch of it. After both, open your notes and write the gaps you found in cairn-teach-notes.txt.",
+    "commands": [
+      "echo teach-back experiment started",
+      "cat cairn-teach-notes.txt"
+    ],
+    "checks": [
+      {
+        "id": "no-notes",
+        "type": "manual",
+        "prompt": "Did you explain aloud for two minutes with notes fully closed?",
+        "answer": "yes"
+      },
+      {
+        "id": "sketch-drawn",
+        "type": "manual",
+        "prompt": "Did you draw the sketch yourself rather than copying one?",
+        "answer": "yes"
+      },
+      {
+        "id": "gaps-listed",
+        "type": "manual",
+        "prompt": "Did you write down where you got stuck, then check the notes for exactly those points?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The pauses and stumbles are the data. They mark exactly where encoding was thin."
+      },
+      {
+        "level": 2,
+        "text": "If the explanation went smoothly, pick a harder topic and repeat."
+      }
+    ],
+    "solution": "Explain cold for two minutes, sketch from memory, then hunt the notes only for the points where you stumbled.",
+    "cleanup": ["rm -f cairn-teach-notes.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

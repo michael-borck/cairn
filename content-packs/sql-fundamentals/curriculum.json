@@ -1,0 +1,127 @@
+{
+  "modules": [
+    {
+      "id": "querying-tables",
+      "title": "Querying tables",
+      "order": 1,
+      "skillIds": [
+        "relational-model",
+        "select-basics",
+        "filtering-and-sorting",
+        "aggregate-functions"
+      ]
+    },
+    {
+      "id": "working-across-tables",
+      "title": "Working across tables",
+      "order": 2,
+      "skillIds": [
+        "joins-inner",
+        "join-grain-and-fanout",
+        "subqueries-and-ctes"
+      ]
+    },
+    {
+      "id": "changing-data-safely",
+      "title": "Changing data and making it fast",
+      "order": 3,
+      "skillIds": [
+        "modifying-data",
+        "indexes-and-plans",
+        "schema-design-basics"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "relational-model",
+      "title": "Tables, rows, and keys",
+      "description": "See a database as tables of rows, identify rows with primary keys, and point across tables with foreign keys.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["sql", "modeling"]
+    },
+    {
+      "id": "select-basics",
+      "title": "Select, from, where",
+      "description": "Pick columns with SELECT, name the table with FROM, and keep matching rows with WHERE.",
+      "prerequisites": ["relational-model"],
+      "difficulty": 1,
+      "estimatedMinutes": 20,
+      "tags": ["sql", "querying"]
+    },
+    {
+      "id": "filtering-and-sorting",
+      "title": "Filtering, nulls, and sorting",
+      "description": "Combine conditions, test for null with IS NULL, and order and limit results.",
+      "prerequisites": ["select-basics"],
+      "difficulty": 2,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "filtering"]
+    },
+    {
+      "id": "aggregate-functions",
+      "title": "Aggregates and grouping",
+      "description": "Collapse rows with COUNT, SUM, and AVG, define groups with GROUP BY, and filter groups with HAVING.",
+      "prerequisites": ["filtering-and-sorting"],
+      "difficulty": 2,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "aggregation"]
+    },
+    {
+      "id": "joins-inner",
+      "title": "Inner joins",
+      "description": "Pair rows across tables on a foreign key, and keep only the matches.",
+      "prerequisites": ["relational-model", "select-basics"],
+      "difficulty": 2,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "joins"]
+    },
+    {
+      "id": "join-grain-and-fanout",
+      "title": "Grain and fan-out",
+      "description": "Know what one result row represents, spot row multiplication after a join, and count entities correctly.",
+      "prerequisites": ["joins-inner", "aggregate-functions"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "joins", "aggregation"]
+    },
+    {
+      "id": "subqueries-and-ctes",
+      "title": "Subqueries and CTEs",
+      "description": "Name each step of a query with a CTE, check its grain, and build the answer step by step.",
+      "prerequisites": ["aggregate-functions", "joins-inner"],
+      "difficulty": 3,
+      "estimatedMinutes": 20,
+      "tags": ["sql", "ctes", "readability"]
+    },
+    {
+      "id": "modifying-data",
+      "title": "Insert, update, delete safely",
+      "description": "Change rows with a WHERE clause, and make mistakes undoable with transactions.",
+      "prerequisites": ["select-basics", "filtering-and-sorting"],
+      "difficulty": 2,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "dml", "safety"]
+    },
+    {
+      "id": "indexes-and-plans",
+      "title": "Indexes and query plans",
+      "description": "Create an index for a query shape, read EXPLAIN QUERY PLAN, and weigh read speed against write cost.",
+      "prerequisites": ["filtering-and-sorting"],
+      "difficulty": 3,
+      "estimatedMinutes": 20,
+      "tags": ["sql", "indexes", "performance"]
+    },
+    {
+      "id": "schema-design-basics",
+      "title": "Schema design basics",
+      "description": "Split a flat export into tables, place foreign keys on the many side, and add constraints that refuse bad rows.",
+      "prerequisites": ["relational-model", "joins-inner"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["sql", "modeling", "constraints"]
+    }
+  ]
+}

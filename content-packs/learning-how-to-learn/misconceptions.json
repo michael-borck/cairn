@@ -1,0 +1,156 @@
+[
+  {
+    "id": "rereading-is-review",
+    "label": "Treats rereading as effective review",
+    "skillIds": ["retrieval-practice", "illusion-of-knowing"],
+    "description": "The learner believes going over the material again strengthens memory, when it mainly builds familiarity.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Rereading adds exposure; recall adds strength. Turn every reread into a closed-book attempt.",
+      "itemIds": ["ret-mcq-best-use", "ill-mcq-familiar", "ret-lab-two-lists"]
+    }
+  },
+  {
+    "id": "highlighting-works",
+    "label": "Believes highlighting locks material in",
+    "skillIds": ["illusion-of-knowing"],
+    "description": "The learner treats marking sentences as studying them, though highlighting only trains recognition.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Highlighting locates text; it does not encode it. It pays off only when the marked material is recalled later.",
+      "itemIds": ["ill-mcq-highlighting", "ill-lab-highlight-audit"]
+    }
+  },
+  {
+    "id": "cramming-is-efficient",
+    "label": "Believes last-minute massing is the efficient strategy",
+    "skillIds": ["spaced-repetition", "sleep-and-consolidation"],
+    "description": "The learner concentrates study into one session and expects durable memory from it.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Cramming can pass tomorrow's test; spaced study keeps the material a month later. Same hours, better curve.",
+      "itemIds": ["space-mcq-cram", "sleep-mcq-allnighter", "space-lab-spacing-audit"]
+    }
+  },
+  {
+    "id": "recognition-equals-recall",
+    "label": "Equates recognising answers with producing them",
+    "skillIds": ["illusion-of-knowing", "retrieval-practice"],
+    "description": "The learner counts 'that looks right' as knowing, then cannot produce the answer unaided.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Recognition is matching an answer you see; recall is producing one from nothing. Practise producing.",
+      "itemIds": ["ill-mcq-familiar", "ill-explain-illusion", "ret-teach-testing"]
+    }
+  },
+  {
+    "id": "massed-practice-feels-better-means-better",
+    "label": "Judges methods by how smooth they feel",
+    "skillIds": ["interleaving", "desirable-difficulty"],
+    "description": "The learner prefers blocked, fluent practice and avoids mixed or effortful practice because it feels worse.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Blocked, easy practice feels better and tests worse. Judge methods by delayed recall, not session comfort.",
+      "itemIds": ["int-mcq-blocked", "des-mcq-fluency", "int-reflect-shuffle"]
+    }
+  },
+  {
+    "id": "difficulty-means-bad-teaching",
+    "label": "Reads all difficulty as failure",
+    "skillIds": ["desirable-difficulty", "interleaving"],
+    "description": "The learner concludes that struggle means the method or teacher is bad, when some difficulty is what builds retention.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Spacing, mixing, and retrieval all feel worse and work better. Effortless is not the goal; eventual success is.",
+      "itemIds": ["int-mcq-feels-worse", "des-mcq-struggle", "mot-mcq-ability"]
+    }
+  },
+  {
+    "id": "intelligence-is-fixed",
+    "label": "Concludes ability is fixed from early struggle",
+    "skillIds": ["motivation-and-habits", "desirable-difficulty"],
+    "description": "The learner reads hard weeks as evidence of a fixed limit ('not a maths person') and stops investing effort.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Skill tracks accumulated practice. 'I am not an X person' ends learning early; 'my method needs work' continues it.",
+      "itemIds": ["mot-mcq-ability", "mot-mcq-streak", "des-mcq-struggle"]
+    }
+  },
+  {
+    "id": "more-hours-always-better",
+    "label": "Believes more hours always mean more learning",
+    "skillIds": ["sleep-and-consolidation", "motivation-and-habits"],
+    "description": "The learner extends sessions, skips breaks and sleep, or stacks make-up marathons, ignoring diminishing returns and consolidation.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Hours matter less than what happens in them and after them: sleep, spacing, and retrieval beat raw time.",
+      "itemIds": ["sleep-mcq-allnighter", "sleep-mcq-breaks", "mot-mcq-streak"]
+    }
+  },
+  {
+    "id": "notes-equal-knowledge",
+    "label": "Counts stored notes as knowing",
+    "skillIds": ["memory-and-forgetting", "illusion-of-knowing"],
+    "description": "The learner treats writing, copying, or collecting material as having learned it.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Notes store information outside your head. The test is what you can produce without them.",
+      "itemIds": ["mem-mcq-recording", "ela-mcq-dual-coding", "ill-mcq-highlighting"]
+    }
+  },
+  {
+    "id": "memory-is-a-recording",
+    "label": "Believes experience creates a permanent recording",
+    "skillIds": ["memory-and-forgetting"],
+    "description": "The learner assumes watching or attending means the material is stored and accessible.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Experience writes a weak trace, not a recording. Traces fade without recall and strengthen with it.",
+      "itemIds": ["mem-mcq-recording", "mem-mcq-curve"]
+    }
+  },
+  {
+    "id": "forgetting-means-failure",
+    "label": "Reads normal forgetting as personal failure",
+    "skillIds": ["memory-and-forgetting", "spaced-repetition"],
+    "description": "The learner treats each lapse as evidence the method or the person failed, rather than as the expected curve.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Forgetting is the default curve, not a defect. Each review bends it; each failed attempt still helps.",
+      "itemIds": ["mem-mcq-curve", "space-mcq-forget", "mem-reflect-review"]
+    }
+  },
+  {
+    "id": "memorize-before-understand",
+    "label": "Equates verbatim memorisation with understanding",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "description": "The learner memorises definitions word for word and cannot apply them in new contexts.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Verbatim recall without connections is brittle. Explain in your own words first, then memorise the details.",
+      "itemIds": ["ela-mcq-why-explain", "ela-lab-teach-one-thing"]
+    }
+  },
+  {
+    "id": "motivation-comes-before-action",
+    "label": "Waits to feel motivated before starting",
+    "skillIds": ["motivation-and-habits"],
+    "description": "The learner postpones sessions until motivation arrives, though action usually produces the feeling.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Action creates motivation more often than it receives it. Start with a two-minute version and let momentum argue for you.",
+      "itemIds": ["mot-mcq-streak", "mot-reflect-obstacles"]
+    }
+  },
+  {
+    "id": "failed-recall-is-wasted",
+    "label": "Believes failed recall attempts are wasted effort",
+    "skillIds": ["retrieval-practice"],
+    "description": "The learner avoids guessing or attempting answers they might get wrong, missing that the attempt itself aids learning.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "A failed retrieval attempt primes the correct answer. Guessing with the source closed is not wasted; it is the workout.",
+      "itemIds": ["ret-mcq-closed-book", "des-mcq-struggle"]
+    }
+  }
+]

@@ -1,0 +1,127 @@
+{
+  "modules": [
+    {
+      "id": "requests-and-responses",
+      "title": "Requests and responses",
+      "order": 1,
+      "skillIds": [
+        "request-response-model",
+        "urls-and-resources",
+        "methods-and-semantics"
+      ]
+    },
+    {
+      "id": "reading-responses",
+      "title": "Reading responses",
+      "order": 2,
+      "skillIds": [
+        "status-codes",
+        "headers-and-content-types",
+        "json-payloads"
+      ]
+    },
+    {
+      "id": "using-apis-well",
+      "title": "Using APIs well",
+      "order": 3,
+      "skillIds": [
+        "auth-basics",
+        "rest-design",
+        "errors-and-retries",
+        "inspecting-traffic"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "request-response-model",
+      "title": "The request-response model",
+      "description": "Clients send requests, servers send responses, and both are structured text.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["http"]
+    },
+    {
+      "id": "urls-and-resources",
+      "title": "URLs and resources",
+      "description": "Read a URL: scheme, host, path, and query string.",
+      "prerequisites": ["request-response-model"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["http", "urls"]
+    },
+    {
+      "id": "methods-and-semantics",
+      "title": "Methods and their semantics",
+      "description": "GET, POST, PUT, PATCH, and DELETE, and what idempotent means.",
+      "prerequisites": ["urls-and-resources"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["http", "methods"]
+    },
+    {
+      "id": "status-codes",
+      "title": "Status codes",
+      "description": "The 2xx, 3xx, 4xx, and 5xx families and the codes worth memorising.",
+      "prerequisites": ["request-response-model"],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["http", "status"]
+    },
+    {
+      "id": "headers-and-content-types",
+      "title": "Headers and content types",
+      "description": "Content-Type, Accept, Authorization, and caching headers.",
+      "prerequisites": ["status-codes"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["http", "headers"]
+    },
+    {
+      "id": "json-payloads",
+      "title": "JSON payloads",
+      "description": "Read and write the JSON that most APIs speak.",
+      "prerequisites": ["headers-and-content-types"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["http", "json"]
+    },
+    {
+      "id": "auth-basics",
+      "title": "Authentication basics",
+      "description": "API keys, bearer tokens, and keeping credentials safe.",
+      "prerequisites": ["headers-and-content-types"],
+      "difficulty": 3,
+      "estimatedMinutes": 20,
+      "tags": ["http", "auth"]
+    },
+    {
+      "id": "rest-design",
+      "title": "REST design",
+      "description": "Resources as nouns, collections, and pagination.",
+      "prerequisites": ["methods-and-semantics", "json-payloads"],
+      "difficulty": 3,
+      "estimatedMinutes": 20,
+      "tags": ["http", "rest"]
+    },
+    {
+      "id": "errors-and-retries",
+      "title": "Errors and retries",
+      "description": "Rate limits, timeouts, and backing off politely.",
+      "prerequisites": ["status-codes"],
+      "difficulty": 3,
+      "estimatedMinutes": 15,
+      "tags": ["http", "reliability"]
+    },
+    {
+      "id": "inspecting-traffic",
+      "title": "Inspecting traffic",
+      "description": "Read the full exchange with curl -v: the request you sent and the response you got.",
+      "prerequisites": ["headers-and-content-types"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["http", "curl", "debugging"]
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+[
+  {
+    "id": "null-equals-nothing",
+    "label": "Compares null with = instead of IS NULL",
+    "skillIds": ["filtering-and-sorting"],
+    "description": "The learner writes `WHERE city = NULL` and gets no rows, because null is unknown and never equals anything, including itself.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Null is not a value, so `=` cannot match it. The test is `IS NULL` (or `IS NOT NULL`).",
+      "itemIds": ["sql-mcq-null-equals", "sql-mcq-null-string", "sql-lab-filter-sort"]
+    }
+  },
+  {
+    "id": "null-string-confusion",
+    "label": "Confuses the null value with the string 'null'",
+    "skillIds": ["filtering-and-sorting"],
+    "description": "The learner writes `WHERE city = 'NULL'` and expects it to find null values, but that compares against the four-character text 'NULL'.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "The value NULL is unknown, not text. `'NULL'` is a string of four letters. Only `IS NULL` finds the unknown.",
+      "itemIds": ["sql-mcq-null-string", "sql-mcq-null-equals"]
+    }
+  },
+  {
+    "id": "filter-aggregates-in-where",
+    "label": "Filters on aggregates in WHERE instead of HAVING",
+    "skillIds": ["aggregate-functions"],
+    "description": "The learner writes `WHERE COUNT(*) > 1`, but WHERE runs before groups exist. Aggregate conditions belong in HAVING.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "WHERE filters rows before grouping. HAVING filters groups after aggregation. `HAVING COUNT(*) > 1` is the working form.",
+      "itemIds": ["sql-mcq-where-having", "sql-mcq-cte-structure", "sql-lab-aggregates"]
+    }
+  },
+  {
+    "id": "name-is-identity",
+    "label": "Treats names or row positions as identity",
+    "skillIds": ["relational-model", "aggregate-functions", "joins-inner"],
+    "description": "The learner joins, groups, or points at rows using a person's name, some display text, or line position instead of a key.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Names repeat and positions shift on every sort. Only a primary key identifies a row; group by the key and carry the name as a label.",
+      "itemIds": ["sql-mcq-row-identity", "sql-mcq-group-by-label", "sql-mcq-join-pairing"]
+    }
+  },
+  {
+    "id": "join-fanout-inflates-count",
+    "label": "Trusts counts inflated by join fan-out",
+    "skillIds": ["join-grain-and-fanout"],
+    "description": "The learner joins customers to orders, sees COUNT(*) return 5, and reports 5 customers, when 3 orders belong to one customer.",
+    "remediation": {
+      "strategy": "worked_example",
+      "explanation": "A one-to-many join repeats the one side. COUNT(*) counts joined rows; COUNT(DISTINCT key) counts entities. Predict the row count before you aggregate.",
+      "itemIds": ["sql-mcq-fanout-count", "sql-mcq-count-vs-distinct", "sql-worked-fanout"]
+    }
+  },
+  {
+    "id": "distinct-hides-fanout",
+    "label": "Uses DISTINCT to hide a fan-out",
+    "skillIds": ["join-grain-and-fanout"],
+    "description": "The learner slaps DISTINCT on a doubled result. The duplicate rows vanish, but any totals stay wrong.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "DISTINCT removes duplicate output rows; it does not repair a doubled SUM. Fix the grain: aggregate to one row per entity, then join.",
+      "itemIds": ["sql-mcq-distinct-fix", "sql-mcq-cte-grain"]
+    }
+  },
+  {
+    "id": "missing-on-cartesian",
+    "label": "Omits the ON condition and pairs every row with every row",
+    "skillIds": ["joins-inner"],
+    "description": "The learner writes a join without ON, or assumes SQLite will guess the relationship, and gets every left row paired with every right row.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Without a condition the join is a cartesian product: 3 customers x 5 orders is 15 rows. State the relationship: `ON o.customer_id = c.customer_id`.",
+      "itemIds": ["sql-mcq-missing-on", "sql-lab-join"]
+    }
+  },
+  {
+    "id": "select-star-habit",
+    "label": "Writes SELECT * by default",
+    "skillIds": ["select-basics"],
+    "description": "The learner selects every column for every query, shipping extra data and breaking silently when the schema changes.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Name the columns the question needs. `SELECT status, total_cents FROM orders` says what the report is about and survives schema changes.",
+      "itemIds": ["sql-mcq-select-star", "sql-mcq-shipped-orders", "sql-worked-first-query"]
+    }
+  },
+  {
+    "id": "sort-direction-assumed",
+    "label": "Assumes ORDER BY sorts largest first and clause details can shuffle",
+    "skillIds": ["filtering-and-sorting"],
+    "description": "The learner writes ORDER BY total_cents and expects biggest-first, or rearranges LIMIT and ORDER BY as if order did not matter.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "ORDER BY sorts ascending by default; biggest-first needs DESC. Clauses run in a fixed order: SELECT, FROM, WHERE, ORDER BY, LIMIT.",
+      "itemIds": ["sql-mcq-order-limit", "sql-mcq-distinct-fix"]
+    }
+  },
+  {
+    "id": "update-without-where",
+    "label": "Runs UPDATE or DELETE without a WHERE clause",
+    "skillIds": ["modifying-data"],
+    "description": "The learner writes `UPDATE orders SET status = 'shipped'` with no WHERE and changes every row in the table.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "An UPDATE or DELETE without WHERE touches every row. Preview first with a SELECT using the same WHERE, then run the change inside a transaction.",
+      "itemIds": ["sql-mcq-update-where", "sql-mcq-delete-safely", "sql-lab-modify"]
+    }
+  },
+  {
+    "id": "no-undo-without-transaction",
+    "label": "Believes changes are undoable without a transaction",
+    "skillIds": ["modifying-data"],
+    "description": "The learner assumes SQLite keeps an undo history or that ROLLBACK works after an autocommitted statement.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Each statement outside a transaction commits instantly. Only work inside BEGIN ... ROLLBACK can be undone, and only before COMMIT.",
+      "itemIds": ["sql-mcq-rollback", "sql-lab-modify", "sql-reflect-delete-safety"]
+    }
+  },
+  {
+    "id": "index-everywhere",
+    "label": "Adds an index to every column",
+    "skillIds": ["indexes-and-plans"],
+    "description": "The learner treats indexes as free speed and indexes every column, slowing every insert and update.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Every index must be maintained on every write. Index the columns your frequent queries filter and join on, then confirm the plan uses them.",
+      "itemIds": ["sql-mcq-index-write-cost", "sql-mcq-explain-scan", "sql-lab-index"]
+    }
+  },
+  {
+    "id": "seq-scan-means-broken",
+    "label": "Reads a full table scan as proof the index is broken",
+    "skillIds": ["indexes-and-plans"],
+    "description": "The learner sees SCAN in EXPLAIN QUERY PLAN and concludes the index failed, when the planner simply chose the cheapest plan for the data size.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Reading 5 rows is cheaper than walking an index and fetching each row. SCAN is the right plan for small tables; SEARCH USING INDEX appears when the data is big enough to matter.",
+      "itemIds": ["sql-mcq-explain-scan", "sql-lab-index"]
+    }
+  },
+  {
+    "id": "repeating-groups",
+    "label": "Keeps repeating groups in one table",
+    "skillIds": ["relational-model", "schema-design-basics"],
+    "description": "The learner stores several things in one cell, like 'Espresso Blend, Ceramic Mug', or widens the table with product1, product2, product3 columns.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "One kind of thing per table, one fact per cell. Move the repeating items to their own table and link with a foreign key.",
+      "itemIds": ["sql-mcq-repeating-groups", "sql-mcq-fk-side", "sql-mcq-what-is-fk"]
+    }
+  }
+]

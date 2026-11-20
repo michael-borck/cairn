@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rubric-teach-grain",
+    "title": "Explain grain and fan-out",
+    "criteria": [
+      {
+        "id": "grain",
+        "label": "States what one row of each table represents",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: one orders row is one order; one customers row is one customer"
+        }
+      },
+      {
+        "id": "fanout",
+        "label": "Explains how a one-to-many join multiplies rows",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: a customer with 3 orders appears on 3 joined rows"
+        }
+      },
+      {
+        "id": "fix",
+        "label": "Counts entities correctly and avoids DISTINCT as a bandage",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: COUNT(DISTINCT key) or aggregate first, then join"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-schema",
+    "title": "Explain turning an export into tables",
+    "criteria": [
+      {
+        "id": "entities",
+        "label": "Finds the things and gives each its own table with a key",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: customers and orders separate, each with a primary key"
+        }
+      },
+      {
+        "id": "fk",
+        "label": "Places the foreign key on the many side",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: orders.customer_id references customers"
+        }
+      },
+      {
+        "id": "constraints",
+        "label": "Names constraints that refuse bad rows",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: PRIMARY KEY, NOT NULL, UNIQUE, CHECK with an example"
+        }
+      }
+    ]
+  }
+]

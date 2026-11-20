@@ -1,0 +1,64 @@
+[
+  {
+    "id": "rubric-teach-request",
+    "title": "Explain a request-response exchange",
+    "criteria": [
+      {
+        "id": "anatomy",
+        "label": "Names the parts of a request and a response",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: method, URL, headers, body; status line, headers, body"
+        }
+      },
+      {
+        "id": "example",
+        "label": "Walks through one concrete exchange",
+        "weight": 0.5,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-auth",
+    "title": "Explain credential hygiene",
+    "criteria": [
+      {
+        "id": "mechanism",
+        "label": "Describes how a bearer token is sent",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "hygiene",
+        "label": "Names two places secrets must never live",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "rotation",
+        "label": "Says what to do when a key leaks",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  }
+]

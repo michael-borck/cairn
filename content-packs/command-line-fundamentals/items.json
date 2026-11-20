@@ -1,0 +1,1320 @@
+[
+  {
+    "id": "cli-explain-shell",
+    "type": "explain",
+    "skillIds": ["shell-and-commands"],
+    "difficulty": 1,
+    "prompt": "What is the shell?",
+    "body": "The shell is a program that reads a line of text, runs a program, and prints the result. Commands have a shape: a program name, then optional flags that tweak behaviour, then arguments that name the targets. Flags usually start with a single dash and a letter (-r) or a double dash and a word (--recursive), and short flags can often be combined: `ls -l -a -h` is the same as `ls -lah`. When a command surprises you, do not guess: `command --help` prints a short summary and `man command` prints the full manual.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about who is doing the reading when you type a command."
+      }
+    ],
+    "check": {
+      "prompt": "In `rm -r old-build`, what does the -r flag likely do?",
+      "answer": "It makes the removal recursive, so it descends into directories."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["shell"]
+  },
+  {
+    "id": "cli-mcq-help",
+    "type": "mcq",
+    "skillIds": ["shell-and-commands"],
+    "difficulty": 1,
+    "prompt": "You cannot remember cp's options. Which command prints a quick usage summary?",
+    "options": [
+      {
+        "id": "a",
+        "text": "cp --help",
+        "misconceptionId": "help-syntax-guessing"
+      },
+      {
+        "id": "b",
+        "text": "help --cp"
+      },
+      {
+        "id": "c",
+        "text": "cp /help",
+        "misconceptionId": "help-syntax-guessing"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The command comes first; the flag asking for help comes after it."
+      },
+      {
+        "level": 2,
+        "text": "Almost every command accepts the double-dash word --help."
+      }
+    ],
+    "explanation": "`cp --help` prints a usage summary. `man cp` gives the full manual.",
+    "estimatedSeconds": 40,
+    "tags": ["shell", "help"]
+  },
+  {
+    "id": "cli-mcq-combined-flags",
+    "type": "mcq",
+    "skillIds": ["shell-and-commands"],
+    "difficulty": 2,
+    "prompt": "A colleague runs `ls -lah`. What does that command do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "One flag named lah, which ls does not know",
+        "misconceptionId": "help-syntax-guessing"
+      },
+      {
+        "id": "b",
+        "text": "Three short flags combined: long output, all entries, human-readable sizes"
+      },
+      {
+        "id": "c",
+        "text": "It lists only files whose names contain a, h, or l",
+        "misconceptionId": "help-syntax-guessing"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Short flags after a single dash can be stacked into one cluster."
+      }
+    ],
+    "explanation": "-l is long format, -a shows hidden entries, -h prints sizes in human units. Combined: `ls -lah`.",
+    "estimatedSeconds": 45,
+    "tags": ["shell", "flags"]
+  },
+  {
+    "id": "cli-short-recursive",
+    "type": "short_answer",
+    "skillIds": ["shell-and-commands"],
+    "difficulty": 1,
+    "prompt": "Which single letter is the usual short flag for running a command recursively?",
+    "scoring": {
+      "mode": "exact",
+      "value": "r"
+    },
+    "modelAnswer": "r, as in rm -r or cp -r",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think of the word that means into every subdirectory."
+      }
+    ],
+    "explanation": "-r (or --recursive) tells tools like rm, cp, and grep to descend into directories.",
+    "estimatedSeconds": 40,
+    "tags": ["shell", "flags"]
+  },
+  {
+    "id": "path-explain-paths",
+    "type": "explain",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 1,
+    "prompt": "Absolute and relative paths",
+    "body": "Every directory has a location, and `pwd` prints where you are. A path that starts with / is absolute: it is read from the root of the filesystem, so `/Users/ai/reports/2026.md` means the same thing no matter where you stand. A path without a leading slash is relative: it starts from your current directory, so `reports/2026.md` only works if reports is right here. Two short names save typing: ~ expands to your home directory, and .. means the parent of the current directory.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask of any path: where does the walk start?"
+      }
+    ],
+    "check": {
+      "prompt": "You are in /home/ai/lab and run `cd ../docs`. Where do you end up?",
+      "answer": "/home/ai/docs, because .. climbs to /home/ai first"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-mcq-cd-up",
+    "type": "mcq",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 1,
+    "prompt": "You are in /home/ai/lab. Where does `cd ..` take you?",
+    "options": [
+      {
+        "id": "a",
+        "text": "/",
+        "misconceptionId": "absolute-relative-confusion"
+      },
+      {
+        "id": "b",
+        "text": "/home/ai"
+      },
+      {
+        "id": "c",
+        "text": "/home/ai/lab"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": ".. climbs exactly one level, not all the way to the top."
+      }
+    ],
+    "explanation": ".. is the parent directory. From /home/ai/lab one step up is /home/ai.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-mcq-absolute",
+    "type": "mcq",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 1,
+    "prompt": "Which of these is an absolute path?",
+    "options": [
+      {
+        "id": "a",
+        "text": "reports/2026.md"
+      },
+      {
+        "id": "b",
+        "text": "/Users/ai/reports/2026.md"
+      },
+      {
+        "id": "c",
+        "text": "./notes.txt",
+        "misconceptionId": "absolute-relative-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look at the first character of each path."
+      }
+    ],
+    "explanation": "A leading slash anchors the walk at the filesystem root, which makes it absolute.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-mcq-tilde",
+    "type": "mcq",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 2,
+    "prompt": "What does `cd ~/projects` do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Enters a folder literally named ~ in the current directory",
+        "misconceptionId": "tilde-literal-folder"
+      },
+      {
+        "id": "b",
+        "text": "Enters the projects folder inside your home directory"
+      },
+      {
+        "id": "c",
+        "text": "Enters the system-wide /projects folder",
+        "misconceptionId": "absolute-relative-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The shell replaces ~ with something before cd even runs."
+      }
+    ],
+    "explanation": "~ expands to your home directory, so this is /home/<you>/projects on Linux or /Users/<you>/projects on macOS.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-worked-sibling",
+    "type": "worked_example",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 2,
+    "prompt": "Move from one project to its sibling: you are in ~/dev/cairn and want ~/dev/notes.",
+    "steps": [
+      {
+        "title": "Confirm where you are",
+        "body": "Run `pwd`. It prints /home/<you>/dev/cairn so you know your anchor."
+      },
+      {
+        "title": "Climb one level",
+        "body": "Run `cd ..`. You are now in ~/dev, the shared parent."
+      },
+      {
+        "title": "Drop into the sibling",
+        "body": "Run `cd notes`. Relative paths start from where you stand."
+      },
+      {
+        "title": "Or do it in one move",
+        "body": "`cd ../notes` combines the climb and the drop: go up, then sideways."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "In one command, how do you go from ~/dev/cairn to ~/dev/notes?",
+      "answer": "cd ../notes"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "The parent directory is the meeting point between siblings."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "sibling-parent",
+        "kind": "check",
+        "prompt": "What do ~/dev/cairn and ~/dev/notes share?",
+        "answer": "their parent directory, ~/dev",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Both paths end with a folder inside the same directory."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "sibling-parent-name",
+            "kind": "check",
+            "prompt": "Which directory is the shared parent of ~/dev/cairn and ~/dev/notes?",
+            "answer": "~/dev",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "sibling-move",
+        "kind": "mcq",
+        "prompt": "Starting in ~/dev/cairn, which single command lands you in ~/dev/notes?",
+        "options": [
+          {
+            "id": "a",
+            "text": "cd notes"
+          },
+          {
+            "id": "b",
+            "text": "cd ../notes"
+          },
+          {
+            "id": "c",
+            "text": "cd /notes"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "You must climb out of cairn before you can enter notes."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 150,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-teach-paths",
+    "type": "teach_back",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 2,
+    "prompt": "In your own words: what makes a path absolute, what does ~ expand to, and what does .. mean?",
+    "rubricId": "rubric-teach-paths",
+    "modelAnswer": "An absolute path starts at the filesystem root (/) and works from anywhere. ~ expands to the current user's home directory before the command runs. .. names the parent of the current directory.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three things to cover: the anchor, the home shortcut, and the parent shortcut."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["cli", "paths"]
+  },
+  {
+    "id": "path-lab-navigate",
+    "type": "lab",
+    "skillIds": ["paths-and-navigation"],
+    "difficulty": 1,
+    "prompt": "Lab: navigate home and back",
+    "labId": "lab-navigate",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Work through the commands one at a time and watch pwd change."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "paths", "lab"]
+  },
+  {
+    "id": "ls-explain",
+    "type": "explain",
+    "skillIds": ["listing-and-inspecting"],
+    "difficulty": 1,
+    "prompt": "Reading an ls listing",
+    "body": "Plain `ls` shows visible names only. Files whose names start with a dot are hidden: configs like .gitignore or .env do not appear until you add -a. The -l flag switches to long format, one file per line: permissions, link count, owner, group, size, modification date, then the name. Add -h so sizes print as 4.0K instead of 4096. Two power moves: -S sorts by size (largest first) and -t sorts by modification time (newest first).",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The leading dot is the only thing that hides a file from plain ls."
+      }
+    ],
+    "check": {
+      "prompt": "Why does `ls` not show .env but `ls -a` does?",
+      "answer": "Names starting with a dot are hidden from the plain listing; -a shows all entries."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "ls"]
+  },
+  {
+    "id": "ls-mcq-hidden",
+    "type": "mcq",
+    "skillIds": ["listing-and-inspecting"],
+    "difficulty": 1,
+    "prompt": "Which command shows hidden files in a directory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "ls -a"
+      },
+      {
+        "id": "b",
+        "text": "ls /a",
+        "misconceptionId": "dot-hide-default"
+      },
+      {
+        "id": "c",
+        "text": "ls hidden"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One short flag means all."
+      }
+    ],
+    "explanation": "`ls -a` lists all entries, including dot files like .gitignore.",
+    "estimatedSeconds": 35,
+    "tags": ["cli", "ls"]
+  },
+  {
+    "id": "ls-mcq-dotfile",
+    "type": "mcq",
+    "skillIds": ["listing-and-inspecting"],
+    "difficulty": 2,
+    "prompt": "A teammate says their project has no .env file, but the app insists it does. What is the fastest check?",
+    "options": [
+      {
+        "id": "a",
+        "text": "ls, because .env would be listed by name",
+        "misconceptionId": "dot-hide-default"
+      },
+      {
+        "id": "b",
+        "text": "ls -a, because names starting with a dot are hidden from plain ls"
+      },
+      {
+        "id": "c",
+        "text": "ls .env/ since env files live in a folder"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The file name starts with a character plain ls treats specially."
+      }
+    ],
+    "explanation": "Dot files are invisible to plain `ls`; `ls -a` settles the argument instantly.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "ls"]
+  },
+  {
+    "id": "ls-mcq-lah",
+    "type": "mcq",
+    "skillIds": ["listing-and-inspecting"],
+    "difficulty": 2,
+    "prompt": "You want sizes you can read at a glance. Which listing prints sizes like 4.0K and 12M?",
+    "options": [
+      {
+        "id": "a",
+        "text": "ls -l, which always prints human sizes",
+        "misconceptionId": "dot-hide-default"
+      },
+      {
+        "id": "b",
+        "text": "ls -lh"
+      },
+      {
+        "id": "c",
+        "text": "ls -size"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": false,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Long output prints raw bytes until you add the human flag."
+      }
+    ],
+    "explanation": "-l gives the detail columns and -h renders sizes in K, M, and G.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "ls"]
+  },
+  {
+    "id": "ls-lab-inspect",
+    "type": "lab",
+    "skillIds": ["listing-and-inspecting"],
+    "difficulty": 2,
+    "prompt": "Lab: inspect a directory fully",
+    "labId": "lab-inspect",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Create the hidden file first, then compare plain ls with ls -a."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "ls", "lab"]
+  },
+  {
+    "id": "read-explain",
+    "type": "explain",
+    "skillIds": ["reading-files"],
+    "difficulty": 1,
+    "prompt": "Reading files without opening an editor",
+    "body": "`cat` dumps a whole file to the screen, which is perfect for short files and useless for 10,000-line logs. For those, take slices: `head -n 20 file` prints the first 20 lines and `tail -n 20 file` prints the last 20. `less file` opens a pager where you scroll with arrows, search with /pattern, and quit with q. When you need facts rather than content, `wc` counts: -l lines, -w words, -c bytes.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "head and tail are symmetric: one reads from the top, one from the bottom."
+      }
+    ],
+    "check": {
+      "prompt": "A build log has 40,000 lines and the error is at the end. Which command shows you the last 30 lines?",
+      "answer": "tail -n 30 build.log"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "text"]
+  },
+  {
+    "id": "read-mcq-tail",
+    "type": "mcq",
+    "skillIds": ["reading-files"],
+    "difficulty": 1,
+    "prompt": "Which command prints the last 20 lines of server.log?",
+    "options": [
+      {
+        "id": "a",
+        "text": "head -n 20 server.log",
+        "misconceptionId": "head-tail-swapped"
+      },
+      {
+        "id": "b",
+        "text": "tail -n 20 server.log"
+      },
+      {
+        "id": "c",
+        "text": "tail 20 server.log"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The end of a fish is its tail."
+      }
+    ],
+    "explanation": "tail reads from the bottom; -n 20 asks for twenty lines.",
+    "estimatedSeconds": 35,
+    "tags": ["cli", "text"]
+  },
+  {
+    "id": "read-mcq-wc",
+    "type": "mcq",
+    "skillIds": ["reading-files"],
+    "difficulty": 1,
+    "prompt": "Which command counts the lines in notes.txt?",
+    "options": [
+      {
+        "id": "a",
+        "text": "wc -l notes.txt"
+      },
+      {
+        "id": "b",
+        "text": "wc -w notes.txt",
+        "misconceptionId": "wc-flag-mixup"
+      },
+      {
+        "id": "c",
+        "text": "wc -c notes.txt",
+        "misconceptionId": "wc-flag-mixup"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The flag letter matches the unit you want."
+      }
+    ],
+    "explanation": "-l counts lines, -w words, -c bytes.",
+    "estimatedSeconds": 35,
+    "tags": ["cli", "text"]
+  },
+  {
+    "id": "read-mcq-less",
+    "type": "mcq",
+    "skillIds": ["reading-files"],
+    "difficulty": 2,
+    "prompt": "You need to scroll through a 5,000-line config looking for one setting. Which tool fits best?",
+    "options": [
+      {
+        "id": "a",
+        "text": "cat config.yaml, then read the terminal scrollback",
+        "misconceptionId": "head-tail-swapped"
+      },
+      {
+        "id": "b",
+        "text": "less config.yaml, then search inside with /setting"
+      },
+      {
+        "id": "c",
+        "text": "tail -f config.yaml"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "You want paging and search, not a one-shot dump."
+      }
+    ],
+    "explanation": "less pages through the file and searches with /pattern. tail -f follows new output on a live log, which is a different job.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "text"]
+  },
+  {
+    "id": "read-lab-sample",
+    "type": "lab",
+    "skillIds": ["reading-files"],
+    "difficulty": 1,
+    "prompt": "Lab: read and count a sample file",
+    "labId": "lab-sample-text",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the setup line first so the sample file exists."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "text", "lab"]
+  },
+  {
+    "id": "grep-explain",
+    "type": "explain",
+    "skillIds": ["searching-text"],
+    "difficulty": 2,
+    "prompt": "grep: find lines that match",
+    "body": "`grep pattern file` prints every line of the file containing the pattern. Order matters: pattern first, then the file. The flags you will use daily: -i ignores case, -n prints line numbers, -c counts matching lines, -v inverts the match (lines without the pattern), and -r searches every file under a directory. To find TODO notes across a whole project: `grep -rn TODO .`",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Say the command as a sentence: find, in this file, the lines containing this."
+      }
+    ],
+    "check": {
+      "prompt": "What does `grep -c error app.log` print: the matching lines, or a count?",
+      "answer": "A count of matching lines, not the lines themselves"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "grep"]
+  },
+  {
+    "id": "grep-mcq-recursive",
+    "type": "mcq",
+    "skillIds": ["searching-text"],
+    "difficulty": 2,
+    "prompt": "Which command searches for TODO in every file under the current directory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "grep -r \"TODO\" ."
+      },
+      {
+        "id": "b",
+        "text": "grep \"TODO\" .",
+        "misconceptionId": "find-missing-path"
+      },
+      {
+        "id": "c",
+        "text": "grep -d \"TODO\" ."
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Directories need a flag that says: go inside them too."
+      }
+    ],
+    "explanation": "-r makes grep walk the directory tree. The dot means start here.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "grep"]
+  },
+  {
+    "id": "grep-mcq-insensitive",
+    "type": "mcq",
+    "skillIds": ["searching-text"],
+    "difficulty": 1,
+    "prompt": "Logs contain error, Error, and ERROR. Which command catches all three?",
+    "options": [
+      {
+        "id": "a",
+        "text": "grep -i error app.log"
+      },
+      {
+        "id": "b",
+        "text": "grep error app.log"
+      },
+      {
+        "id": "c",
+        "text": "grep -v error app.log",
+        "misconceptionId": "grep-order-swapped"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One flag ignores case differences."
+      }
+    ],
+    "explanation": "-i makes the match case-insensitive. -v would print the lines without error, the opposite of what you want.",
+    "estimatedSeconds": 35,
+    "tags": ["cli", "grep"]
+  },
+  {
+    "id": "grep-mcq-order",
+    "type": "mcq",
+    "skillIds": ["searching-text"],
+    "difficulty": 1,
+    "prompt": "Which grep line is written correctly?",
+    "options": [
+      {
+        "id": "a",
+        "text": "grep app.log error",
+        "misconceptionId": "grep-order-swapped"
+      },
+      {
+        "id": "b",
+        "text": "grep error app.log"
+      },
+      {
+        "id": "c",
+        "text": "grep error | app.log",
+        "misconceptionId": "pipe-file-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "What are you looking for, and where? Match that order."
+      }
+    ],
+    "explanation": "grep takes the pattern first, then the file.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "grep"]
+  },
+  {
+    "id": "grep-lab-todos",
+    "type": "lab",
+    "skillIds": ["searching-text"],
+    "difficulty": 2,
+    "prompt": "Lab: hunt TODOs in a small tree",
+    "labId": "lab-grep-todos",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Combine -r, -n, and -i in one flag cluster."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "grep", "lab"]
+  },
+  {
+    "id": "pipe-explain",
+    "type": "explain",
+    "skillIds": ["pipes-and-redirection"],
+    "difficulty": 2,
+    "prompt": "Pipes and redirection",
+    "body": "Two characters turn small commands into tools. The pipe | feeds one command's output into the next command's input: `ls | wc -l` counts entries. Redirection sends output to a file instead: `ls > list.txt` writes (overwriting anything there) and `ls >> list.txt` appends to the end. A pipe connects commands; a redirect connects a command to a file. The classic counting pipeline is `sort | uniq -c`, because uniq only collapses lines that are adjacent, which is why you sort first.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what is on the right side: a command, or a file?"
+      }
+    ],
+    "check": {
+      "prompt": "In `grep error app.log | wc -l`, what does wc receive?",
+      "answer": "The matching lines from grep, as input, and it counts them"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "pipes"]
+  },
+  {
+    "id": "pipe-mcq-overwrite",
+    "type": "mcq",
+    "skillIds": ["pipes-and-redirection"],
+    "difficulty": 2,
+    "prompt": "Which command saves the listing into list.txt, replacing any previous contents?",
+    "options": [
+      {
+        "id": "a",
+        "text": "ls | list.txt",
+        "misconceptionId": "pipe-file-confusion"
+      },
+      {
+        "id": "b",
+        "text": "ls > list.txt"
+      },
+      {
+        "id": "c",
+        "text": "ls >> list.txt",
+        "misconceptionId": "redirect-append-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The arrow points at a file, not at another command."
+      }
+    ],
+    "explanation": "> redirects output to a file and overwrites it. A pipe needs a command on the right, and >> appends instead of replacing.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "pipes"]
+  },
+  {
+    "id": "pipe-mcq-append",
+    "type": "mcq",
+    "skillIds": ["pipes-and-redirection"],
+    "difficulty": 2,
+    "prompt": "You log one line per run and must keep every earlier line. Which redirect keeps history?",
+    "options": [
+      {
+        "id": "a",
+        "text": "echo run > log.txt",
+        "misconceptionId": "redirect-append-confusion"
+      },
+      {
+        "id": "b",
+        "text": "echo run >> log.txt"
+      },
+      {
+        "id": "c",
+        "text": "echo run | log.txt",
+        "misconceptionId": "pipe-file-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One arrow replaces; what might two arrows do?"
+      }
+    ],
+    "explanation": ">> appends. Every run with > would leave a one-line file.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "pipes"]
+  },
+  {
+    "id": "pipe-mcq-pipeline",
+    "type": "mcq",
+    "skillIds": ["pipes-and-redirection"],
+    "difficulty": 3,
+    "prompt": "What does `cat notes.txt | sort | uniq -c | sort -nr | head -n 5` show?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The five largest files mentioned in notes.txt"
+      },
+      {
+        "id": "b",
+        "text": "The five most frequent lines in notes.txt, with counts"
+      },
+      {
+        "id": "c",
+        "text": "The first five lines of notes.txt unchanged"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the pipeline left to right; each stage transforms the previous stage's output."
+      }
+    ],
+    "explanation": "sort groups identical lines, uniq -c counts each group, sort -nr puts the biggest count first, head keeps five.",
+    "estimatedSeconds": 60,
+    "tags": ["cli", "pipes"]
+  },
+  {
+    "id": "pipe-lab-frequency",
+    "type": "lab",
+    "skillIds": ["pipes-and-redirection"],
+    "difficulty": 3,
+    "prompt": "Lab: build a word-frequency pipeline",
+    "labId": "lab-pipe-frequency",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Build the pipeline one stage at a time and look at the output between stages."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["cli", "pipes", "lab"]
+  },
+  {
+    "id": "files-explain",
+    "type": "explain",
+    "skillIds": ["creating-and-moving"],
+    "difficulty": 2,
+    "prompt": "Creating, copying, moving",
+    "body": "Four verbs cover most file work. `mkdir -p a/b` creates nested directories in one shot. `touch draft.md` creates an empty file. `cp source dest` copies a file; add -r to copy a directory and everything inside it. `mv old new` moves or renames, and unlike cp it removes the original. Delete with `rm file`, and know that rm is permanent: there is no trash and no undo. Before any risky delete, run `ls` on the exact path you are about to type.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "cp duplicates; mv relocates. Only one of them leaves the original behind."
+      }
+    ],
+    "check": {
+      "prompt": "What is the difference between `cp a.txt b.txt` and `mv a.txt b.txt`?",
+      "answer": "cp leaves both files; mv leaves only b.txt"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "files"]
+  },
+  {
+    "id": "files-mcq-cp-vs-mv",
+    "type": "mcq",
+    "skillIds": ["creating-and-moving"],
+    "difficulty": 1,
+    "prompt": "You want a backup of report.md before editing it. Which command keeps the original?",
+    "options": [
+      {
+        "id": "a",
+        "text": "mv report.md report.md.bak",
+        "misconceptionId": "cp-mv-swap"
+      },
+      {
+        "id": "b",
+        "text": "cp report.md report.md.bak"
+      },
+      {
+        "id": "c",
+        "text": "touch report.md.bak"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "A backup is a copy by definition."
+      }
+    ],
+    "explanation": "cp duplicates the file and leaves the original in place. mv would leave only the .bak file.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "files"]
+  },
+  {
+    "id": "files-mcq-rename",
+    "type": "mcq",
+    "skillIds": ["creating-and-moving"],
+    "difficulty": 1,
+    "prompt": "Which command renames draft-v1.md to draft-v2.md?",
+    "options": [
+      {
+        "id": "a",
+        "text": "cp draft-v1.md draft-v2.md",
+        "misconceptionId": "cp-mv-swap"
+      },
+      {
+        "id": "b",
+        "text": "mv draft-v1.md draft-v2.md"
+      },
+      {
+        "id": "c",
+        "text": "rename draft-v1.md draft-v2.md"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Renaming is moving to a new name in the same directory."
+      }
+    ],
+    "explanation": "mv with a new name in the same directory is a rename. cp would leave the old file behind.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "files"]
+  },
+  {
+    "id": "files-mcq-cp-dir",
+    "type": "mcq",
+    "skillIds": ["creating-and-moving"],
+    "difficulty": 2,
+    "prompt": "Which command copies the whole photos directory, including everything inside?",
+    "options": [
+      {
+        "id": "a",
+        "text": "cp photos photos-backup",
+        "misconceptionId": "cp-needs-recursive"
+      },
+      {
+        "id": "b",
+        "text": "cp -r photos photos-backup"
+      },
+      {
+        "id": "c",
+        "text": "cp --dir photos photos-backup"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Into every subdirectory: which flag word from earlier means that?"
+      }
+    ],
+    "explanation": "Directories need recursive copy: cp -r. Plain cp refuses or copies only single files.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "files"]
+  },
+  {
+    "id": "files-lab-tree",
+    "type": "lab",
+    "skillIds": ["creating-and-moving"],
+    "difficulty": 2,
+    "prompt": "Lab: build and move a mini project",
+    "labId": "lab-file-tree",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the commands in order and verify each step with ls before moving on."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["cli", "files", "lab"]
+  },
+  {
+    "id": "find-explain",
+    "type": "explain",
+    "skillIds": ["finding-files"],
+    "difficulty": 3,
+    "prompt": "find: walk the tree",
+    "body": "`find` searches by file properties rather than by content. It always needs a starting directory: `find . -name \"*.log\"` walks the current tree printing every .log file. Useful tests: -type f for files only, -type d for directories only, -iname for case-insensitive names, and -size +10M for anything over ten megabytes. Quote the pattern, as in \"*.log\", so the shell does not expand it before find sees it.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "find answers where is it, not what is inside it. Content search is grep's job."
+      }
+    ],
+    "check": {
+      "prompt": "Which find command lists only directories under the current tree?",
+      "answer": "find . -type d"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["cli", "find"]
+  },
+  {
+    "id": "find-mcq-logs",
+    "type": "mcq",
+    "skillIds": ["finding-files"],
+    "difficulty": 2,
+    "prompt": "Which command finds every .log file under the current directory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "find -name \"*.log\"",
+        "misconceptionId": "find-missing-path"
+      },
+      {
+        "id": "b",
+        "text": "find . -name \"*.log\""
+      },
+      {
+        "id": "c",
+        "text": "find *.log"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The first thing after find is where to start walking."
+      }
+    ],
+    "explanation": "find needs the starting point: `find . -name \"*.log\"`. Without the dot it errors; with a bare glob the shell expands it first.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "find"]
+  },
+  {
+    "id": "find-mcq-type",
+    "type": "mcq",
+    "skillIds": ["finding-files"],
+    "difficulty": 2,
+    "prompt": "Which find command lists files only, skipping directories?",
+    "options": [
+      {
+        "id": "a",
+        "text": "find . -type f"
+      },
+      {
+        "id": "b",
+        "text": "find . -type d"
+      },
+      {
+        "id": "c",
+        "text": "find . -name \"*\""
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "f for files, d for directories."
+      }
+    ],
+    "explanation": "-type f filters to regular files.",
+    "estimatedSeconds": 40,
+    "tags": ["cli", "find"]
+  },
+  {
+    "id": "find-lab-logs",
+    "type": "lab",
+    "skillIds": ["finding-files"],
+    "difficulty": 2,
+    "prompt": "Lab: find and size log files",
+    "labId": "lab-find-logs",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Create the nested tree first, then predict what find will print before running it."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "find", "lab"]
+  },
+  {
+    "id": "perm-explain",
+    "type": "explain",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 3,
+    "prompt": "Permission bits and safe habits",
+    "body": "`ls -l` starts each line with ten characters. The first is the type (- for files, d for directories); the rest are three triads of rwx: read, write, execute, for owner, group, and others. So -rw-r--r-- means the owner can read and write, everyone else can only read. Numbers are shorthand: r=4, w=2, x=1, added per triad, so 644 is rw- r-- r-- and 755 is rwx r-x r-x. `chmod +x script.sh` adds execute for everyone. `sudo` runs one command as root: powerful, and worth asking why before using it. `rm` has no trash; only backups bring files back.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the ten characters in groups: type, owner, group, others."
+      }
+    ],
+    "check": {
+      "prompt": "What can a non-owner do with a file listed as -rw-r--r--?",
+      "answer": "Read it, but not write or execute it"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["cli", "permissions"]
+  },
+  {
+    "id": "perm-mcq-decode",
+    "type": "mcq",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 3,
+    "prompt": "A file shows -rw-r--r-- in ls -l. Who can write to it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Everyone, since read implies write"
+      },
+      {
+        "id": "b",
+        "text": "Only the owner"
+      },
+      {
+        "id": "c",
+        "text": "Nobody, because there is no x"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Find the w in each of the three triads."
+      }
+    ],
+    "explanation": "The first triad (owner) is rw-. Group and others have r-- only, so only the owner can write.",
+    "estimatedSeconds": 50,
+    "tags": ["cli", "permissions"]
+  },
+  {
+    "id": "perm-mcq-chmod-x",
+    "type": "mcq",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 2,
+    "prompt": "Running ./deploy.sh fails with permission denied. Which fix adds execute permission?",
+    "options": [
+      {
+        "id": "a",
+        "text": "chmod +x deploy.sh"
+      },
+      {
+        "id": "b",
+        "text": "chmod 644 deploy.sh",
+        "misconceptionId": "sudo-habit"
+      },
+      {
+        "id": "c",
+        "text": "sudo run deploy.sh"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The error names the missing permission: add exactly that."
+      }
+    ],
+    "explanation": "chmod +x adds execute. 644 is the read/write default with no execute bit, and sudo does not fix permissions at all.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "permissions"]
+  },
+  {
+    "id": "perm-mcq-sudo",
+    "type": "mcq",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 2,
+    "prompt": "A command fails because a file belongs to root. What does sudo do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Speeds the command up so it succeeds",
+        "misconceptionId": "sudo-habit"
+      },
+      {
+        "id": "b",
+        "text": "Runs that one command with root's permissions"
+      },
+      {
+        "id": "c",
+        "text": "Permanently changes the file's owner to you"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "sudo is about identity, not about effort."
+      }
+    ],
+    "explanation": "sudo runs the single command that follows as the superuser. Use it deliberately, not as a retry habit.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "permissions", "sudo"]
+  },
+  {
+    "id": "perm-mcq-trash",
+    "type": "mcq",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 2,
+    "prompt": "You just ran `rm notes-old.txt` by mistake. Where can you restore it from?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The terminal's Trash folder",
+        "misconceptionId": "rm-has-trash"
+      },
+      {
+        "id": "b",
+        "text": "Nowhere, unless you have a backup; rm is permanent"
+      },
+      {
+        "id": "c",
+        "text": "It is still on disk until you empty a bin directory",
+        "misconceptionId": "rm-has-trash"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The shell has no undo and no recycling step."
+      }
+    ],
+    "explanation": "rm unlinks the file immediately. Backups, or nothing, are the recovery path.",
+    "estimatedSeconds": 45,
+    "tags": ["cli", "safety"]
+  },
+  {
+    "id": "perm-teach-permissions",
+    "type": "teach_back",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 3,
+    "prompt": "Teach it back: decode -rw-r--r--, say what 755 means in bits, and describe when sudo is appropriate.",
+    "rubricId": "rubric-teach-permissions",
+    "modelAnswer": "-rw-r--r--: the owner reads and writes, the group and others only read. 755 is rwx for the owner, r-x for group and others, from r=4, w=2, x=1. sudo is for deliberate admin actions on files owned by root, used once and questioned first.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the triads, the number-to-bits conversion, and the sudo rule of thumb."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["cli", "permissions"]
+  },
+  {
+    "id": "perm-lab-chmod",
+    "type": "lab",
+    "skillIds": ["permissions-and-safety"],
+    "difficulty": 2,
+    "prompt": "Lab: make a script executable",
+    "labId": "lab-chmod",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The lab works on macOS or Linux; on Windows use WSL."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["cli", "permissions", "lab"]
+  }
+]

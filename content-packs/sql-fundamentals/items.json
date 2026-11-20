@@ -1,0 +1,1417 @@
+[
+  {
+    "id": "sql-explain-relational-model",
+    "type": "explain",
+    "skillIds": ["relational-model"],
+    "difficulty": 1,
+    "prompt": "Tables, rows, and keys",
+    "body": "A relational database is a set of tables. One table per kind of thing. The tiny shop you will query has a `customers` table:\n\n| customer_id | name | city |\n|---|---|---|\n| 1 | Ada Lovelace | Perth |\n| 2 | Grace Hopper | Fremantle |\n| 3 | Barbara Liskov | (null) |\n\nEach row is one customer. Each column is one fact about that customer. A primary key is a column that names a row: `customer_id` is ours. It never changes, never repeats, and has no meaning outside the database. Names are different: two customers can share a name, and people rename themselves.\n\nA foreign key is a column that points at another table's key. Every row of `orders` carries `customer_id`, which points at the buyer. That one column is the whole relationship. Orders point at customers; customers do not collect a list of their orders.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask of any column: does this value name exactly one row, or could two rows share it?"
+      }
+    ],
+    "check": {
+      "prompt": "What does `orders.customer_id` point at?",
+      "answer": "One row in `customers`, identified by its `customer_id`"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["sql", "modeling"]
+  },
+  {
+    "id": "sql-mcq-row-identity",
+    "type": "mcq",
+    "skillIds": ["relational-model"],
+    "difficulty": 1,
+    "prompt": "Another table wants to point at exactly one order. Which value should it store?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The order's `order_id`"
+      },
+      {
+        "id": "b",
+        "text": "The buyer's name, Ada Lovelace",
+        "misconceptionId": "name-is-identity"
+      },
+      {
+        "id": "c",
+        "text": "The order's position in the table, row 2",
+        "misconceptionId": "name-is-identity"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two orders can belong to Ada. One value is guaranteed never to repeat."
+      }
+    ],
+    "explanation": "The primary key names one row. Names repeat and row positions shift with every sort, so neither identifies an order.",
+    "estimatedSeconds": 40,
+    "tags": ["sql", "modeling"]
+  },
+  {
+    "id": "sql-mcq-what-is-fk",
+    "type": "mcq",
+    "skillIds": ["relational-model"],
+    "difficulty": 2,
+    "prompt": "`orders.customer_id` is declared `REFERENCES customers(customer_id)`. What does the database now guarantee?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Every value in `orders.customer_id` matches a real row in `customers`"
+      },
+      {
+        "id": "b",
+        "text": "The customer columns are copied into each order row",
+        "misconceptionId": "repeating-groups"
+      },
+      {
+        "id": "c",
+        "text": "Nothing until you also create an index on the column",
+        "misconceptionId": "index-everywhere"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The foreign key is a rule the database checks on every write."
+      }
+    ],
+    "explanation": "A foreign key refuses an order whose `customer_id` matches no customer. It is a rule about what may be stored, not a copy of columns and not an index.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "modeling"]
+  },
+  {
+    "id": "sql-short-primary-key",
+    "type": "short_answer",
+    "skillIds": ["relational-model"],
+    "difficulty": 1,
+    "prompt": "You are writing `CREATE TABLE orders`. Which declaration makes `order_id` the row identity?",
+    "scoring": {
+      "mode": "contains",
+      "value": "PRIMARY KEY"
+    },
+    "modelAnswer": "`order_id INTEGER PRIMARY KEY` - the primary key declaration makes the column unique, non-null, and the row's identity.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The declaration is two words describing the column's role as identity."
+      }
+    ],
+    "explanation": "`order_id INTEGER PRIMARY KEY` makes the column the row identity: unique, never null.",
+    "estimatedSeconds": 40,
+    "tags": ["sql", "modeling", "ddl"]
+  },
+  {
+    "id": "sql-explain-select",
+    "type": "explain",
+    "skillIds": ["select-basics"],
+    "difficulty": 1,
+    "prompt": "The shape of a query",
+    "body": "Every query answers three questions. Which columns? `SELECT name, city`. From which table? `FROM customers`. Which rows? `WHERE city = 'Perth'`.\n\n```sql\nSELECT name, city\nFROM customers\nWHERE city = 'Perth';\n```\n\nRead it as a sentence: give me these columns, from this table, keeping these rows. `SELECT *` asks for every column. It is fine while exploring a table and a habit to break in anything you keep: a report that asks for everything breaks or bloats when a column is added, and it hides which facts the result is actually about.\n\nText values wear single quotes: `'Perth'`, not `Perth`. `Perth` unquoted would be read as a column name, and the error will say no such column.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Each clause answers one question: what, from where, keeping which."
+      }
+    ],
+    "check": {
+      "prompt": "Which clause keeps only the shipped orders?",
+      "answer": "The WHERE clause: `WHERE status = 'shipped'`"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["sql", "querying"]
+  },
+  {
+    "id": "sql-mcq-select-star",
+    "type": "mcq",
+    "skillIds": ["select-basics"],
+    "difficulty": 1,
+    "prompt": "A report needs only `status` and `total_cents` from `orders`, but the query says `SELECT *`. What is the practical cost?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Extra columns travel and confuse the report, and a later schema change can break it silently"
+      },
+      {
+        "id": "b",
+        "text": "None; `*` is always the fastest way to select",
+        "misconceptionId": "select-star-habit"
+      },
+      {
+        "id": "c",
+        "text": "`SELECT *` is an error once a table has more than five columns",
+        "misconceptionId": "select-star-habit"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about what happens next month, when someone adds a column to the table."
+      }
+    ],
+    "explanation": "Name the columns the question needs. The query stays small, readable, and stable when the table grows.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "querying"]
+  },
+  {
+    "id": "sql-mcq-shipped-orders",
+    "type": "mcq",
+    "skillIds": ["select-basics"],
+    "difficulty": 2,
+    "prompt": "Which query lists every shipped order?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`SELECT order_id, total_cents FROM orders WHERE status = 'shipped';`"
+      },
+      {
+        "id": "b",
+        "text": "`SELECT order_id, total_cents FROM orders HAVING status = 'shipped';`",
+        "misconceptionId": "filter-aggregates-in-where"
+      },
+      {
+        "id": "c",
+        "text": "`SELECT * FROM shipped;`",
+        "misconceptionId": "select-star-habit"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Filtering rows is the job of exactly one clause; there is no table per status value."
+      }
+    ],
+    "explanation": "WHERE filters rows. HAVING is for filtering groups after aggregation, and `shipped` is a value in a column, not a table.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "querying"]
+  },
+  {
+    "id": "sql-worked-first-query",
+    "type": "worked_example",
+    "skillIds": ["select-basics"],
+    "difficulty": 2,
+    "prompt": "Build a query step by step: names and order totals for shipped orders.",
+    "steps": [
+      {
+        "title": "Name the columns",
+        "body": "The question needs the order id and its total. That is `SELECT order_id, total_cents`. Not `*`: we know which facts we want."
+      },
+      {
+        "title": "Name the table",
+        "body": "The rows live in `orders`: `FROM orders`."
+      },
+      {
+        "title": "Keep the shipped rows",
+        "body": "Add `WHERE status = 'shipped'`. Status is text, so it wears single quotes."
+      },
+      {
+        "title": "Run it",
+        "body": "`SELECT order_id, total_cents FROM orders WHERE status = 'shipped';` returns 3 rows: orders 1, 2, and 3 with totals 8200, 5500, and 12000."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "Write the query for customer names and cities, keeping only Perth customers.",
+      "answer": "SELECT name, city FROM customers WHERE city = 'Perth';"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Build the query in three decisions: columns, table, rows."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "wf-clauses",
+        "kind": "check",
+        "prompt": "Which clause names the table the rows come from?",
+        "answer": "FROM, as in `FROM orders`",
+        "hints": [
+          {
+            "level": 1,
+            "text": "One clause is literally the word for the source."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "wf-from-detail",
+            "kind": "check",
+            "prompt": "In `SELECT name FROM customers`, which table is being read?",
+            "answer": "customers",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "wf-filter-choice",
+        "kind": "mcq",
+        "prompt": "Which clause keeps only the shipped rows?",
+        "options": [
+          {
+            "id": "a",
+            "text": "WHERE status = 'shipped'"
+          },
+          {
+            "id": "b",
+            "text": "ORDER BY status"
+          },
+          {
+            "id": "c",
+            "text": "GROUP BY status"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [
+          {
+            "level": 1,
+            "text": "One clause filters rows before anything else happens to them."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "wf-quote-detail",
+            "kind": "check",
+            "prompt": "Which quotes wrap a text value in SQL: single or double?",
+            "answer": "single quotes: 'shipped'",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["sql", "querying"]
+  },
+  {
+    "id": "sql-lab-first-query",
+    "type": "lab",
+    "skillIds": ["select-basics"],
+    "difficulty": 1,
+    "prompt": "Lab: first queries on shop.db",
+    "labId": "lab-first-query",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the two setup commands first so shop.db exists with data in it."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-where-nulls",
+    "type": "explain",
+    "skillIds": ["filtering-and-sorting"],
+    "difficulty": 2,
+    "prompt": "Nulls, comparisons, and ordering",
+    "body": "Null means unknown. Barbara's city is null because nobody recorded it. It is not `''` (an empty string) and not `'NULL'` (four letters of text). It is no value at all.\n\nThat is why comparison fails:\n\n```sql\nSELECT customer_id, name FROM customers WHERE city = 'NULL';   -- 0 rows\nSELECT customer_id, name FROM customers WHERE city IS NULL;    -- Barbara\n```\n\nA null is never equal to anything, not even to another null. The test for unknown is `IS NULL`; the test for known is `IS NOT NULL`.\n\nConditions combine with `AND` and `OR`, and you can order and trim a result:\n\n```sql\nSELECT order_id, total_cents\nFROM orders\nWHERE total_cents > 8000 AND status != 'cancelled'\nORDER BY total_cents DESC\nLIMIT 3;\n```\n\n`ORDER BY` sorts ascending by default; `DESC` puts the largest first. `LIMIT 3` keeps three rows after sorting.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Unknown is a state, not a value, so it needs its own operator."
+      }
+    ],
+    "check": {
+      "prompt": "Why does `WHERE city = 'NULL'` find no rows?",
+      "answer": "It compares against the four-character text 'NULL'. An unknown value matches nothing with =; use IS NULL."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "filtering", "null"]
+  },
+  {
+    "id": "sql-mcq-null-equals",
+    "type": "mcq",
+    "skillIds": ["filtering-and-sorting"],
+    "difficulty": 2,
+    "prompt": "Which WHERE clause finds the orders whose `note` column was never filled in (null)?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`WHERE note IS NULL`"
+      },
+      {
+        "id": "b",
+        "text": "`WHERE note = NULL`",
+        "misconceptionId": "null-equals-nothing"
+      },
+      {
+        "id": "c",
+        "text": "`WHERE note = 'null'`",
+        "misconceptionId": "null-string-confusion"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Null is not a value, so the equality operator has nothing to compare."
+      }
+    ],
+    "explanation": "`IS NULL` is the test for unknown. `= NULL` returns no rows, and `= 'null'` compares against the literal text 'null'.",
+    "estimatedSeconds": 40,
+    "tags": ["sql", "filtering", "null"]
+  },
+  {
+    "id": "sql-mcq-null-string",
+    "type": "mcq",
+    "skillIds": ["filtering-and-sorting"],
+    "difficulty": 2,
+    "prompt": "A teammate's query `WHERE city = 'NULL'` returns nothing, but Barbara's city really is null. What went wrong?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Null is not the four-letter string 'NULL'; only `IS NULL` matches it"
+      },
+      {
+        "id": "b",
+        "text": "The query needed double quotes: `= \"NULL\"`",
+        "misconceptionId": "null-string-confusion"
+      },
+      {
+        "id": "c",
+        "text": "The idea was right; `= NULL` would have worked",
+        "misconceptionId": "null-equals-nothing"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look closely at the quotes in the failing query. What do they create?"
+      }
+    ],
+    "explanation": "Single quotes make a text value. `'NULL'` is four letters, not the unknown. And `= NULL` fails too, because null equals nothing. The test is `IS NULL`.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "filtering", "null"]
+  },
+  {
+    "id": "sql-mcq-order-limit",
+    "type": "mcq",
+    "skillIds": ["filtering-and-sorting"],
+    "difficulty": 2,
+    "prompt": "Which query shows the three largest order totals, largest first?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`SELECT order_id, total_cents FROM orders ORDER BY total_cents DESC LIMIT 3;`"
+      },
+      {
+        "id": "b",
+        "text": "`SELECT order_id, total_cents FROM orders ORDER BY total_cents LIMIT 3;` - the biggest come first by default",
+        "misconceptionId": "sort-direction-assumed"
+      },
+      {
+        "id": "c",
+        "text": "`SELECT order_id, total_cents FROM orders LIMIT 3 ORDER BY total_cents DESC;`",
+        "misconceptionId": "sort-direction-assumed"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which direction does sorting go unless you say otherwise? And which clause comes last?"
+      }
+    ],
+    "explanation": "ORDER BY sorts ascending unless you add DESC, and LIMIT comes after ORDER BY. `ORDER BY total_cents DESC LIMIT 3` is the working form.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "sorting"]
+  },
+  {
+    "id": "sql-lab-filter-sort",
+    "type": "lab",
+    "skillIds": ["filtering-and-sorting"],
+    "difficulty": 2,
+    "prompt": "Lab: filter, test for null, sort",
+    "labId": "lab-filter-sort",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Predict the row count for each query before you run it."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-aggregates",
+    "type": "explain",
+    "skillIds": ["aggregate-functions"],
+    "difficulty": 2,
+    "prompt": "Collapsing rows: COUNT, SUM, GROUP BY",
+    "body": "An aggregate collapses many rows into one value. `COUNT(*)` counts rows, `SUM(total_cents)` adds the totals, `AVG(total_cents)` averages them:\n\n```sql\nSELECT COUNT(*) AS order_count, SUM(total_cents) AS revenue\nFROM orders;\n-- 5 orders, 41700\n```\n\n`GROUP BY` splits the rows into groups and aggregates each one. Group the orders by customer:\n\n| customer_id | orders | spend |\n|---|---|---|\n| 1 (Ada) | 3 | 20700 |\n| 2 (Grace) | 2 | 21000 |\n\nBarbara has no group. Groups form from the rows that exist.\n\n`WHERE` filters rows before grouping. `HAVING` filters groups after aggregation. To keep customers with more than one order:\n\n```sql\nSELECT customer_id, COUNT(*) AS orders\nFROM orders\nGROUP BY customer_id\nHAVING COUNT(*) > 1;\n```\n\n`COUNT(*) > 1` tests an aggregate, so it cannot live in WHERE. At WHERE time, the groups do not exist yet.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what exists when the filter runs: rows, or groups?"
+      }
+    ],
+    "check": {
+      "prompt": "Where does the condition 'more than one order' go, and why?",
+      "answer": "In HAVING, because it tests an aggregate, and aggregates exist only after grouping"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "aggregation"]
+  },
+  {
+    "id": "sql-mcq-where-having",
+    "type": "mcq",
+    "skillIds": ["aggregate-functions"],
+    "difficulty": 2,
+    "prompt": "Which query keeps only customers whose order count is above 1?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`... GROUP BY customer_id HAVING COUNT(*) > 1`"
+      },
+      {
+        "id": "b",
+        "text": "`... WHERE COUNT(*) > 1 GROUP BY customer_id`",
+        "misconceptionId": "filter-aggregates-in-where"
+      },
+      {
+        "id": "c",
+        "text": "`... WHERE total_cents > 1 GROUP BY customer_id`",
+        "misconceptionId": "filter-aggregates-in-where"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The condition tests a count. Counts do not exist until groups do."
+      }
+    ],
+    "explanation": "WHERE runs before GROUP BY, so it cannot see `COUNT(*)`. Group conditions go in HAVING.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "aggregation"]
+  },
+  {
+    "id": "sql-mcq-count-nullable",
+    "type": "mcq",
+    "skillIds": ["aggregate-functions"],
+    "difficulty": 3,
+    "prompt": "In shop.db, Barbara's `city` is null. What does `SELECT COUNT(*), COUNT(city) FROM customers;` return?",
+    "options": [
+      {
+        "id": "a",
+        "text": "3 and 2: COUNT(*) counts rows, COUNT(city) skips nulls"
+      },
+      {
+        "id": "b",
+        "text": "3 and 3: both counts count every row",
+        "misconceptionId": "null-equals-nothing"
+      },
+      {
+        "id": "c",
+        "text": "2 and 2: the null row is dropped from the table",
+        "misconceptionId": "null-equals-nothing"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The two counts differ by exactly one thing: how they treat unknown values."
+      }
+    ],
+    "explanation": "COUNT(*) counts rows; COUNT(column) counts non-null values in that column. Nulls stay in the table; they are just skipped by the column count.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "aggregation", "null"]
+  },
+  {
+    "id": "sql-mcq-group-by-label",
+    "type": "mcq",
+    "skillIds": ["aggregate-functions"],
+    "difficulty": 3,
+    "prompt": "Two different customers are both named Alex Chen (ids 7 and 9). What does `GROUP BY name` do to their order totals?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Merges them into one group; their totals become one number"
+      },
+      {
+        "id": "b",
+        "text": "Keeps them apart; SQLite notices the different customer ids",
+        "misconceptionId": "name-is-identity"
+      },
+      {
+        "id": "c",
+        "text": "Errors out, because names must be unique",
+        "misconceptionId": "name-is-identity"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "GROUP BY makes one group per distinct value. What happens when a value repeats?"
+      }
+    ],
+    "explanation": "Grouping by a label merges everyone who shares the label. Group by the key (`customer_id`) and carry the name as a display column.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "aggregation"]
+  },
+  {
+    "id": "sql-lab-aggregates",
+    "type": "lab",
+    "skillIds": ["aggregate-functions"],
+    "difficulty": 2,
+    "prompt": "Lab: count, sum, and group",
+    "labId": "lab-aggregates",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Check every aggregate against the rows you can count by hand."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-joins",
+    "type": "explain",
+    "skillIds": ["joins-inner"],
+    "difficulty": 2,
+    "prompt": "Inner joins pair the rows",
+    "body": "Orders know their buyer through the foreign key. A join follows it:\n\n```sql\nSELECT c.name, o.order_id, o.total_cents\nFROM customers c\nJOIN orders o ON o.customer_id = c.customer_id;\n```\n\n`c` and `o` are aliases, short names for the tables. `ON` states the relationship: the order's `customer_id` must equal the customer's `customer_id`.\n\nThe result pairs each order with its buyer. Ada appears three times, once per order. Grace twice. Barbara not at all: an inner join keeps only the matches, and she has no orders. That is correct when the question is 'orders and their buyers'.\n\nJoin on the key, not on a name. Names duplicate, change, and are not the relationship. The key is.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The ON clause is the sentence 'this order's buyer is this customer' written in columns."
+      }
+    ],
+    "check": {
+      "prompt": "Why does Barbara not appear in the inner join?",
+      "answer": "She has no orders, and an inner join keeps only rows that match on both sides"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "joins"]
+  },
+  {
+    "id": "sql-mcq-missing-on",
+    "type": "mcq",
+    "skillIds": ["joins-inner"],
+    "difficulty": 2,
+    "prompt": "A teammate writes `SELECT c.name, o.total_cents FROM customers c JOIN orders o;` with no ON. What comes back?",
+    "options": [
+      {
+        "id": "a",
+        "text": "15 rows: every customer paired with every order (3 x 5)"
+      },
+      {
+        "id": "b",
+        "text": "The 5 orders, matched to their buyers automatically",
+        "misconceptionId": "missing-on-cartesian"
+      },
+      {
+        "id": "c",
+        "text": "An empty result, because no condition matched",
+        "misconceptionId": "missing-on-cartesian"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Without a condition, what can the join possibly use to decide which rows pair?"
+      }
+    ],
+    "explanation": "No condition means every combination: a cartesian product. 3 customers x 5 orders is 15 rows. Always state the relationship in ON.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "joins"]
+  },
+  {
+    "id": "sql-mcq-join-pairing",
+    "type": "mcq",
+    "skillIds": ["joins-inner"],
+    "difficulty": 2,
+    "prompt": "Which ON condition pairs each order with the customer who placed it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`ON o.customer_id = c.customer_id`"
+      },
+      {
+        "id": "b",
+        "text": "`ON o.order_id = c.customer_id` - they are both numbers",
+        "misconceptionId": "name-is-identity"
+      },
+      {
+        "id": "c",
+        "text": "No condition; SQLite pairs the rows by position",
+        "misconceptionId": "missing-on-cartesian"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Match the foreign key to the key it references, not just any two columns."
+      }
+    ],
+    "explanation": "The relationship is `orders.customer_id` pointing at `customers.customer_id`. Matching two arbitrary number columns pairs the wrong rows.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "joins"]
+  },
+  {
+    "id": "sql-lab-join",
+    "type": "lab",
+    "skillIds": ["joins-inner"],
+    "difficulty": 2,
+    "prompt": "Lab: join customers to orders",
+    "labId": "lab-join",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the no-ON query deliberately; the row count is the lesson."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-fanout",
+    "type": "explain",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "Grain: what is one row of the result?",
+    "body": "A table's grain is what one row represents. One `customers` row is a customer. One `orders` row is an order. A join produces the finer grain: `customers JOIN orders` gives one row per order, because Ada's single customer row pairs with each of her three orders.\n\nCount what the join made:\n\n```sql\nSELECT COUNT(*) AS joined_rows,\n       COUNT(DISTINCT c.customer_id) AS customers\nFROM customers c\nJOIN orders o ON o.customer_id = c.customer_id;\n-- joined_rows: 5, customers: 2\n```\n\nFive joined rows, two real customers. Neither number is wrong; they answer different questions. The trap is summing a customer-level value on order-level rows: Ada's credit would be counted three times.\n\n`SELECT DISTINCT` removes duplicate output rows. It does not repair a doubled sum. If the number is wrong, fix the grain; do not hide the symptom.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Before any join, write one sentence: one row of my result represents what?"
+      }
+    ],
+    "check": {
+      "prompt": "The join returns 5 rows. How many customers actually have orders?",
+      "answer": "2 - Ada and Grace; COUNT(DISTINCT c.customer_id) shows it"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "joins", "aggregation"]
+  },
+  {
+    "id": "sql-mcq-fanout-count",
+    "type": "mcq",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "After `customers JOIN orders ON o.customer_id = c.customer_id`, what does `COUNT(*)` count?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Joined rows: 5, because Ada's row repeats for each of her orders"
+      },
+      {
+        "id": "b",
+        "text": "Customers: 3, because the query started from customers",
+        "misconceptionId": "join-fanout-inflates-count"
+      },
+      {
+        "id": "c",
+        "text": "Orders plus customers: 8, because both tables contributed",
+        "misconceptionId": "join-fanout-inflates-count"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "How many rows exist after the join, and what is each one?"
+      }
+    ],
+    "explanation": "COUNT(*) counts result rows, and the result has one row per order. For entities, use COUNT(DISTINCT key) or aggregate before joining.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "joins", "aggregation"]
+  },
+  {
+    "id": "sql-mcq-count-vs-distinct",
+    "type": "mcq",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "Which expression counts the customers that have orders in the joined result?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`COUNT(DISTINCT c.customer_id)`"
+      },
+      {
+        "id": "b",
+        "text": "`COUNT(*)`",
+        "misconceptionId": "join-fanout-inflates-count"
+      },
+      {
+        "id": "c",
+        "text": "`SUM(o.total_cents)`",
+        "misconceptionId": "join-fanout-inflates-count"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "You want each customer counted once, no matter how many orders they have."
+      }
+    ],
+    "explanation": "COUNT(DISTINCT key) collapses the repeats before counting: 2. COUNT(*) gives 5 rows, and SUM adds money, not customers.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "joins", "aggregation"]
+  },
+  {
+    "id": "sql-mcq-distinct-fix",
+    "type": "mcq",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "A per-customer revenue report shows doubled totals. Someone adds `SELECT DISTINCT` and the duplicated rows vanish. What is the state of the report?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Still wrong: DISTINCT hides the repeated rows, but any doubled sums remain doubled"
+      },
+      {
+        "id": "b",
+        "text": "Fixed: DISTINCT removes the error from the result",
+        "misconceptionId": "distinct-hides-fanout"
+      },
+      {
+        "id": "c",
+        "text": "Fixed and faster: DISTINCT also sorts the data into order",
+        "misconceptionId": "distinct-hides-fanout"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "DISTINCT changes which rows you see. Does it change any arithmetic?"
+      }
+    ],
+    "explanation": "DISTINCT is a symptom hider. Fix the grain: aggregate to one row per customer first, then join.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "joins"]
+  },
+  {
+    "id": "sql-worked-fanout",
+    "type": "worked_example",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "Worked example: count customers with orders without double counting.",
+    "steps": [
+      {
+        "title": "State the grain",
+        "body": "The question asks for customers. One row of the answer should be one customer. Write that down first."
+      },
+      {
+        "title": "Predict the join's grain",
+        "body": "customers JOIN orders is one row per order (Ada 3, Grace 2, Barbara 0). So the join has 5 rows, not 3."
+      },
+      {
+        "title": "Count the rows and the entities",
+        "body": "`SELECT COUNT(*), COUNT(DISTINCT c.customer_id) FROM customers c JOIN orders o ON o.customer_id = c.customer_id;` returns 5 and 2. The question wanted 2."
+      },
+      {
+        "title": "Or aggregate first",
+        "body": "`SELECT customer_id, COUNT(*) FROM orders GROUP BY customer_id;` gives one row per customer directly. Grouping fixes the grain without DISTINCT."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "How many rows does the customers-orders join return on shop.db, and how many distinct customers does it hold?",
+      "answer": "5 joined rows; 2 distinct customers"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two numbers come out of this example. Say what each one counts."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "fanout-predict",
+        "kind": "check",
+        "prompt": "Ada has 3 orders. How many joined rows does she contribute?",
+        "answer": "3 - her one customer row pairs with each order",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Each of her order rows looks up her customer row once."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "fanout-pair-detail",
+            "kind": "check",
+            "prompt": "One customer row pairs with how many of that customer's order rows?",
+            "answer": "one per order",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "fanout-count-choice",
+        "kind": "mcq",
+        "prompt": "Which expression returns 2 here - the number of customers with orders?",
+        "options": [
+          {
+            "id": "a",
+            "text": "COUNT(*)"
+          },
+          {
+            "id": "b",
+            "text": "COUNT(DISTINCT c.customer_id)"
+          },
+          {
+            "id": "c",
+            "text": "COUNT(o.total_cents)"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Repeat the same value five times and count it once."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "fanout-why-detail",
+            "kind": "check",
+            "prompt": "Why does COUNT(*) give 5 instead of 2?",
+            "answer": "because the join repeats each customer once per order",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["sql", "joins", "aggregation"]
+  },
+  {
+    "id": "sql-teach-grain",
+    "type": "teach_back",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "Teach it back: what does grain mean, how does a one-to-many join multiply rows, and how do you count entities correctly?",
+    "rubricId": "rubric-teach-grain",
+    "modelAnswer": "Grain is what one row represents: one orders row is one order, one customers row is one customer. A one-to-many join produces the finer grain, so a customer with 3 orders appears on 3 rows and COUNT(*) counts 5 joined rows for 2 customers. To count entities, use COUNT(DISTINCT key) or aggregate to one row per entity before joining; DISTINCT only hides the duplicate rows and cannot fix a doubled sum.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the definition, the multiplication, and the correct count."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["sql", "joins", "aggregation"]
+  },
+  {
+    "id": "sql-reflect-verify-numbers",
+    "type": "reflection",
+    "skillIds": ["join-grain-and-fanout"],
+    "difficulty": 3,
+    "prompt": "Reflect on a number you have reported",
+    "prompts": [
+      "Think of a count or total you have reported from data. What was one row of that result? Could you have written it in one sentence?",
+      "If that number were doubled by a join, which query in this pack would have caught it: COUNT(*), COUNT(DISTINCT ...), or a grouped check?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "A number you cannot explain row-by-row is a number you cannot defend."
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["sql", "verification"]
+  },
+  {
+    "id": "sql-explain-ctes",
+    "type": "explain",
+    "skillIds": ["subqueries-and-ctes"],
+    "difficulty": 3,
+    "prompt": "Name the steps with a CTE",
+    "body": "A common table expression (CTE) gives one step of a query a name:\n\n```sql\nWITH per_customer AS (\n  SELECT customer_id,\n         COUNT(*) AS order_count,\n         SUM(total_cents) AS spend_cents\n  FROM orders\n  GROUP BY customer_id\n)\nSELECT c.name, p.order_count, p.spend_cents\nFROM per_customer p\nJOIN customers c ON c.customer_id = p.customer_id\nORDER BY p.spend_cents DESC;\n```\n\nEach CTE has one job and one grain. `per_customer` is one row per customer. The outer query attaches names and sorts. A reader can check each step on its own: run the part between WITH and the outer SELECT, count its rows, then trust the next step.\n\nName steps for what they are: `per_customer`, `shipped_orders`, `late_invoices`. Avoid `t1`, `data`, and `final`. Readable SQL is checkable SQL, and a query you can check is a query you can trust.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "A CTE is a named subquery: define it, then use its name like a table."
+      }
+    ],
+    "check": {
+      "prompt": "What is the grain of the per_customer CTE?",
+      "answer": "One row per customer with orders"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "ctes"]
+  },
+  {
+    "id": "sql-mcq-cte-structure",
+    "type": "mcq",
+    "skillIds": ["subqueries-and-ctes"],
+    "difficulty": 3,
+    "prompt": "Which query correctly lists customers with more than one order using a CTE?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`WITH counts AS (SELECT customer_id, COUNT(*) AS n FROM orders GROUP BY customer_id) SELECT customer_id, n FROM counts WHERE n > 1;`"
+      },
+      {
+        "id": "b",
+        "text": "`WITH counts AS (SELECT customer_id, COUNT(*) FROM orders) SELECT customer_id FROM counts WHERE COUNT(*) > 1;`",
+        "misconceptionId": "filter-aggregates-in-where"
+      },
+      {
+        "id": "c",
+        "text": "`WITH counts AS (SELECT customer_id, COUNT(*) AS n FROM orders GROUP BY customer_id) SELECT customer_id, n FROM counts HAVING n > 1;`",
+        "misconceptionId": "filter-aggregates-in-where"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The aggregation happens inside the CTE. Once it has a name, filtering it is ordinary row filtering."
+      }
+    ],
+    "explanation": "Aggregate and group inside the CTE, then filter its output with WHERE in the outer query. HAVING belongs with its own GROUP BY, which the outer query does not have.",
+    "estimatedSeconds": 60,
+    "tags": ["sql", "ctes"]
+  },
+  {
+    "id": "sql-mcq-cte-grain",
+    "type": "mcq",
+    "skillIds": ["subqueries-and-ctes"],
+    "difficulty": 3,
+    "prompt": "Before trusting a two-step CTE query's final number, how do you check the first step?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Run the CTE's SELECT on its own and count its rows"
+      },
+      {
+        "id": "b",
+        "text": "Add DISTINCT to the final SELECT so any duplicates disappear",
+        "misconceptionId": "distinct-hides-fanout"
+      },
+      {
+        "id": "c",
+        "text": "Use SELECT * in every step so no column is hidden",
+        "misconceptionId": "select-star-habit"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Each step is a runnable query. Use that."
+      }
+    ],
+    "explanation": "Run each CTE on its own and check its grain before building on it. DISTINCT and SELECT * both hide problems instead of revealing them.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "ctes"]
+  },
+  {
+    "id": "sql-lab-cte",
+    "type": "lab",
+    "skillIds": ["subqueries-and-ctes"],
+    "difficulty": 3,
+    "prompt": "Lab: name the steps with a CTE",
+    "labId": "lab-cte",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the inner SELECT first, check its 2 rows, then run the full WITH query."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-modify",
+    "type": "explain",
+    "skillIds": ["modifying-data"],
+    "difficulty": 2,
+    "prompt": "Changing rows without damage",
+    "body": "Three statements change data. `INSERT INTO orders VALUES (...)` adds a row. `UPDATE orders SET status = 'shipped' WHERE order_id = 5;` changes matching rows. `DELETE FROM orders WHERE order_id = 5;` removes them.\n\nThe WHERE clause is the safety catch. An UPDATE or DELETE without WHERE touches every row in the table. There is no confirmation dialog and no undo:\n\n```sql\nUPDATE orders SET total_cents = 0;   -- every order zeroed. Every one.\n```\n\nThe habit that saves you: preview first, then commit to the change.\n\n```sql\nBEGIN;\nUPDATE orders SET status = 'shipped' WHERE order_id = 5;\nSELECT * FROM orders WHERE order_id = 5;   -- looks right?\nCOMMIT;                                     -- or ROLLBACK;\n```\n\nBetween BEGIN and COMMIT the change is one unit. ROLLBACK discards it all. Outside a transaction, each statement commits immediately and is permanent.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Before any UPDATE or DELETE, run a SELECT with the same WHERE clause."
+      }
+    ],
+    "check": {
+      "prompt": "What does UPDATE without a WHERE clause do?",
+      "answer": "Changes every row in the table"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "dml", "safety"]
+  },
+  {
+    "id": "sql-mcq-update-where",
+    "type": "mcq",
+    "skillIds": ["modifying-data"],
+    "difficulty": 2,
+    "prompt": "`UPDATE orders SET status = 'shipped';` - no WHERE clause. What does SQLite do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sets every row's status to shipped"
+      },
+      {
+        "id": "b",
+        "text": "Updates the first row only",
+        "misconceptionId": "update-without-where"
+      },
+      {
+        "id": "c",
+        "text": "Asks for confirmation before running",
+        "misconceptionId": "update-without-where"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the statement literally: which rows does it name?"
+      }
+    ],
+    "explanation": "No WHERE means no limit: every row changes, instantly and permanently. Preview with a SELECT first, and run the real change inside a transaction.",
+    "estimatedSeconds": 40,
+    "tags": ["sql", "dml"]
+  },
+  {
+    "id": "sql-mcq-delete-safely",
+    "type": "mcq",
+    "skillIds": ["modifying-data"],
+    "difficulty": 2,
+    "prompt": "You must delete the cancelled orders. Which sequence is the safe habit?",
+    "options": [
+      {
+        "id": "a",
+        "text": "SELECT the rows with the WHERE clause, then DELETE with the same WHERE, inside BEGIN/COMMIT"
+      },
+      {
+        "id": "b",
+        "text": "`DELETE FROM orders;` and re-insert the rows you still wanted",
+        "misconceptionId": "update-without-where"
+      },
+      {
+        "id": "c",
+        "text": "`DELETE FROM orders WHERE 1;` because 1 is always true so nothing can go wrong",
+        "misconceptionId": "update-without-where"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "You should know exactly which rows will disappear before any of them do."
+      }
+    ],
+    "explanation": "Preview the exact rows with SELECT, delete the same selection, and wrap it in a transaction so ROLLBACK is one mistake away.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "dml", "safety"]
+  },
+  {
+    "id": "sql-mcq-rollback",
+    "type": "mcq",
+    "skillIds": ["modifying-data"],
+    "difficulty": 3,
+    "prompt": "You ran `UPDATE orders SET status = 'shipped';` outside any transaction and realised it hit the wrong rows. How do you undo it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "You cannot, unless you have a backup or a copy of the data"
+      },
+      {
+        "id": "b",
+        "text": "Run `UNDO;`",
+        "misconceptionId": "no-undo-without-transaction"
+      },
+      {
+        "id": "c",
+        "text": "Run `ROLLBACK;` - it reverses the last statement",
+        "misconceptionId": "no-undo-without-transaction"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "When did the change become permanent? The answer tells you what any command can undo."
+      }
+    ],
+    "explanation": "Without BEGIN, the UPDATE committed the instant it ran. ROLLBACK only undoes work inside an open transaction. Recover from a backup, or rebuild the data.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "dml", "safety"]
+  },
+  {
+    "id": "sql-lab-modify",
+    "type": "lab",
+    "skillIds": ["modifying-data"],
+    "difficulty": 2,
+    "prompt": "Lab: change data inside a transaction",
+    "labId": "lab-modify",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The disastrous UPDATE is deliberate and safe: it happens between BEGIN and ROLLBACK."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-reflect-delete-safety",
+    "type": "reflection",
+    "skillIds": ["modifying-data"],
+    "difficulty": 3,
+    "prompt": "Reflect on changing data",
+    "prompts": [
+      "Write your personal pre-flight checklist for any UPDATE or DELETE. Which SELECT do you run first, and what transaction commands wrap the change?",
+      "Describe a data mistake you have made or heard about. Would BEGIN/ROLLBACK have caught it? What would have caught it instead?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "A checklist you write down is the one you will follow at the worst moment."
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["sql", "safety"]
+  },
+  {
+    "id": "sql-explain-indexes",
+    "type": "explain",
+    "skillIds": ["indexes-and-plans"],
+    "difficulty": 3,
+    "prompt": "Indexes and query plans",
+    "body": "Without an index, finding Ada's orders means reading every order and testing each one. An index is a separate sorted structure on one or more columns, so SQLite can go straight to `customer_id = 1`.\n\nAn index is not free. Every INSERT and UPDATE must maintain every index on the table, so indexes trade write speed for read speed.\n\nAsk SQLite how it will run a query:\n\n```sql\nEXPLAIN QUERY PLAN\nSELECT * FROM orders WHERE customer_id = 1;\n-- SCAN orders\n\nCREATE INDEX orders_customer_idx ON orders (customer_id);\n\nEXPLAIN QUERY PLAN\nSELECT * FROM orders WHERE customer_id = 1;\n-- SEARCH orders USING INDEX orders_customer_idx (customer_id=?)\n```\n\nSCAN reads the whole table. SEARCH walks the index to the matching rows. On 5 rows, SCAN is already instant - a small table lies. On five million orders the index is the difference between a lookup and a full read.\n\nCreate indexes for the filters you actually run, then read the plan to confirm. The plan is the evidence; a stopwatch is not.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Match the index columns to the columns your WHERE clauses actually use."
+      }
+    ],
+    "check": {
+      "prompt": "What changed in the plan after CREATE INDEX?",
+      "answer": "SCAN orders became SEARCH orders USING INDEX orders_customer_idx"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "indexes", "performance"]
+  },
+  {
+    "id": "sql-mcq-explain-scan",
+    "type": "mcq",
+    "skillIds": ["indexes-and-plans"],
+    "difficulty": 3,
+    "prompt": "You created the index, but EXPLAIN QUERY PLAN still says `SCAN orders` on a 5-row table. What does that mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "SQLite read the whole table because with 5 rows that is the cheaper plan; small tables lie"
+      },
+      {
+        "id": "b",
+        "text": "The index is broken and must be dropped and recreated",
+        "misconceptionId": "seq-scan-means-broken"
+      },
+      {
+        "id": "c",
+        "text": "You need an index on every column to force it to search",
+        "misconceptionId": "index-everywhere"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "How expensive is reading 5 rows? Compare it with walking an index and fetching each row."
+      }
+    ],
+    "explanation": "For a tiny table, reading everything is cheaper than index lookups. SCAN on small data is the planner being smart, not an index failing. Judgement needs production-sized data.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "indexes"]
+  },
+  {
+    "id": "sql-mcq-index-write-cost",
+    "type": "mcq",
+    "skillIds": ["indexes-and-plans"],
+    "difficulty": 3,
+    "prompt": "Your app inserts orders constantly. What does adding a fourth index to `orders` cost?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Every insert and update must also maintain that index"
+      },
+      {
+        "id": "b",
+        "text": "Nothing: indexes only affect reads",
+        "misconceptionId": "index-everywhere"
+      },
+      {
+        "id": "c",
+        "text": "Only disk space; the write path never changes",
+        "misconceptionId": "index-everywhere"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "When a new order row arrives, what has to stay sorted?"
+      }
+    ],
+    "explanation": "Each index is a structure that must be updated on every write. Index the filters you really run, confirm each one with the plan, and skip the rest.",
+    "estimatedSeconds": 45,
+    "tags": ["sql", "indexes"]
+  },
+  {
+    "id": "sql-lab-index",
+    "type": "lab",
+    "skillIds": ["indexes-and-plans"],
+    "difficulty": 3,
+    "prompt": "Lab: add an index and read the plan",
+    "labId": "lab-index",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read the plan text before and after: SCAN versus SEARCH USING INDEX."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["sql", "sqlite", "lab"]
+  },
+  {
+    "id": "sql-explain-schema-design",
+    "type": "explain",
+    "skillIds": ["schema-design-basics"],
+    "difficulty": 3,
+    "prompt": "From flat export to tables",
+    "body": "A spreadsheet export puts everything in one wide table: customer name repeated on every order line, products crammed into cells. Read it and ask what exists independently. Customers exist before orders. So: a `customers` table, an `orders` table, and a foreign key connecting them.\n\nThe key goes on the many side. One customer has many orders, so `orders.customer_id` references `customers`. The customer row never stores a list of its orders.\n\nThen make the database refuse bad rows. Constraints are tests the database runs on every write:\n\n```sql\nCREATE TABLE orders (\n  order_id    INTEGER PRIMARY KEY,\n  customer_id INTEGER NOT NULL REFERENCES customers(customer_id),\n  status      TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')),\n  total_cents INTEGER NOT NULL CHECK (total_cents >= 0)\n);\n```\n\nPRIMARY KEY gives identity. NOT NULL says the value must exist. CHECK states the rule: no negative money, no invented statuses. An application can forget these tests; the database cannot.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Find the kinds of things first, then ask where the reference from many to one lives."
+      }
+    ],
+    "check": {
+      "prompt": "In a one-to-many relationship, which table holds the foreign key?",
+      "answer": "The many side: orders carries customer_id referencing customers"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sql", "modeling", "constraints"]
+  },
+  {
+    "id": "sql-mcq-fk-side",
+    "type": "mcq",
+    "skillIds": ["schema-design-basics"],
+    "difficulty": 3,
+    "prompt": "One customer places many orders. Where does the reference between them live?",
+    "options": [
+      {
+        "id": "a",
+        "text": "`customer_id` on every `orders` row, referencing customers"
+      },
+      {
+        "id": "b",
+        "text": "A list of order ids on each `customers` row",
+        "misconceptionId": "repeating-groups"
+      },
+      {
+        "id": "c",
+        "text": "Nowhere: queries match orders to customers by name at run time",
+        "misconceptionId": "name-is-identity"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which side can hold exactly one value without repeating itself?"
+      }
+    ],
+    "explanation": "The many side holds the key. Each order names its one buyer. Lists inside a row and matching by name both break as data grows.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "modeling"]
+  },
+  {
+    "id": "sql-mcq-repeating-groups",
+    "type": "mcq",
+    "skillIds": ["schema-design-basics"],
+    "difficulty": 3,
+    "prompt": "The old spreadsheet stores each customer's products as 'Espresso Blend, Ceramic Mug' in one cell. What is the database-shaped fix?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A products table with one row per product, referenced from the order rows"
+      },
+      {
+        "id": "b",
+        "text": "Wider customers table: product1, product2, product3 columns",
+        "misconceptionId": "repeating-groups"
+      },
+      {
+        "id": "c",
+        "text": "A longer text column; SQLite handles strings of any size",
+        "misconceptionId": "repeating-groups"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One kind of thing per table, one fact per cell. What is the thing hiding in that cell?"
+      }
+    ],
+    "explanation": "Comma lists and product1/product2 columns are repeating groups: unqueryable, uncountable, and forever one product short. Give products their own table and link with keys.",
+    "estimatedSeconds": 50,
+    "tags": ["sql", "modeling"]
+  },
+  {
+    "id": "sql-teach-schema",
+    "type": "teach_back",
+    "skillIds": ["schema-design-basics"],
+    "difficulty": 3,
+    "prompt": "Teach it back: how do you turn a flat export into tables, where does the foreign key go, and which constraints guard the data?",
+    "rubricId": "rubric-teach-schema",
+    "modelAnswer": "Read the export and list what exists independently; each kind of thing becomes a table with a primary key. In a one-to-many relationship the foreign key goes on the many side: orders.customer_id references customers. Then add constraints the database enforces on every write: PRIMARY KEY for identity, NOT NULL for required values, UNIQUE for no repeats, and CHECK for rules like total_cents >= 0 or an allowed status list.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: finding the entities, placing the key, naming the constraints."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["sql", "modeling"]
+  }
+]

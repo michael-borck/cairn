@@ -1,0 +1,156 @@
+[
+  {
+    "id": "model-understands-meaning",
+    "label": "Believes the model understands meaning like a person",
+    "skillIds": ["what-models-are"],
+    "description": "The learner treats the model as a mind that reads, reasons, and knows things, rather than machinery that computes predictions from weights.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A model computes a prediction from numbers. There is no reader inside and no understanding in the human sense; fluency is the output, not evidence of comprehension.",
+      "itemIds": ["wma-mcq-weights", "wma-mcq-inference"]
+    }
+  },
+  {
+    "id": "training-is-uploading",
+    "label": "Thinks training uploaded a searchable corpus into the model",
+    "skillIds": ["what-models-are"],
+    "description": "The learner imagines the model stores its training documents and looks answers up in them at query time.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Training adjusted weights by nudging next-token guesses toward better scores. The documents were never stored; only the adjustment remains.",
+      "itemIds": ["wma-mcq-inference", "wma-short-weights"]
+    }
+  },
+  {
+    "id": "tokens-equal-words",
+    "label": "Assumes one token equals one word",
+    "skillIds": ["tokens-and-context"],
+    "description": "The learner counts tokens as words and is surprised by context limits, pricing, and letter-counting failures.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A token is a statistical piece of text: part of a word, a whole word, or punctuation. Common strings stay whole; rare ones split.",
+      "itemIds": ["tok-mcq-tokens-words", "tok-mcq-context-window"]
+    }
+  },
+  {
+    "id": "context-window-unlimited",
+    "label": "Believes the context window is unlimited",
+    "skillIds": ["tokens-and-context"],
+    "description": "The learner expects a chat to hold everything forever and is confused when early instructions stop having effect.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "The context window caps the payload in tokens. When a chat outgrows it, the earliest text is dropped and the model answers as though it never saw it.",
+      "itemIds": ["tok-mcq-context-window", "tok-mcq-memory"]
+    }
+  },
+  {
+    "id": "model-remembers-you",
+    "label": "Believes the model remembers you between calls",
+    "skillIds": ["tokens-and-context"],
+    "description": "The learner thinks the model itself stores past conversations and learns from them.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "The model is stateless. Any memory is a transcript an app keeps and resends; a fresh chat is an empty list.",
+      "itemIds": ["tok-mcq-memory", "tok-lab-forgotten"]
+    }
+  },
+  {
+    "id": "temperature-controls-truthfulness",
+    "label": "Believes temperature controls truthfulness",
+    "skillIds": ["how-generation-works"],
+    "description": "The learner treats temperature as an accuracy dial, raising or lowering it to make answers more true.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Temperature changes how adventurous token sampling is, not what the model knows. Truth is untouched either way.",
+      "itemIds": ["gen-mcq-temperature", "gen-lab-temperature"]
+    }
+  },
+  {
+    "id": "ai-output-is-deterministic",
+    "label": "Expects identical output for identical prompts",
+    "skillIds": ["how-generation-works"],
+    "description": "The learner assumes the same prompt always yields the same answer and treats differences as bugs or deceit.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Generation samples from next-token scores. Unless temperature is 0 and the setup is fixed, consecutive runs differ by design.",
+      "itemIds": ["gen-mcq-deterministic", "gen-lab-temperature"]
+    }
+  },
+  {
+    "id": "bigger-always-better",
+    "label": "Believes bigger models are always better",
+    "skillIds": ["model-sizes-and-hardware"],
+    "description": "The learner picks the largest model available regardless of task, memory, or cost.",
+    "remediation": {
+      "strategy": "worked_example",
+      "explanation": "Size is a trade between capability and memory and speed. For simple, well-scoped work a small model can be the better choice; the task decides.",
+      "itemIds": ["size-mcq-bigger", "size-mcq-hardware", "size-worked-choose"]
+    }
+  },
+  {
+    "id": "local-models-need-gpus",
+    "label": "Believes local models require an expensive GPU",
+    "skillIds": ["model-sizes-and-hardware"],
+    "description": "The learner assumes running any local model needs specialist hardware and never tries the small ones.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Small models like llama3.2:1b run on ordinary CPUs. Memory, not a GPU, decides what fits: roughly 1 GB per billion parameters at 4-bit.",
+      "itemIds": ["size-mcq-hardware", "size-worked-choose"]
+    }
+  },
+  {
+    "id": "prompting-one-shot-magic",
+    "label": "Hunts for one magic prompt phrasing",
+    "skillIds": ["prompting-with-intent"],
+    "description": "The learner believes success comes from secret wording rather than supplying context, constraints, and examples, then iterating.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "The model predicts from the patterns you supply. Missing context and vague instructions beat any phrasing trick; iterate instead of incanting.",
+      "itemIds": ["prompt-mcq-parts", "prompt-mcq-contradiction"]
+    }
+  },
+  {
+    "id": "ai-hallucinates-rarely",
+    "label": "Believes confabulation is a rare malfunction",
+    "skillIds": ["verification-habits"],
+    "description": "The learner trusts fluent, confident answers by default and thinks invention only happens in odd edge cases.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A bare model with no source improvises in the same fluent voice as when it is right. Confabulation is ordinary behaviour, so consequential claims need external checks.",
+      "itemIds": ["ver-mcq-hallucination", "ver-lab-confabulate"]
+    }
+  },
+  {
+    "id": "model-can-cite-reliably",
+    "label": "Believes requested citations are reliable",
+    "skillIds": ["verification-habits"],
+    "description": "The learner treats citation-shaped strings as proof and skips opening the sources.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Citations are generated text like any other. Invented and misattributed references look exactly like real ones, so the check is opening them.",
+      "itemIds": ["ver-mcq-cite", "ver-mcq-check"]
+    }
+  },
+  {
+    "id": "local-meets-cloud-privacy",
+    "label": "Equates a local-feeling app with local inference",
+    "skillIds": ["privacy-and-locality"],
+    "description": "The learner trusts an app's private branding without checking whether the model call leaves the machine.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "The interface can be local while the thinking is hosted. Check the server address: localhost means your machine, anything else means read the terms.",
+      "itemIds": ["priv-mcq-app", "priv-lab-airplane"]
+    }
+  },
+  {
+    "id": "ai-fits-every-task",
+    "label": "Reaches for a model on every task",
+    "skillIds": ["when-not-to-use-ai"],
+    "description": "The learner hands exact arithmetic, deterministic processing, and high-stakes decisions to a text predictor.",
+    "remediation": {
+      "strategy": "explain",
+      "explanation": "Models predict plausible text. Exact outputs need deterministic tools - calculators, scripts, databases - and high-stakes decisions need evidence and a qualified human.",
+      "itemIds": ["when-mcq-math", "when-short-deterministic"]
+    }
+  }
+]

@@ -1,0 +1,366 @@
+[
+  {
+    "id": "lab-first-query",
+    "title": "First queries on shop.db",
+    "skillIds": ["select-basics"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Create the tiny shop database, open it with the sqlite3 shell, and run your first SELECT queries. sqlite3 is preinstalled on macOS. On Linux install it with `sudo apt install sqlite3` (or your distro's package manager). On Windows download the sqlite-tools shell from sqlite.org and run `sqlite3.exe`. Type SQL at the `sqlite>` prompt and finish each statement with a semicolon; leave with `.quit`.",
+    "commands": [
+      "sqlite3 shop.db",
+      "SELECT * FROM customers;",
+      "SELECT name, city FROM customers;",
+      "SELECT order_id, total_cents FROM orders WHERE status = 'shipped';",
+      ".quit"
+    ],
+    "checks": [
+      {
+        "id": "customers-count",
+        "type": "manual",
+        "prompt": "Does `SELECT * FROM customers;` return exactly 3 rows?",
+        "answer": "yes - Ada Lovelace, Grace Hopper, Barbara Liskov"
+      },
+      {
+        "id": "shipped-count",
+        "type": "manual",
+        "prompt": "Does the shipped-orders query return 3 rows with totals 8200, 5500, and 12000?",
+        "answer": "yes - orders 1, 2, and 3"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The shell prompt changes to `sqlite>` once you are inside the database; statements end with a semicolon."
+      },
+      {
+        "level": 2,
+        "text": "Name the columns you actually need instead of `*` when you only want a report."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"SELECT * FROM customers; SELECT order_id, total_cents FROM orders WHERE status = 'shipped';\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-filter-sort",
+    "title": "Filter, test for null, sort",
+    "skillIds": ["filtering-and-sorting"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Combine conditions with AND, compare text, find the customer whose city is unknown with IS NULL, and pull the top rows with ORDER BY and LIMIT. Predict each row count before running the query.",
+    "commands": [
+      "sqlite3 shop.db \"SELECT order_id, total_cents FROM orders WHERE total_cents > 8000;\"",
+      "sqlite3 shop.db \"SELECT order_id, total_cents FROM orders WHERE total_cents > 8000 AND status != 'cancelled';\"",
+      "sqlite3 shop.db \"SELECT customer_id, name FROM customers WHERE city IS NULL;\"",
+      "sqlite3 shop.db \"SELECT customer_id, name FROM customers WHERE city = 'NULL';\"",
+      "sqlite3 shop.db \"SELECT order_id, total_cents FROM orders ORDER BY total_cents DESC LIMIT 3;\""
+    ],
+    "checks": [
+      {
+        "id": "over-8000",
+        "type": "manual",
+        "prompt": "Does `total_cents > 8000` return 3 rows, and does adding `AND status != 'cancelled'` drop it to 2 (8200 and 12000)?",
+        "answer": "yes - order 4 has 9000 but is cancelled"
+      },
+      {
+        "id": "null-found",
+        "type": "manual",
+        "prompt": "Does `WHERE city IS NULL` find Barbara, while `WHERE city = 'NULL'` finds nothing?",
+        "answer": "yes - NULL is unknown, not the text 'NULL'"
+      },
+      {
+        "id": "top-three",
+        "type": "manual",
+        "prompt": "Does the sorted query show totals 12000, 9000, 8200 in that order?",
+        "answer": "yes - DESC puts the largest first"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "A null has no value, so no comparison with `=` can match it."
+      },
+      {
+        "level": 2,
+        "text": "ORDER BY sorts ascending unless you add DESC; LIMIT cuts the list after sorting."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"SELECT order_id, total_cents FROM orders WHERE total_cents > 8000 AND status != 'cancelled'; SELECT customer_id, name FROM customers WHERE city IS NULL; SELECT order_id, total_cents FROM orders ORDER BY total_cents DESC LIMIT 3;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-aggregates",
+    "title": "Count, sum, and group",
+    "skillIds": ["aggregate-functions"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Collapse the order rows with COUNT and SUM, split them into groups with GROUP BY, and keep only the groups that qualify with HAVING. Check each number against the rows you can count by hand.",
+    "commands": [
+      "sqlite3 shop.db \"SELECT COUNT(*) AS order_count, SUM(total_cents) AS total_cents_sum FROM orders;\"",
+      "sqlite3 shop.db \"SELECT status, COUNT(*) AS orders FROM orders GROUP BY status;\"",
+      "sqlite3 shop.db \"SELECT customer_id, COUNT(*) AS orders, SUM(total_cents) AS spend_cents FROM orders GROUP BY customer_id HAVING COUNT(*) > 1;\""
+    ],
+    "checks": [
+      {
+        "id": "totals",
+        "type": "manual",
+        "prompt": "Does the first query report 5 orders and a sum of 41700?",
+        "answer": "yes - 8200 + 5500 + 12000 + 9000 + 7000 = 41700"
+      },
+      {
+        "id": "status-groups",
+        "type": "manual",
+        "prompt": "Does GROUP BY status give shipped 3, cancelled 1, placed 1?",
+        "answer": "yes"
+      },
+      {
+        "id": "having-groups",
+        "type": "manual",
+        "prompt": "Does the HAVING query return two customers: 1 with 3 orders (20700) and 2 with 2 orders (21000)?",
+        "answer": "yes - customer 3 never ordered, so no group exists"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "GROUP BY customer_id makes one group per customer; the aggregates then collapse each group to one row."
+      },
+      {
+        "level": 2,
+        "text": "The 'more than one order' condition tests an aggregate, so it belongs in HAVING, not WHERE."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"SELECT customer_id, COUNT(*) AS orders, SUM(total_cents) AS spend_cents FROM orders GROUP BY customer_id HAVING COUNT(*) > 1;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-join",
+    "title": "Join customers to orders",
+    "skillIds": ["joins-inner"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Pair each order with its buyer using an inner join on the foreign key, then count what the join produced. Predict the row count before each query.",
+    "commands": [
+      "sqlite3 shop.db \"SELECT c.name, o.order_id, o.total_cents FROM customers c JOIN orders o ON o.customer_id = c.customer_id;\"",
+      "sqlite3 shop.db \"SELECT c.name, o.order_id FROM customers c JOIN orders o;\"",
+      "sqlite3 shop.db \"SELECT COUNT(*) AS joined_rows, COUNT(DISTINCT c.customer_id) AS customers_with_orders FROM customers c JOIN orders o ON o.customer_id = c.customer_id;\"",
+      "sqlite3 shop.db \"SELECT c.name, COUNT(*) AS orders FROM customers c JOIN orders o ON o.customer_id = c.customer_id GROUP BY c.customer_id, c.name;\""
+    ],
+    "checks": [
+      {
+        "id": "joined-rows",
+        "type": "manual",
+        "prompt": "Does the joined list show 5 rows, one per order, with no Barbara?",
+        "answer": "yes - Barbara has no orders, so an inner join drops her"
+      },
+      {
+        "id": "no-on",
+        "type": "manual",
+        "prompt": "Does the join with no ON condition pair every customer with every order (15 rows)?",
+        "answer": "yes - a join without a condition is a cartesian product"
+      },
+      {
+        "id": "counts",
+        "type": "manual",
+        "prompt": "Does the count query report 5 joined rows but only 2 distinct customers?",
+        "answer": "yes - Ada's 3 orders and Grace's 2 repeat her name 5 times"
+      },
+      {
+        "id": "per-customer",
+        "type": "manual",
+        "prompt": "Does the grouped query show Ada with 3 orders and Grace with 2?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The c and o are table aliases; `c.name` means the name column from customers."
+      },
+      {
+        "level": 2,
+        "text": "Before each query, write the number of rows you expect, then compare."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"SELECT c.name, o.order_id, o.total_cents FROM customers c JOIN orders o ON o.customer_id = c.customer_id; SELECT COUNT(*), COUNT(DISTINCT c.customer_id) FROM customers c JOIN orders o ON o.customer_id = c.customer_id;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-cte",
+    "title": "Name the steps with a CTE",
+    "skillIds": ["subqueries-and-ctes"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Build a report in named steps: first one row per customer with order count and spend, then join to customers for names. Run the CTE's SELECT on its own to check its grain before trusting the final answer.",
+    "commands": [
+      "sqlite3 shop.db \"SELECT customer_id, COUNT(*) AS order_count, SUM(total_cents) AS spend_cents FROM orders GROUP BY customer_id;\"",
+      "sqlite3 shop.db \"WITH per_customer AS (SELECT customer_id, COUNT(*) AS order_count, SUM(total_cents) AS spend_cents FROM orders GROUP BY customer_id) SELECT c.name, p.order_count, p.spend_cents FROM per_customer p JOIN customers c ON c.customer_id = p.customer_id ORDER BY p.spend_cents DESC;\""
+    ],
+    "checks": [
+      {
+        "id": "cte-grain",
+        "type": "manual",
+        "prompt": "Does the CTE's SELECT on its own return 2 rows, one per customer with orders?",
+        "answer": "yes - that is the grain: one row per customer"
+      },
+      {
+        "id": "final-order",
+        "type": "manual",
+        "prompt": "Does the final query show Grace first with 21000, then Ada with 20700?",
+        "answer": "yes - sorted by spend, largest first"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The CTE is the part between WITH and the outer SELECT; it is just a named subquery you can run alone."
+      },
+      {
+        "level": 2,
+        "text": "Each step should have one grain: the CTE is one row per customer, the outer query just attaches names."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"WITH per_customer AS (SELECT customer_id, COUNT(*) AS order_count, SUM(total_cents) AS spend_cents FROM orders GROUP BY customer_id) SELECT c.name, p.order_count, p.spend_cents FROM per_customer p JOIN customers c ON c.customer_id = p.customer_id ORDER BY p.spend_cents DESC;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-modify",
+    "title": "Change data inside a transaction",
+    "skillIds": ["modifying-data"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Ship order 5 with a targeted UPDATE and commit it. Then run a deliberately terrible UPDATE with no WHERE inside a transaction, see the damage, and undo it with ROLLBACK. There is no undo outside a transaction.",
+    "commands": [
+      "sqlite3 shop.db",
+      "BEGIN;",
+      "UPDATE orders SET status = 'shipped' WHERE order_id = 5;",
+      "SELECT order_id, status FROM orders WHERE order_id = 5;",
+      "COMMIT;",
+      "BEGIN;",
+      "UPDATE orders SET total_cents = 0;",
+      "SELECT SUM(total_cents) FROM orders;",
+      "ROLLBACK;",
+      "SELECT SUM(total_cents) FROM orders;",
+      ".quit"
+    ],
+    "checks": [
+      {
+        "id": "committed",
+        "type": "manual",
+        "prompt": "After COMMIT, does order 5 show status shipped?",
+        "answer": "yes - the WHERE clause limited the change to one row"
+      },
+      {
+        "id": "damage-visible",
+        "type": "manual",
+        "prompt": "After the WHERE-less UPDATE, does SUM(total_cents) read 0?",
+        "answer": "yes - every row was changed, because nothing limited the update"
+      },
+      {
+        "id": "rolled-back",
+        "type": "manual",
+        "prompt": "After ROLLBACK, is the sum back to 41700?",
+        "answer": "yes - everything since BEGIN was undone"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Statements between BEGIN and COMMIT are one unit: COMMIT keeps them, ROLLBACK discards them."
+      },
+      {
+        "level": 2,
+        "text": "Before any UPDATE, run a SELECT with the same WHERE clause to preview exactly which rows will change."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"BEGIN; UPDATE orders SET status = 'shipped' WHERE order_id = 5; COMMIT; BEGIN; UPDATE orders SET total_cents = 0; ROLLBACK; SELECT SUM(total_cents) FROM orders;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-index",
+    "title": "Add an index and read the plan",
+    "skillIds": ["indexes-and-plans"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "sqlite3 shop.db \"CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT); CREATE TABLE orders (order_id INTEGER PRIMARY KEY, customer_id INTEGER NOT NULL REFERENCES customers(customer_id), status TEXT NOT NULL CHECK (status IN ('placed', 'shipped', 'cancelled')), total_cents INTEGER NOT NULL CHECK (total_cents >= 0));\"",
+      "sqlite3 shop.db \"INSERT INTO customers VALUES (1, 'Ada Lovelace', 'Perth'), (2, 'Grace Hopper', 'Fremantle'), (3, 'Barbara Liskov', NULL); INSERT INTO orders VALUES (1, 1, 'shipped', 8200), (2, 1, 'shipped', 5500), (3, 2, 'shipped', 12000), (4, 2, 'cancelled', 9000), (5, 1, 'placed', 7000);\""
+    ],
+    "task": "Ask SQLite how it plans to find Ada's orders, create an index that matches the query's shape, and read the plan again. The plan is the evidence, not a stopwatch.",
+    "commands": [
+      "sqlite3 shop.db \"EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1;\"",
+      "sqlite3 shop.db \"CREATE INDEX orders_customer_idx ON orders (customer_id);\"",
+      "sqlite3 shop.db \"EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1;\""
+    ],
+    "checks": [
+      {
+        "id": "before-plan",
+        "type": "manual",
+        "prompt": "Does the first plan say `SCAN orders`?",
+        "answer": "yes - SQLite reads the whole table to find matching rows"
+      },
+      {
+        "id": "after-plan",
+        "type": "manual",
+        "prompt": "Does the second plan say `SEARCH orders USING INDEX orders_customer_idx`?",
+        "answer": "yes - the plan now walks the index instead of scanning"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "EXPLAIN QUERY PLAN shows the plan without running the query; look for SCAN versus SEARCH."
+      },
+      {
+        "level": 2,
+        "text": "The index column should match the column in the WHERE clause: customer_id in both."
+      }
+    ],
+    "solution": "sqlite3 shop.db \"CREATE INDEX orders_customer_idx ON orders (customer_id); EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 1;\"",
+    "cleanup": ["rm shop.db"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

@@ -1,0 +1,156 @@
+[
+  {
+    "id": "division-type-surprise",
+    "label": "Expects / to return an int",
+    "skillIds": ["values-and-types"],
+    "description": "The learner expects 7 / 2 to be 3 or 10 / 2 to be int 5, not knowing / always produces a float.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "/ is true division and always returns a float: 10 / 2 is 5.0. Use // when you want a floored whole number.",
+      "itemIds": ["py-mcq-division", "py-explain-values"]
+    }
+  },
+  {
+    "id": "type-confusion-concat",
+    "label": "Expects Python to convert between str and int automatically",
+    "skillIds": ["values-and-types", "strings-and-formatting", "errors-and-exceptions"],
+    "description": "The learner writes \"5\" + 5 expecting 10 or 55, or int(\"12a\") expecting 12, as if Python coerced types for them.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Python never guesses a conversion. \"5\" + \"5\" is \"55\" and 5 + 5 is 10; mixing them raises TypeError, and int() refuses anything that is not a clean digit string.",
+      "itemIds": ["py-mcq-add-types", "py-mcq-len-str", "py-mcq-int-convert"]
+    }
+  },
+  {
+    "id": "equals-vs-assign",
+    "label": "Swaps = and ==",
+    "skillIds": ["variables-and-names", "control-flow"],
+    "description": "The learner uses = where a comparison is needed, writing if x = 5: and getting a SyntaxError.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A single = stores a value. A double == asks a question and answers True or False.",
+      "itemIds": ["py-mcq-assign-vs-equals", "py-explain-variables"]
+    }
+  },
+  {
+    "id": "shadowed-builtin",
+    "label": "Shadows builtins like list and str",
+    "skillIds": ["variables-and-names", "functions"],
+    "description": "The learner names a variable list or str, then later calls like list(range(3)) fail with TypeError: 'list' object is not callable.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "list and str are builtin types. Reusing their names replaces them for the rest of the program; pick names like items or text.",
+      "itemIds": ["py-mcq-naming", "py-mcq-shadow"]
+    }
+  },
+  {
+    "id": "missing-colon",
+    "label": "Forgets the colon after if, while, for, and def",
+    "skillIds": ["control-flow"],
+    "description": "The learner writes if score > 90 without the ending colon and hits SyntaxError.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Every block header in Python ends with a colon. The indented lines below it are the body.",
+      "itemIds": ["py-mcq-colon", "py-explain-control"]
+    }
+  },
+  {
+    "id": "range-off-by-one",
+    "label": "Misjudges range and randint boundaries",
+    "skillIds": ["control-flow", "modules-and-imports"],
+    "description": "The learner expects range(1, 4) to include 4 or randint(1, 6) to stop at 5, guessing boundaries instead of checking them.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "range excludes its stop value: range(1, 4) is 1, 2, 3. randint is the opposite — both endpoints are included: randint(1, 6) can return 6.",
+      "itemIds": ["py-mcq-range", "py-mcq-randint", "py-explain-control"]
+    }
+  },
+  {
+    "id": "infinite-loop",
+    "label": "Writes while loops that never end",
+    "skillIds": ["control-flow"],
+    "description": "The learner forgets to move the condition toward False inside the loop, so count < 3 stays True forever.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A while loop repeats as long as its condition stays True. Something in the body must change the tested variable: count = count + 1.",
+      "itemIds": ["py-mcq-while", "py-lab-loop"]
+    }
+  },
+  {
+    "id": "missing-return",
+    "label": "Prints instead of returning from functions",
+    "skillIds": ["functions"],
+    "description": "The learner uses print inside a function and then expects the call's value, not realising the function returns None.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "print shows text on the screen; return hands a value back to the caller. No return means the call gives None.",
+      "itemIds": ["py-mcq-return-print", "py-worked-greet"]
+    }
+  },
+  {
+    "id": "mutable-default-arg",
+    "label": "Uses a mutable default argument",
+    "skillIds": ["functions"],
+    "description": "The learner writes def collect(x, items=[]) and finds state leaking between calls, because the default list is created once at definition.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Default arguments are evaluated once, when def runs. Every call that omits items shares one list; pass None and create a fresh list inside the function.",
+      "itemIds": ["py-mcq-mutable-default", "py-lab-functions"]
+    }
+  },
+  {
+    "id": "index-and-key-confusion",
+    "label": "Indexes lists from 1 and dicts by position",
+    "skillIds": ["data-structures"],
+    "description": "The learner expects names[1] to be the first item, and ages[0] to return the first dict entry, treating keys as positions.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "List positions start at 0: names[0] is the first item. Dicts have no positions at all — you look up by key: ages[\"ann\"].",
+      "itemIds": ["py-mcq-index", "py-mcq-dict", "py-explain-data-structures"]
+    }
+  },
+  {
+    "id": "mutate-while-iterating",
+    "label": "Mutates a list while iterating over it",
+    "skillIds": ["data-structures"],
+    "description": "The learner calls remove inside a for loop over the same list and finds items skipped, because the list shifts under the loop's cursor.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Removing while looping slides items left, and the loop's next index jumps past one. Build a new list instead: [n for n in nums if n >= 0].",
+      "itemIds": ["py-mcq-mutate", "py-lab-data"]
+    }
+  },
+  {
+    "id": "forgot-f-prefix",
+    "label": "Drops the f prefix on formatted strings",
+    "skillIds": ["strings-and-formatting"],
+    "description": "The learner writes \"Hi {name}\" without the f and prints literal braces instead of the value.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Braces only interpolate when the string has the f prefix: f\"Hi {name}\". Without it they are ordinary characters.",
+      "itemIds": ["py-mcq-fstring", "py-explain-strings"]
+    }
+  },
+  {
+    "id": "write-vs-append",
+    "label": "Opens files with w when they meant a",
+    "skillIds": ["files"],
+    "description": "The learner opens a log with \"w\" and destroys its history, or thinks \"r\" can add content.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "\"w\" truncates the file the moment it opens. \"a\" appends at the end and keeps what is there; \"r\" can only read.",
+      "itemIds": ["py-mcq-w-mode", "py-mcq-append-mode", "py-lab-files"]
+    }
+  },
+  {
+    "id": "assert-silent-pass",
+    "label": "Expects passing tests to print something",
+    "skillIds": ["testing-basics"],
+    "description": "The learner runs a passing test file, sees no output, and assumes the tests did not run.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "assert is a tripwire: silent when it passes, AssertionError when it fails. No output from a test run means everything passed.",
+      "itemIds": ["py-mcq-assert-pass", "py-mcq-assert-fail", "py-explain-testing"]
+    }
+  }
+]

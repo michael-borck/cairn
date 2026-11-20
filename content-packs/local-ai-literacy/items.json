@@ -1,0 +1,1396 @@
+[
+  {
+    "id": "wma-explain-model",
+    "type": "explain",
+    "skillIds": ["what-models-are"],
+    "difficulty": 1,
+    "prompt": "What a language model is",
+    "body": "A language model is a file of numbers. Training adjusted billions of numbers, called parameters or weights, so the model got good at one job: predicting the next piece of text. Running the model, called inference, feeds your text through those weights and reads off a prediction. There is no database of facts inside and no list of rules. Every question runs the same machinery: numbers in, prediction out. This is why a model can be superb on one question and confidently wrong on the next. It is not looking anything up. It is predicting.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think of the model as maths, not memory."
+      }
+    ],
+    "check": {
+      "prompt": "When a local model answers your question, what is it actually doing?",
+      "answer": "Running your text through its trained weights to predict a reply, one piece of text at a time."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["models", "inference"]
+  },
+  {
+    "id": "wma-mcq-weights",
+    "type": "mcq",
+    "skillIds": ["what-models-are"],
+    "difficulty": 2,
+    "prompt": "A friend says the model \"looks answers up\" somewhere. What is closer to the truth?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It searches an index of everything it read during training",
+        "misconceptionId": "training-is-uploading"
+      },
+      {
+        "id": "b",
+        "text": "It computes a prediction from its learned weights. Nothing is looked up"
+      },
+      {
+        "id": "c",
+        "text": "It understands your question the way a person does, then reasons out the answer",
+        "misconceptionId": "model-understands-meaning"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Inside the model there is no index and no reader. What is left?"
+      },
+      {
+        "level": 2,
+        "text": "The weights turn your text into a prediction directly."
+      }
+    ],
+    "explanation": "A model is a pile of weights. Inference computes with them; nothing is fetched and nobody is home.",
+    "estimatedSeconds": 45,
+    "tags": ["models"]
+  },
+  {
+    "id": "wma-mcq-inference",
+    "type": "mcq",
+    "skillIds": ["what-models-are"],
+    "difficulty": 1,
+    "prompt": "What does \"inference\" mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Training the model further on your chat history",
+        "misconceptionId": "training-is-uploading"
+      },
+      {
+        "id": "b",
+        "text": "Running your text through the trained weights to produce a prediction"
+      },
+      {
+        "id": "c",
+        "text": "The model pausing to think carefully, like a person does",
+        "misconceptionId": "model-understands-meaning"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The word contrasts with training."
+      },
+      {
+        "level": 2,
+        "text": "Training happens once, on lots of text. Inference happens every time you type."
+      }
+    ],
+    "explanation": "Inference is the run: text in, prediction out, using weights fixed at training time.",
+    "estimatedSeconds": 40,
+    "tags": ["models", "inference"]
+  },
+  {
+    "id": "wma-short-weights",
+    "type": "short_answer",
+    "skillIds": ["what-models-are"],
+    "difficulty": 2,
+    "prompt": "The learned numbers inside a model are called parameters, or more commonly ___. (One word.)",
+    "scoring": {
+      "mode": "exact",
+      "value": "weights"
+    },
+    "modelAnswer": "weights (also called parameters)",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Training nudges billions of them; inference reads them."
+      },
+      {
+        "level": 2,
+        "text": "Scales have them, and so do models.",
+        "revealsAnswer": true
+      }
+    ],
+    "explanation": "Parameters or weights: the numbers training adjusted and inference uses.",
+    "estimatedSeconds": 40,
+    "tags": ["models"]
+  },
+  {
+    "id": "tok-explain-tokens",
+    "type": "explain",
+    "skillIds": ["tokens-and-context"],
+    "difficulty": 2,
+    "prompt": "Tokens and the context window",
+    "body": "Models do not read letters or words. A tokenizer splits text into tokens: pieces of words, whole words, or punctuation. \"unbelievable\" might be three tokens; \"the\" is one. Everything is counted in tokens: your prompt, the conversation so far, and the reply. The context window is the maximum the model will accept in one call. When a chat grows past it, the earliest text has to go, and the model answers as though it never saw it. A practical consequence: ask a model how many r letters are in \"strawberry\" and it can stumble, because it never saw letters. It saw tokens.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what the model actually receives: not letters, not quite words."
+      }
+    ],
+    "check": {
+      "prompt": "Why can a model miscount the letters in a word?",
+      "answer": "It sees tokens, not letters. The spelling is hidden inside the token pieces."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["tokens", "context"]
+  },
+  {
+    "id": "tok-mcq-tokens-words",
+    "type": "mcq",
+    "skillIds": ["tokens-and-context"],
+    "difficulty": 1,
+    "prompt": "How do tokens relate to words?",
+    "options": [
+      {
+        "id": "a",
+        "text": "One token is always exactly one word",
+        "misconceptionId": "tokens-equal-words"
+      },
+      {
+        "id": "b",
+        "text": "A token is a piece of text: part of a word, a whole word, or punctuation"
+      },
+      {
+        "id": "c",
+        "text": "Every word always splits into many tokens, five or more",
+        "misconceptionId": "tokens-equal-words"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Common short words and rare long words are not treated the same way."
+      },
+      {
+        "level": 2,
+        "text": "Splitting is statistical: frequent strings stay whole, rare ones get chopped."
+      }
+    ],
+    "explanation": "Tokenizers split text statistically. \"the\" is one token; \"unbelievable\" may be several.",
+    "estimatedSeconds": 45,
+    "tags": ["tokens"]
+  },
+  {
+    "id": "tok-mcq-context-window",
+    "type": "mcq",
+    "skillIds": ["tokens-and-context"],
+    "difficulty": 2,
+    "prompt": "An hour into a long chat, the model ignores the instruction you gave at the start. Why?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It decided the old instruction no longer matters",
+        "misconceptionId": "model-remembers-you"
+      },
+      {
+        "id": "b",
+        "text": "The chat outgrew the context window and the earliest text was dropped"
+      },
+      {
+        "id": "c",
+        "text": "Context windows stretch automatically, so nothing is ever dropped",
+        "misconceptionId": "context-window-unlimited"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Every call resends the whole conversation, and the payload has a maximum size."
+      },
+      {
+        "level": 2,
+        "text": "Past the limit, something must leave. Products usually drop the oldest text."
+      }
+    ],
+    "explanation": "The context window caps the payload in tokens. When it fills, the beginning of the chat is the usual casualty.",
+    "estimatedSeconds": 50,
+    "tags": ["context"]
+  },
+  {
+    "id": "tok-mcq-memory",
+    "type": "mcq",
+    "skillIds": ["tokens-and-context"],
+    "difficulty": 1,
+    "prompt": "Last week you told a chatbot your name. Today you open a fresh chat and ask for it. What happens?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It answers correctly: the model stored your name from last week",
+        "misconceptionId": "model-remembers-you"
+      },
+      {
+        "id": "b",
+        "text": "It has no idea. The model keeps nothing between calls"
+      },
+      {
+        "id": "c",
+        "text": "It remembers but hides it until you allow personalisation",
+        "misconceptionId": "model-remembers-you"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Where would the name physically live for the model to read today?"
+      },
+      {
+        "level": 2,
+        "text": "Any \"memory\" is a list of text some app keeps and resends. A fresh chat is an empty list."
+      }
+    ],
+    "explanation": "The model is stateless. Products fake memory by resending a transcript, and a fresh chat starts with nothing.",
+    "estimatedSeconds": 45,
+    "tags": ["context", "memory"]
+  },
+  {
+    "id": "tok-lab-forgotten",
+    "type": "lab",
+    "skillIds": ["tokens-and-context"],
+    "difficulty": 2,
+    "prompt": "Lab: watch the model forget you",
+    "labId": "lab-fresh-context",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two separate `ollama run` sessions are two separate conversations."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["context", "lab"]
+  },
+  {
+    "id": "gen-explain-next-token",
+    "type": "explain",
+    "skillIds": ["how-generation-works"],
+    "difficulty": 2,
+    "prompt": "Next-token prediction and temperature",
+    "body": "The model writes one token at a time. After each token it computes scores for every possible next token, samples one, appends it, and repeats. Temperature shapes the sampling. Low temperature keeps the choice conservative: the same prompt tends to produce similar replies. High temperature lets the sampler wander: replies differ more and get stranger. What temperature does not do is change what the model knows. It is a dial between predictable and adventurous, not between false and true. It is also why the same prompt can give different answers on consecutive runs.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The model is always doing one small thing: choosing the next token."
+      }
+    ],
+    "check": {
+      "prompt": "What does raising the temperature change?",
+      "answer": "How adventurous the token sampling is. Not what the model knows."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["generation", "temperature"]
+  },
+  {
+    "id": "gen-mcq-temperature",
+    "type": "mcq",
+    "skillIds": ["how-generation-works"],
+    "difficulty": 1,
+    "prompt": "What does the temperature setting do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Controls how truthful the answers are",
+        "misconceptionId": "temperature-controls-truthfulness"
+      },
+      {
+        "id": "b",
+        "text": "Controls how adventurous the token sampling is"
+      },
+      {
+        "id": "c",
+        "text": "Raises the model's confidence in what it says",
+        "misconceptionId": "temperature-controls-truthfulness"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "It sits in the sampler, not in the weights."
+      },
+      {
+        "level": 2,
+        "text": "Low temperature: predictable. High: varied and stranger. Truth is untouched either way."
+      }
+    ],
+    "explanation": "Temperature changes the choosing, not the knowledge. Truthfulness is not on that dial.",
+    "estimatedSeconds": 45,
+    "tags": ["temperature"]
+  },
+  {
+    "id": "gen-mcq-deterministic",
+    "type": "mcq",
+    "skillIds": ["how-generation-works"],
+    "difficulty": 1,
+    "prompt": "You ask the same question twice and get two different answers. What happened?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A fault: the same prompt must always produce the same text",
+        "misconceptionId": "ai-output-is-deterministic"
+      },
+      {
+        "id": "b",
+        "text": "Nothing unusual: sampling lets consecutive runs differ"
+      },
+      {
+        "id": "c",
+        "text": "The model learned from your first question and changed its answer",
+        "misconceptionId": "model-remembers-you"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Recall how the next token is chosen when temperature is above zero."
+      },
+      {
+        "level": 2,
+        "text": "Sampling is a random draw from scored options. Two draws can differ."
+      }
+    ],
+    "explanation": "Generation samples from next-token scores. Unless temperature is 0 and the setup is fixed, runs differ by design.",
+    "estimatedSeconds": 45,
+    "tags": ["generation"]
+  },
+  {
+    "id": "gen-lab-temperature",
+    "type": "lab",
+    "skillIds": ["how-generation-works"],
+    "difficulty": 2,
+    "prompt": "Lab: feel the temperature dial",
+    "labId": "lab-temperature",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run both attempts in one chat session, changing the temperature between them."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["temperature", "lab"]
+  },
+  {
+    "id": "size-explain-sizes",
+    "type": "explain",
+    "skillIds": ["model-sizes-and-hardware"],
+    "difficulty": 2,
+    "prompt": "Model sizes and what they need",
+    "body": "Model names carry a size: llama3.2:1b has about 1 billion parameters; a 70B model has about 70 billion. Memory is the practical limit. A 4-bit quantised model needs roughly one gigabyte per billion parameters, so a 1b model is a ~1 GB download that runs on nearly anything, a 7-8B model wants around 5 GB of free memory, and a 70B model wants 40 GB or more and will not fit on an ordinary laptop. Bigger is not automatically better. A small model is often the right choice for drafting and rewriting; a bigger one earns its cost on harder reasoning. The honest test is your task, not the size label.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Match the gigabytes to the parameters before you match a model to a machine."
+      }
+    ],
+    "check": {
+      "prompt": "A laptop has 8 GB of free memory. Which fits: a 7B model or a 70B model?",
+      "answer": "The 7B, at roughly 5 GB. The 70B needs 40 GB or more and will not fit."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["hardware", "quantisation"]
+  },
+  {
+    "id": "size-mcq-bigger",
+    "type": "mcq",
+    "skillIds": ["model-sizes-and-hardware"],
+    "difficulty": 2,
+    "prompt": "Which statement about model size is true?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Bigger models are better at every task, always",
+        "misconceptionId": "bigger-always-better"
+      },
+      {
+        "id": "b",
+        "text": "Bigger usually helps on hard tasks, but a small model can be the better choice for simple work and always costs less to run"
+      },
+      {
+        "id": "c",
+        "text": "The parameter count tells you how many documents the model was trained on",
+        "misconceptionId": "training-is-uploading"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about the last time the biggest tool was also the right one."
+      },
+      {
+        "level": 2,
+        "text": "For a short email draft a 1b model may do; for multi-step reasoning, size tends to help."
+      }
+    ],
+    "explanation": "Size is a trade: capability against memory and speed. The task decides, not the number.",
+    "estimatedSeconds": 45,
+    "tags": ["hardware"]
+  },
+  {
+    "id": "size-mcq-hardware",
+    "type": "mcq",
+    "skillIds": ["model-sizes-and-hardware"],
+    "difficulty": 2,
+    "prompt": "A laptop has 8 GB of free memory and no graphics card. What can it run?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Nothing. Local models require an expensive GPU",
+        "misconceptionId": "local-models-need-gpus"
+      },
+      {
+        "id": "b",
+        "text": "A small model like llama3.2:1b comfortably, a 7-8B model with less headroom, and no 70B model at all"
+      },
+      {
+        "id": "c",
+        "text": "Any model it likes, as long as you are willing to wait",
+        "misconceptionId": "bigger-always-better"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Apply the rule of thumb: about one gigabyte per billion parameters at 4-bit."
+      },
+      {
+        "level": 2,
+        "text": "It is a memory limit, not a patience limit. Weights that never fit will not run."
+      }
+    ],
+    "explanation": "Small models run on ordinary CPUs. The RAM rule, not a GPU, decides what fits.",
+    "estimatedSeconds": 45,
+    "tags": ["hardware"]
+  },
+  {
+    "id": "size-short-rule",
+    "type": "short_answer",
+    "skillIds": ["model-sizes-and-hardware"],
+    "difficulty": 2,
+    "prompt": "Rule of thumb: a 4-bit quantised model needs roughly how many gigabytes of memory per billion parameters? (One number.)",
+    "scoring": {
+      "mode": "exact",
+      "value": "1"
+    },
+    "modelAnswer": "About 1 GB per billion parameters, plus a little overhead for the running application.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Compare the size of the llama3.2:1b download with its parameter count."
+      },
+      {
+        "level": 2,
+        "text": "One.",
+        "revealsAnswer": true
+      }
+    ],
+    "explanation": "Roughly 1 GB per billion parameters at 4-bit quantisation. Bigger models scale linearly.",
+    "estimatedSeconds": 40,
+    "tags": ["hardware", "quantisation"]
+  },
+  {
+    "id": "size-worked-choose",
+    "type": "worked_example",
+    "skillIds": ["model-sizes-and-hardware"],
+    "difficulty": 3,
+    "prompt": "Choose a model for an 8 GB laptop. You want help drafting and rewriting short texts.",
+    "steps": [
+      {
+        "title": "Count the memory",
+        "body": "Check free memory first. With about 8 GB free, anything needing more than ~6 GB is out."
+      },
+      {
+        "title": "Apply the rule of thumb",
+        "body": "A 4-bit model needs roughly 1 GB per billion parameters. 1b is about 1 GB. 7-8B is about 5 GB. 70B is 40+ GB: out."
+      },
+      {
+        "title": "Pick and verify",
+        "body": "Run `ollama pull llama3.2:1b`, then `ollama list` to see the real size on disk, then chat and judge the quality."
+      },
+      {
+        "title": "Escalate only if needed",
+        "body": "If drafts feel too thin, try a 7-8B model. If it fits and answers well, you have your answer."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "Which model size classes fit an 8 GB laptop, and which do not?",
+      "answer": "Small models: 1-3B comfortably, 7-8B tightly. A 70B model will not fit."
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "One gigabyte per billion parameters is the whole arithmetic."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "size-s-limit",
+        "kind": "check",
+        "prompt": "What is the practical limit that decides whether a model runs on a machine?",
+        "answer": "how much memory (RAM) the weights need at run time",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Not the disk, not the screen: the working memory the weights occupy."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "size-s-limit-7b",
+            "kind": "check",
+            "prompt": "Roughly how much memory does a 4-bit 7B model need?",
+            "answer": "about 7 GB",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "size-s-pick",
+        "kind": "mcq",
+        "prompt": "On 8 GB free, which pull makes sense for drafting short texts?",
+        "options": [
+          {
+            "id": "a",
+            "text": "ollama pull llama3.2:1b"
+          },
+          {
+            "id": "b",
+            "text": "a 70B model, because bigger is always better"
+          },
+          {
+            "id": "c",
+            "text": "three models at once, to compare"
+          }
+        ],
+        "correctOptionId": "a",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Add up the gigabytes before choosing."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["hardware", "ollama"]
+  },
+  {
+    "id": "run-explain-ollama",
+    "type": "explain",
+    "skillIds": ["running-local-models"],
+    "difficulty": 2,
+    "prompt": "Ollama: local models in a terminal",
+    "body": "Ollama is a small program that runs models on your own machine. It serves them at localhost:11434, and no account, key, or cloud is involved. Five commands cover the basics: `ollama pull llama3.2:1b` downloads the weights to your disk (about 1-2 GB for the 1b model), `ollama run llama3.2:1b` starts a chat, `/bye` leaves the chat, `ollama list` shows what you have, and `ollama rm llama3.2:1b` deletes a model when you are done with it. The first pull is the big download; after that, everything happens on your machine.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "localhost means this machine. The server never leaves it."
+      }
+    ],
+    "check": {
+      "prompt": "What does `ollama pull llama3.2:1b` do?",
+      "answer": "Downloads that model's weights onto your disk, so you can run it offline afterwards."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["ollama", "local"]
+  },
+  {
+    "id": "run-mcq-where",
+    "type": "mcq",
+    "skillIds": ["running-local-models"],
+    "difficulty": 1,
+    "prompt": "When you chat with a local Ollama model, where does your prompt go?",
+    "options": [
+      {
+        "id": "a",
+        "text": "To a data centre and back, like any chatbot",
+        "misconceptionId": "local-meets-cloud-privacy"
+      },
+      {
+        "id": "b",
+        "text": "To the Ollama server on your own machine. No transmission leaves the computer"
+      },
+      {
+        "id": "c",
+        "text": "To the model's maker, who runs it and sends the result back",
+        "misconceptionId": "local-meets-cloud-privacy"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look at the address: localhost:11434."
+      },
+      {
+        "level": 2,
+        "text": "localhost is this machine. The whole conversation stays inside it."
+      }
+    ],
+    "explanation": "Local inference means the prompt, the weights, and the reply are all on your machine. Nothing is transmitted.",
+    "estimatedSeconds": 40,
+    "tags": ["local", "privacy"]
+  },
+  {
+    "id": "run-mcq-download",
+    "type": "mcq",
+    "skillIds": ["running-local-models"],
+    "difficulty": 1,
+    "prompt": "`ollama pull llama3.2:1b` downloads about 1.3 GB. Where does it go?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Into a cloud account you must create first",
+        "misconceptionId": "local-meets-cloud-privacy"
+      },
+      {
+        "id": "b",
+        "text": "Onto your own disk, in Ollama's model folder. No account needed"
+      },
+      {
+        "id": "c",
+        "text": "Nowhere: pull prints a link for you to download by hand",
+        "misconceptionId": "local-meets-cloud-privacy"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "`ollama list` shows what landed, with sizes."
+      },
+      {
+        "level": 2,
+        "text": "The weights sit on your disk until `ollama rm` removes them."
+      }
+    ],
+    "explanation": "The pull writes the weights to your disk. Ollama is account-free; the model is yours to keep or delete.",
+    "estimatedSeconds": 35,
+    "tags": ["ollama"]
+  },
+  {
+    "id": "run-lab-install",
+    "type": "lab",
+    "skillIds": ["running-local-models"],
+    "difficulty": 2,
+    "prompt": "Lab: install Ollama",
+    "labId": "lab-install-ollama",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Installers for all three platforms live at ollama.com."
+      }
+    ],
+    "estimatedSeconds": 420,
+    "tags": ["ollama", "lab"]
+  },
+  {
+    "id": "run-lab-pull",
+    "type": "lab",
+    "skillIds": ["running-local-models"],
+    "difficulty": 2,
+    "prompt": "Lab: pull a small model",
+    "labId": "lab-pull-model",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The tag matters: llama3.2:1b is the 1-billion-parameter model. Other tags are bigger downloads."
+      }
+    ],
+    "estimatedSeconds": 420,
+    "tags": ["ollama", "lab"]
+  },
+  {
+    "id": "run-lab-chat",
+    "type": "lab",
+    "skillIds": ["running-local-models"],
+    "difficulty": 1,
+    "prompt": "Lab: chat with your model",
+    "labId": "lab-chat-model",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Type a question and press Enter. The first reply can take a few seconds while the model loads into memory."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["ollama", "lab"]
+  },
+  {
+    "id": "prompt-explain-intent",
+    "type": "explain",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 2,
+    "prompt": "Prompting with intent",
+    "body": "A good prompt gives the model something true to stand on and a shape to fill. Four parts do most of the work: a role (\"you are a careful editor\"), the context (the actual text or facts), constraints (length, format, what to leave out), and examples (one worked sample of the output you want). Rules a reader could check hold better than vibes: \"define every technical word in the same sentence\" beats \"be clear\". Contradictory instructions produce wobble that looks like randomness, so read your own prompt before blaming the model. Prompting is a conversation, not a spell: iterate on the draft, ask for changes, keep what works.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Role, context, constraints, examples. Which one is missing from a prompt that keeps failing?"
+      }
+    ],
+    "check": {
+      "prompt": "Which instruction will hold up better: \"be clear\" or \"use short sentences and define every technical word\"?",
+      "answer": "The second. It is checkable: a reader can verify it in the output."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "prompt-mcq-parts",
+    "type": "mcq",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 2,
+    "prompt": "A prompt keeps producing vague, useless answers. Which change is most likely to help?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Rephrase it into the one magic phrasing everyone swears by",
+        "misconceptionId": "prompting-one-shot-magic"
+      },
+      {
+        "id": "b",
+        "text": "Add what is missing: the relevant facts, a concrete format, and a checkable constraint"
+      },
+      {
+        "id": "c",
+        "text": "Raise the temperature until it starts making sense",
+        "misconceptionId": "temperature-controls-truthfulness"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what a helpful colleague would need that the prompt does not provide."
+      },
+      {
+        "level": 2,
+        "text": "Models predict from their prompt. Thin prompt in, thin answer out."
+      }
+    ],
+    "explanation": "Better patterns to predict from beat magic words. Context and constraints are the fix.",
+    "estimatedSeconds": 45,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "prompt-mcq-contradiction",
+    "type": "mcq",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 3,
+    "prompt": "One prompt demands \"answer in exactly one sentence\" and \"explain step by step\". What happens?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The model quietly drops one instruction, and may drop a different one next time"
+      },
+      {
+        "id": "b",
+        "text": "One clever word makes both obey",
+        "misconceptionId": "prompting-one-shot-magic"
+      },
+      {
+        "id": "c",
+        "text": "It obeys both exactly on every run, because instructions are rules",
+        "misconceptionId": "ai-output-is-deterministic"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The two demands compete for the same output."
+      },
+      {
+        "level": 2,
+        "text": "Contradiction produces wobble that looks like model randomness. Read the card first."
+      }
+    ],
+    "explanation": "Instructions compete. The model chooses which to disobey, quietly and differently across runs.",
+    "estimatedSeconds": 50,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "prompt-mcq-examples",
+    "type": "mcq",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 2,
+    "prompt": "You need every reply as a two-column table with exact headings. What helps most?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Trust the model to infer the format you have in mind",
+        "misconceptionId": "prompting-one-shot-magic"
+      },
+      {
+        "id": "b",
+        "text": "Paste one worked example of the exact table into the prompt"
+      },
+      {
+        "id": "c",
+        "text": "Ask three times and combine whichever answers look right",
+        "misconceptionId": "prompting-one-shot-magic"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Give the model the pattern to predict from."
+      },
+      {
+        "level": 2,
+        "text": "An example is a strong constraint: the model completes shapes it has seen."
+      }
+    ],
+    "explanation": "A worked example pins the format. Hoping or averaging does not.",
+    "estimatedSeconds": 45,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "prompt-worked-intent",
+    "type": "worked_example",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 3,
+    "prompt": "Build a prompt step by step: turn rough meeting notes into three action items with owners.",
+    "steps": [
+      {
+        "title": "Set the role",
+        "body": "\"You are a meticulous project assistant.\" One sentence; the role steers thoroughness."
+      },
+      {
+        "title": "Give the context",
+        "body": "Paste the raw notes. The model answers from its training and from your payload, and your notes exist only in the payload."
+      },
+      {
+        "title": "Add constraints",
+        "body": "\"Extract at most three action items. Each has one owner and a deadline only if the notes name one.\""
+      },
+      {
+        "title": "Show one example",
+        "body": "One finished item: \"Owner: Sam - send the invoice by Friday.\" The model completes shapes it has seen."
+      },
+      {
+        "title": "Ask",
+        "body": "\"Return only the three items as a list.\" The ask comes last."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "Which parts stop the model inventing owners who are not in the notes?",
+      "answer": "The constraint (one owner per item, drawn from the notes) plus the context containing only the real notes."
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Role, context, constraints, example, ask - in that order."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "prompt-s-order",
+        "kind": "check",
+        "prompt": "What should come last in a well-built prompt?",
+        "answer": "the actual request (the ask)",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Stage-setting first. The question is the punchline."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "prompt-s-order-ask",
+            "kind": "check",
+            "prompt": "In \"Answer as a tax accountant. Here is the invoice. Is GST included in the total?\", which part is the ask?",
+            "answer": "\"Is GST included in the total?\"",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "prompt-s-checkable",
+        "kind": "mcq",
+        "prompt": "Which constraint can the model actually follow?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Be helpful and clear"
+          },
+          {
+            "id": "b",
+            "text": "Keep every sentence under 20 words"
+          },
+          {
+            "id": "c",
+            "text": "Do your best"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Which one could a reader verify in the output?"
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 200,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "prompt-teach-prompting",
+    "type": "teach_back",
+    "skillIds": ["prompting-with-intent"],
+    "difficulty": 2,
+    "prompt": "Teach it back: name the four parts of a working prompt, say why checkable rules beat vague ones, and explain why there is no single magic phrasing.",
+    "rubricId": "rubric-teach-prompting",
+    "modelAnswer": "Role, context, constraints, examples. Checkable rules hold because a reader can verify them in the output; \"be clear\" cannot be observably violated. There is no magic phrasing because the model predicts from whatever patterns you supply - context and constraints change the prediction, and iterating is normal.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three things: the four parts, checkable versus vague, and why iteration beats spells."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["prompting"]
+  },
+  {
+    "id": "ver-explain-verify",
+    "type": "explain",
+    "skillIds": ["verification-habits"],
+    "difficulty": 3,
+    "prompt": "Confabulation and the checking habit",
+    "body": "A model answers from two places: what it learned in training and what is in your prompt. There is no third source. Ask it something neither place contains and it will often still answer, fluently, in the same confident voice: numbers, names, structure and all. That is confabulation. It is not a rare malfunction; it is the machinery running where it had nothing true to work with. Two habits help. First, rate the question before you trust the answer: could training know this, is the fact stable, and who would notice if it were invented? Second, check consequential claims outside the model: open the source, run the calculation, ask the document. Asking the model to be confident does nothing. Confidence is a style, not a measurement.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Where can an answer's content come from? Count the sources."
+      }
+    ],
+    "check": {
+      "prompt": "The model sounds completely sure. What does that tell you about whether it is right?",
+      "answer": "Nothing. The confident voice is generated along with everything else and tracks the question's style, not the evidence."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["verification", "hallucination"]
+  },
+  {
+    "id": "ver-mcq-hallucination",
+    "type": "mcq",
+    "skillIds": ["verification-habits"],
+    "difficulty": 2,
+    "prompt": "A small local model explains your company's refund policy in confident detail. It never saw the policy. What most likely happened?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A rare malfunction. Models almost never invent things",
+        "misconceptionId": "ai-hallucinates-rarely"
+      },
+      {
+        "id": "b",
+        "text": "It composed a plausible-sounding answer with nothing true underneath. Confabulation is ordinary behaviour"
+      },
+      {
+        "id": "c",
+        "text": "It quietly searched the policy online",
+        "misconceptionId": "local-meets-cloud-privacy"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Count the sources: training and your prompt. Where is the policy?"
+      },
+      {
+        "level": 2,
+        "text": "Fluency is generated either way. A well-formatted answer proves nothing."
+      }
+    ],
+    "explanation": "Invented answers arrive in the same fluent voice as correct ones. A bare model with no source improvises.",
+    "estimatedSeconds": 50,
+    "tags": ["verification"]
+  },
+  {
+    "id": "ver-mcq-cite",
+    "type": "mcq",
+    "skillIds": ["verification-habits"],
+    "difficulty": 3,
+    "prompt": "You ask for sources and receive three tidy citations. What now?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Trust them. Models can cite reliably when asked",
+        "misconceptionId": "model-can-cite-reliably"
+      },
+      {
+        "id": "b",
+        "text": "Open each one. Invented and misattributed references look exactly like real ones"
+      },
+      {
+        "id": "c",
+        "text": "Trust them if the model also says it is confident",
+        "misconceptionId": "temperature-controls-truthfulness"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "A citation-shaped string is generated text like any other."
+      },
+      {
+        "level": 2,
+        "text": "The check that counts is external: does the source exist, and does it say what is claimed?"
+      }
+    ],
+    "explanation": "Citations are predictions too. Some are real, some are plausible-shaped. Open them.",
+    "estimatedSeconds": 50,
+    "tags": ["verification", "citations"]
+  },
+  {
+    "id": "ver-mcq-check",
+    "type": "mcq",
+    "skillIds": ["verification-habits"],
+    "difficulty": 2,
+    "prompt": "You have limited time. Which answer can you reasonably skip checking?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Three nickname ideas for a new bicycle"
+      },
+      {
+        "id": "b",
+        "text": "A summary of a meeting you missed, from notes you did not paste in",
+        "misconceptionId": "ai-hallucinates-rarely"
+      },
+      {
+        "id": "c",
+        "text": "A statistic you are about to put in a report",
+        "misconceptionId": "model-can-cite-reliably"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "For each answer, ask what happens if it is wrong, and who would notice."
+      }
+    ],
+    "explanation": "Brainstorms are cheap to be wrong about. A summary of notes the model never saw is invented, and anything you publish deserves an external check.",
+    "estimatedSeconds": 45,
+    "tags": ["verification"]
+  },
+  {
+    "id": "ver-lab-confabulate",
+    "type": "lab",
+    "skillIds": ["verification-habits"],
+    "difficulty": 2,
+    "prompt": "Lab: catch a confident invention",
+    "labId": "lab-confabulation",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask about a rulebook you know does not exist, and press for exact figures."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["verification", "lab"]
+  },
+  {
+    "id": "ver-teach-verification",
+    "type": "teach_back",
+    "skillIds": ["verification-habits"],
+    "difficulty": 3,
+    "prompt": "Teach it back: why do models confabulate, why is confidence not evidence, and what is your check before acting on a claim?",
+    "rubricId": "rubric-teach-verification",
+    "modelAnswer": "Models predict plausible text from training plus the prompt; when neither contains the fact, the prediction is still fluent, so invention is ordinary behaviour, not a glitch. Confidence is generated style, not evidence. Before acting on a consequential claim: open the actual source or verify by a second method, and ask who would catch it if it were invented.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the mechanism, the confidence trap, and one concrete checking habit."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["verification"]
+  },
+  {
+    "id": "priv-explain-privacy",
+    "type": "explain",
+    "skillIds": ["privacy-and-locality"],
+    "difficulty": 2,
+    "prompt": "Where your words go",
+    "body": "Transmission is the event that matters. With a local model, your prompt is assembled, used, and kept - if at all - on your machine. No transmission occurs, so there is nothing to trust. With a cloud model, your words reach someone else's systems, under their terms: retention, training use, jurisdiction. Both are legitimate choices; they are just different physics. One trap: a polished app can be local while the model inside it is not. The interface runs on your machine and forwards every prompt to a hosted service. The check is concrete: find the server address the app calls. localhost (like localhost:11434) means local. Anything else means read the terms.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask one question of any AI tool: where does the first copy of my words land?"
+      }
+    ],
+    "check": {
+      "prompt": "An app claims to be private. How do you check whether the thinking happens on your machine?",
+      "answer": "Find the server address it calls. localhost is local; any other address means your prompts leave the machine."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["privacy", "local-first"]
+  },
+  {
+    "id": "priv-mcq-app",
+    "type": "mcq",
+    "skillIds": ["privacy-and-locality"],
+    "difficulty": 2,
+    "prompt": "A chat app is advertised as \"running on your machine\", yet your prompts reach a hosted model. What happened?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Nothing: if the app is local, the AI is local too",
+        "misconceptionId": "local-meets-cloud-privacy"
+      },
+      {
+        "id": "b",
+        "text": "The interface is local; the model call is not. Check the server address the app uses"
+      },
+      {
+        "id": "c",
+        "text": "The provider broke a promise, and nothing you could have done would reveal it",
+        "misconceptionId": "local-meets-cloud-privacy"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "\"Runs on your machine\" can be true of the window and false of the thinking."
+      },
+      {
+        "level": 2,
+        "text": "The address settles it: localhost is your machine; anything else is someone else's."
+      }
+    ],
+    "explanation": "Local interface, hosted model is a common shape. The server address tells you which kind of place your words land.",
+    "estimatedSeconds": 45,
+    "tags": ["privacy"]
+  },
+  {
+    "id": "priv-mcq-wifi",
+    "type": "mcq",
+    "skillIds": ["privacy-and-locality"],
+    "difficulty": 1,
+    "prompt": "Which of these is evidence that your chat never left your machine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The vendor's privacy page says \"we never store your data\"",
+        "misconceptionId": "local-meets-cloud-privacy"
+      },
+      {
+        "id": "b",
+        "text": "You switched Wi-Fi off, asked a question, and the answer still arrived"
+      },
+      {
+        "id": "c",
+        "text": "The app displays a green \"private\" badge",
+        "misconceptionId": "local-meets-cloud-privacy"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Promises are policy. What would count as proof?"
+      },
+      {
+        "level": 2,
+        "text": "With every network path closed, transmission cannot have happened. The demonstration outranks the promise."
+      }
+    ],
+    "explanation": "A Wi-Fi-off test proves the absence of transmission. Documents and badges describe; they do not demonstrate.",
+    "estimatedSeconds": 45,
+    "tags": ["privacy"]
+  },
+  {
+    "id": "priv-reflection",
+    "type": "reflection",
+    "skillIds": ["privacy-and-locality"],
+    "difficulty": 2,
+    "prompt": "Reflect on your own AI use",
+    "prompts": [
+      "Which of your AI questions would you be fine posting on a public noticeboard? What does that list tell you about what to send where?",
+      "Where do the transcripts of the AI tools you already use live, and who can read them?",
+      "If you ran a local model this week, what would you send to it that you would not send to a cloud chatbot?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "There are no wrong answers. Write one honest sentence per prompt."
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["privacy"]
+  },
+  {
+    "id": "priv-lab-airplane",
+    "type": "lab",
+    "skillIds": ["privacy-and-locality"],
+    "difficulty": 2,
+    "prompt": "Lab: prove it stays home",
+    "labId": "lab-offline-proof",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Turn Wi-Fi off, or unplug the cable, before you run the command."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["privacy", "lab"]
+  },
+  {
+    "id": "when-explain-limits",
+    "type": "explain",
+    "skillIds": ["when-not-to-use-ai"],
+    "difficulty": 2,
+    "prompt": "When not to reach for a model",
+    "body": "A language model predicts plausible text. That makes it strong at drafting, rewriting, summarising, and explaining, and weak wherever the output must be exactly right by construction: arithmetic to the cent, counting, sorting, renaming five hundred files, anything a ten-line script does deterministically. Use the precise tool. Safety-critical and irreversible decisions - medical, legal, financial, anything affecting someone's livelihood - deserve evidence and a qualified human; a model can help you draft the question, not make the call. A quick test before you type: does this task need fluency or precision? If the answer must be exactly right every time, the model is the wrong tool.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Fluency and precision are different requirements. Which does the task actually need?"
+      }
+    ],
+    "check": {
+      "prompt": "You need 17% of 4,832.00 to the cent. What is the right tool, and why?",
+      "answer": "A calculator or a few lines of code. They compute deterministically; a model predicts a plausible-looking number."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["limits", "judgement"]
+  },
+  {
+    "id": "when-mcq-math",
+    "type": "mcq",
+    "skillIds": ["when-not-to-use-ai"],
+    "difficulty": 1,
+    "prompt": "Which task suits a language model best?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Summing a 200-row invoice to the cent",
+        "misconceptionId": "ai-fits-every-task"
+      },
+      {
+        "id": "b",
+        "text": "Drafting three subject-line options for an email"
+      },
+      {
+        "id": "c",
+        "text": "Certifying whether a large number is prime",
+        "misconceptionId": "ai-fits-every-task"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which task tolerates variation, and which demands exactness?"
+      }
+    ],
+    "explanation": "Drafting tolerates variation. Invoices and primality need answers that are correct by construction.",
+    "estimatedSeconds": 40,
+    "tags": ["limits"]
+  },
+  {
+    "id": "when-mcq-decision",
+    "type": "mcq",
+    "skillIds": ["when-not-to-use-ai"],
+    "difficulty": 3,
+    "prompt": "You are choosing between two job offers and ask a model. What is the sane use?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Follow its recommendation. It has read more than you ever will",
+        "misconceptionId": "ai-fits-every-task"
+      },
+      {
+        "id": "b",
+        "text": "Use it to surface considerations, risks, and counter-arguments. The judgement stays yours"
+      },
+      {
+        "id": "c",
+        "text": "Ask the same question several times and go with the most common answer",
+        "misconceptionId": "prompting-one-shot-magic"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "What would you want from a well-read friend: a verdict, or help thinking?"
+      },
+      {
+        "level": 2,
+        "text": "Repetition is not evidence. Voting on generated text adds nothing."
+      }
+    ],
+    "explanation": "Models are good thinking partners and poor authorities. Irreversible decisions need your judgement and real evidence.",
+    "estimatedSeconds": 50,
+    "tags": ["judgement"]
+  },
+  {
+    "id": "when-short-deterministic",
+    "type": "short_answer",
+    "skillIds": ["when-not-to-use-ai"],
+    "difficulty": 2,
+    "prompt": "One word: a calculator gives the same correct answer every time. That property, which language models lack, is called being ___.",
+    "scoring": {
+      "mode": "exact",
+      "value": "deterministic"
+    },
+    "modelAnswer": "deterministic. Same input, same output, correct by construction - which is why calculators and scripts beat models at exact arithmetic.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think of what a script does that sampling does not."
+      },
+      {
+        "level": 2,
+        "text": "deterministic",
+        "revealsAnswer": true
+      }
+    ],
+    "explanation": "Deterministic tools repeat exactly. Sampling models do not, which is why they are the wrong tool for exact outputs.",
+    "estimatedSeconds": 40,
+    "tags": ["limits"]
+  }
+]

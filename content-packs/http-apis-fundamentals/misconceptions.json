@@ -1,0 +1,134 @@
+[
+  {
+    "id": "url-parts-reordered",
+    "label": "Reads URL parts in the wrong order",
+    "skillIds": ["urls-and-resources"],
+    "description": "The learner treats the query string as part of the path or swaps host and path.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A URL reads scheme://host/path?query. Everything before the first / is the host; after ? come parameters.",
+      "itemIds": ["url-mcq-parts", "url-lab-query"]
+    }
+  },
+  {
+    "id": "post-not-idempotent-safe",
+    "label": "Treats POST as safe to repeat",
+    "skillIds": ["methods-and-semantics"],
+    "description": "The learner retries a POST on a timeout and creates duplicate orders or charges.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "GET, PUT, and DELETE are idempotent: repeating them lands in the same place. POST is not; each call can create something new.",
+      "itemIds": ["method-mcq-idempotent", "method-mcq-put", "method-lab-echo"]
+    }
+  },
+  {
+    "id": "put-patch-swap",
+    "label": "Swaps PUT and PATCH",
+    "skillIds": ["methods-and-semantics"],
+    "description": "The learner sends PATCH when they mean a full replacement, or PUT with a partial body.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "PUT replaces the whole representation. PATCH changes only the fields sent.",
+      "itemIds": ["method-mcq-put", "method-worked-update"]
+    }
+  },
+  {
+    "id": "redirect-is-error",
+    "label": "Treats 3xx as a failure",
+    "skillIds": ["status-codes"],
+    "description": "The learner reports a 301 or 302 as an error and does not follow the Location header.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "3xx means look elsewhere. The response carries a Location header pointing at the next address.",
+      "itemIds": ["status-mcq-families", "status-mcq-301"]
+    }
+  },
+  {
+    "id": "auth-status-mixup",
+    "label": "Mixes up 401 and 403",
+    "skillIds": ["status-codes", "auth-basics"],
+    "description": "The learner cannot tell unauthenticated (401) from unauthorised (403).",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "401 says who are you; send credentials. 403 says I know who you are and the answer is no.",
+      "itemIds": ["status-mcq-401", "auth-mcq-key-hygiene"]
+    }
+  },
+  {
+    "id": "base64-is-encryption",
+    "label": "Believes base64 hides secrets",
+    "skillIds": ["auth-basics", "json-payloads"],
+    "description": "The learner base64-encodes an API key and considers it protected.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Base64 is encoding, not encryption. It decodes with no key. Secrets live in env vars or a keychain, never in code.",
+      "itemIds": ["auth-mcq-key-hygiene", "auth-teach-credentials"]
+    }
+  },
+  {
+    "id": "api-key-in-url",
+    "label": "Puts secrets in query strings",
+    "skillIds": ["auth-basics"],
+    "description": "The learner appends the API key to the URL, where it lands in logs and browser history.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Send credentials in a header, not in the URL. URLs get logged everywhere.",
+      "itemIds": ["auth-mcq-key-hygiene", "auth-lab-bearer"]
+    }
+  },
+  {
+    "id": "json-is-javascript",
+    "label": "Confuses JSON with JavaScript",
+    "skillIds": ["json-payloads"],
+    "description": "The learner writes JSON with trailing commas, single quotes, or comments.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "JSON is stricter than JavaScript: double quotes only, no trailing commas, no comments.",
+      "itemIds": ["json-mcq-invalid", "json-lab-field"]
+    }
+  },
+  {
+    "id": "status-200-always-good",
+    "label": "Trusts 200 without reading the body",
+    "skillIds": ["errors-and-retries", "json-payloads"],
+    "description": "The learner treats every 200 as success even when the body carries an error object.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "The status code and the body are separate signals. Some APIs return 200 with an error envelope; read both.",
+      "itemIds": ["retry-mcq-200", "retry-mcq-backoff"]
+    }
+  },
+  {
+    "id": "retry-without-backoff",
+    "label": "Retries immediately and in a loop",
+    "skillIds": ["errors-and-retries"],
+    "description": "The learner hammers a rate-limited API with instant retries, making the 429 worse.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "On 429 or 5xx, wait before retrying, and grow the wait each time. Honour the Retry-After header when present.",
+      "itemIds": ["retry-mcq-backoff", "retry-mcq-timeout"]
+    }
+  },
+  {
+    "id": "timeout-is-crash",
+    "label": "Reads a timeout as a server crash",
+    "skillIds": ["errors-and-retries"],
+    "description": "The learner assumes a timeout means the server died, rather than the response arriving too slowly.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A timeout is your client giving up while waiting. The server may still be processing, which is why blind retries are dangerous.",
+      "itemIds": ["retry-mcq-timeout", "retry-mcq-backoff"]
+    }
+  },
+  {
+    "id": "headers-for-get-useless",
+    "label": "Sends Content-Type on a bodyless GET",
+    "skillIds": ["headers-and-content-types"],
+    "description": "The learner sets Content-Type on requests that carry no body, and forgets Accept.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Content-Type describes the body you are sending. Accept describes the body you want back.",
+      "itemIds": ["header-mcq-content-type", "header-mcq-accept", "header-lab-negotiate"]
+    }
+  }
+]

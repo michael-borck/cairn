@@ -1,0 +1,117 @@
+{
+  "modules": [
+    {
+      "id": "how-models-work",
+      "title": "How models work",
+      "order": 1,
+      "skillIds": [
+        "what-models-are",
+        "tokens-and-context",
+        "how-generation-works",
+        "model-sizes-and-hardware"
+      ]
+    },
+    {
+      "id": "running-models-locally",
+      "title": "Running models locally",
+      "order": 2,
+      "skillIds": [
+        "running-local-models",
+        "prompting-with-intent"
+      ]
+    },
+    {
+      "id": "using-models-well",
+      "title": "Using models well",
+      "order": 3,
+      "skillIds": [
+        "verification-habits",
+        "privacy-and-locality",
+        "when-not-to-use-ai"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "what-models-are",
+      "title": "What a model is",
+      "description": "Parameters, weights, and inference: what a language model actually is and what happens when it answers.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 20,
+      "tags": ["models", "inference"]
+    },
+    {
+      "id": "tokens-and-context",
+      "title": "Tokens and context",
+      "description": "How text is split into tokens, why models do not see letters, and why the context window has edges.",
+      "prerequisites": ["what-models-are"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["tokens", "context"]
+    },
+    {
+      "id": "how-generation-works",
+      "title": "How generation works",
+      "description": "Next-token prediction, sampling, and what temperature actually changes.",
+      "prerequisites": ["tokens-and-context"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["generation", "temperature"]
+    },
+    {
+      "id": "model-sizes-and-hardware",
+      "title": "Model sizes and hardware",
+      "description": "1B versus 70B, memory rules of thumb, and what an ordinary machine can run.",
+      "prerequisites": ["how-generation-works"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["hardware", "quantisation"]
+    },
+    {
+      "id": "running-local-models",
+      "title": "Running local models",
+      "description": "Install Ollama, pull a small model, chat with it, and manage what sits on disk.",
+      "prerequisites": ["model-sizes-and-hardware"],
+      "difficulty": 3,
+      "estimatedMinutes": 30,
+      "tags": ["ollama", "local"]
+    },
+    {
+      "id": "prompting-with-intent",
+      "title": "Prompting with intent",
+      "description": "Role, context, constraints, and examples: building prompts that give the model something true to stand on.",
+      "prerequisites": ["running-local-models"],
+      "difficulty": 2,
+      "estimatedMinutes": 25,
+      "tags": ["prompting"]
+    },
+    {
+      "id": "verification-habits",
+      "title": "Verification habits",
+      "description": "Why models confabulate, why confidence is not evidence, and how to check before trusting.",
+      "prerequisites": ["prompting-with-intent"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["verification", "hallucination"]
+    },
+    {
+      "id": "privacy-and-locality",
+      "title": "Privacy and locality",
+      "description": "What leaves your machine with cloud APIs versus local inference, and how to prove the difference.",
+      "prerequisites": ["running-local-models"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["privacy", "local-first"]
+    },
+    {
+      "id": "when-not-to-use-ai",
+      "title": "When not to use AI",
+      "description": "Deterministic tasks, exact arithmetic, and safety-critical decisions belong to other tools.",
+      "prerequisites": ["verification-habits"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["limits", "judgement"]
+    }
+  ]
+}

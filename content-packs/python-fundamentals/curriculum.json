@@ -1,0 +1,127 @@
+{
+  "modules": [
+    {
+      "id": "first-steps",
+      "title": "First steps",
+      "order": 1,
+      "skillIds": [
+        "values-and-types",
+        "variables-and-names",
+        "control-flow"
+      ]
+    },
+    {
+      "id": "reusable-code",
+      "title": "Reusable code",
+      "order": 2,
+      "skillIds": [
+        "functions",
+        "data-structures",
+        "strings-and-formatting"
+      ]
+    },
+    {
+      "id": "real-programs",
+      "title": "Real programs",
+      "order": 3,
+      "skillIds": [
+        "files",
+        "errors-and-exceptions",
+        "modules-and-imports",
+        "testing-basics"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "values-and-types",
+      "title": "Values and types",
+      "description": "Numbers, strings, and booleans, how type() reports them, and what / really returns.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 20,
+      "tags": ["python", "types"]
+    },
+    {
+      "id": "variables-and-names",
+      "title": "Variables and names",
+      "description": "Assign with =, compare with ==, pick names that do not collide with Python's builtins.",
+      "prerequisites": ["values-and-types"],
+      "difficulty": 1,
+      "estimatedMinutes": 20,
+      "tags": ["python", "variables"]
+    },
+    {
+      "id": "control-flow",
+      "title": "Control flow",
+      "description": "Make decisions with if, repeat with while and for, and read range's boundaries correctly.",
+      "prerequisites": ["variables-and-names"],
+      "difficulty": 2,
+      "estimatedMinutes": 30,
+      "tags": ["python", "loops"]
+    },
+    {
+      "id": "functions",
+      "title": "Functions",
+      "description": "Define with def, pass parameters, return values, and avoid the classic default-argument trap.",
+      "prerequisites": ["control-flow"],
+      "difficulty": 2,
+      "estimatedMinutes": 30,
+      "tags": ["python", "functions"]
+    },
+    {
+      "id": "data-structures",
+      "title": "Lists, dicts, tuples, and sets",
+      "description": "Store collections, index lists from zero, look dicts up by key, and mutate safely.",
+      "prerequisites": ["functions"],
+      "difficulty": 3,
+      "estimatedMinutes": 30,
+      "tags": ["python", "collections"]
+    },
+    {
+      "id": "strings-and-formatting",
+      "title": "Strings and formatting",
+      "description": "Build text with f-strings, call string methods, and remember that strings never change in place.",
+      "prerequisites": ["variables-and-names"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["python", "strings"]
+    },
+    {
+      "id": "files",
+      "title": "Working with files",
+      "description": "Read and write text files with open, pick the right mode, and let with close things for you.",
+      "prerequisites": ["data-structures", "strings-and-formatting"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["python", "files"]
+    },
+    {
+      "id": "errors-and-exceptions",
+      "title": "Errors and exceptions",
+      "description": "Read a traceback from the bottom and keep programs running with try and except.",
+      "prerequisites": ["functions", "files"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["python", "errors"]
+    },
+    {
+      "id": "modules-and-imports",
+      "title": "Modules and imports",
+      "description": "Pull in the standard library, call functions through the module name, and guard script code.",
+      "prerequisites": ["functions"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["python", "modules"]
+    },
+    {
+      "id": "testing-basics",
+      "title": "Testing basics",
+      "description": "State expectations with assert, run a test file, and read silence as success.",
+      "prerequisites": ["data-structures", "errors-and-exceptions"],
+      "difficulty": 3,
+      "estimatedMinutes": 20,
+      "tags": ["python", "testing"]
+    }
+  ]
+}

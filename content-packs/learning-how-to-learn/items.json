@@ -1,0 +1,1270 @@
+[
+  {
+    "id": "mem-explain-encoding",
+    "type": "explain",
+    "skillIds": ["memory-and-forgetting"],
+    "difficulty": 1,
+    "prompt": "Why seeing something is not the same as knowing it",
+    "body": "Learning starts with encoding: your brain turns an experience into a memory trace, and the trace is weak at first. In classic experiments in the 1880s, Hermann Ebbinghaus measured his own memory of nonsense syllables and found a pattern now called the forgetting curve: memory drops sharply in the hours and days after study, then levels off. Two facts follow. First, forgetting is normal, not a personal defect. The curve is steep for everyone. Second, every strong recall attempt slows the curve down. That is the engine behind the rest of this pack. Recall, spaced review, and effortful practice each reshape the curve in your favour.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask whether the memory ever got a chance to be strengthened after it was first formed."
+      }
+    ],
+    "check": {
+      "prompt": "You finished a tutorial yesterday and remember almost none of it today. What does the forgetting curve say is happening?",
+      "answer": "Normal forgetting: the trace faded without review. The fix is recall and spaced review, not self-criticism."
+    },
+    "estimatedSeconds": 120,
+    "tags": ["memory", "forgetting-curve"]
+  },
+  {
+    "id": "mem-worked-curve",
+    "type": "worked_example",
+    "skillIds": ["memory-and-forgetting"],
+    "difficulty": 2,
+    "prompt": "Plan the first week of review for something you just learned.",
+    "steps": [
+      {
+        "title": "Write what you learned",
+        "body": "One line, from memory: for example, 'rm -r deletes directories and there is no undo'. If you cannot write the line, that is useful data too."
+      },
+      {
+        "title": "Predict the decay",
+        "body": "The forgetting curve says most detail fades within days without review. Expect the first review to feel rusty. That is normal."
+      },
+      {
+        "title": "Schedule the first recall",
+        "body": "Tomorrow: close the notes, write the line again, then check. Note what survived."
+      },
+      {
+        "title": "Schedule the second recall",
+        "body": "Three days later, repeat. Each successful recall flattens the curve a little more, so the next gap can be longer."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "When should the first review happen, and what should you do first in it?",
+      "answer": "About a day later, and you recall from memory first. You check notes only after the attempt."
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Recall comes before checking. Checking comes after."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "curve-first-review",
+        "kind": "check",
+        "prompt": "In the first review, do you reread first or recall first?",
+        "answer": "Recall first - rereading before recalling defeats the purpose.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Which option is the effortful one?"
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "curve-recall-meaning",
+            "kind": "check",
+            "prompt": "What counts as a recall attempt?",
+            "answer": "Writing or saying what you remember with the source closed.",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "curve-schedule",
+        "kind": "mcq",
+        "prompt": "Which schedule matches spaced practice for something new?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Four reviews in one evening"
+          },
+          {
+            "id": "b",
+            "text": "Reviews at growing gaps: tomorrow, then a few days, then a week"
+          },
+          {
+            "id": "c",
+            "text": "A single review a month from now"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "The gaps grow as the memory gets stronger."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["memory", "review-plan"]
+  },
+  {
+    "id": "mem-mcq-recording",
+    "type": "mcq",
+    "skillIds": ["memory-and-forgetting"],
+    "difficulty": 2,
+    "prompt": "A friend says: 'I watched the whole lecture video, so the material is in my head somewhere.' What is the flaw in that reasoning?",
+    "options": [
+      {
+        "id": "a",
+        "text": "None - watching encodes everything the screen showed",
+        "misconceptionId": "memory-is-a-recording"
+      },
+      {
+        "id": "b",
+        "text": "Watching creates a weak trace that fades fast without recall; having been exposed is not the same as being able to retrieve"
+      },
+      {
+        "id": "c",
+        "text": "It is in their head, but only in their notes",
+        "misconceptionId": "notes-equal-knowledge"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Exposure creates the trace. What strengthens a trace afterwards?"
+      },
+      {
+        "level": 2,
+        "text": "A trace is only useful if you can find it again when you need it."
+      }
+    ],
+    "explanation": "Encoding from watching is weak and fades along the forgetting curve. Retrieval practice is what makes memory durable.",
+    "estimatedSeconds": 45,
+    "tags": ["memory", "encoding", "transfer"]
+  },
+  {
+    "id": "mem-mcq-curve",
+    "type": "mcq",
+    "skillIds": ["memory-and-forgetting"],
+    "difficulty": 3,
+    "prompt": "You review an old topic and find you have forgotten most of it. What is the best interpretation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Your memory is defective compared with other people's",
+        "misconceptionId": "forgetting-means-failure"
+      },
+      {
+        "id": "b",
+        "text": "The forgetting curve did its job; now a recall attempt will strengthen what remains"
+      },
+      {
+        "id": "c",
+        "text": "The forgetting proves the original lesson was useless",
+        "misconceptionId": "forgetting-means-failure"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ebbinghaus found the same curve shape for every learner he measured."
+      }
+    ],
+    "explanation": "Forgetting is the default. The dip is exactly where spaced retrieval does its work.",
+    "estimatedSeconds": 40,
+    "tags": ["memory", "forgetting-curve"]
+  },
+  {
+    "id": "mem-reflect-review",
+    "type": "reflection",
+    "skillIds": ["memory-and-forgetting"],
+    "difficulty": 2,
+    "prompt": "Run a two-minute audit on your last study session.",
+    "prompts": [
+      "What did you study most recently, and when?",
+      "Without opening your notes, write everything you can still recall from it.",
+      "Where does that recall sit on the forgetting curve: fresh, mid-decay, or mostly gone?",
+      "What is the earliest useful review date: tomorrow, this weekend, or next week?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Recall first. Open notes only after you have written everything you can."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["memory", "reflection"]
+  },
+  {
+    "id": "ret-explain-testing",
+    "type": "explain",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 2,
+    "prompt": "Why recall beats rereading",
+    "body": "Retrieval practice means pulling content out of memory with the source closed: answering a question, writing a summary from memory, explaining aloud. A long line of research, from Ebbinghaus onwards and confirmed in modern classroom experiments such as Roediger and Karpicke's 2006 study, finds that a recall attempt strengthens memory more than the same minutes spent rereading. The reason is effort. Reconstructing forces your brain to search, rebuild, and re-store the memory, which rereading never demands. This is often called the testing effect. It works even when the attempt fails: the attempt itself sets up the correction you read afterwards.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask which option makes you produce the answer rather than recognise it."
+      }
+    ],
+    "check": {
+      "prompt": "You have 20 minutes before dinner: reread the chapter twice, or read it once and recall it twice?",
+      "answer": "Read once and recall twice - retrieval beats extra exposure for later retention."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["retrieval-practice", "testing-effect"]
+  },
+  {
+    "id": "ret-mcq-best-use",
+    "type": "mcq",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 2,
+    "prompt": "You have 30 minutes to study a chapter you have never seen. Which plan should leave you best off a week later?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Reread the chapter three times",
+        "misconceptionId": "rereading-is-review"
+      },
+      {
+        "id": "b",
+        "text": "Highlight every key sentence, then reread the highlights twice",
+        "misconceptionId": "highlighting-works"
+      },
+      {
+        "id": "c",
+        "text": "Read it once, then spend most of the time answering questions about it from memory"
+      }
+    ],
+    "correctOptionId": "c",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "A major 2013 review by Dunlosky and colleagues rated practice testing among the most useful techniques students can use."
+      },
+      {
+        "level": 2,
+        "text": "Options a and b only re-expose you to the material. Option c makes you produce it."
+      }
+    ],
+    "explanation": "Studies consistently find retrieval practice outperforms repeated exposure on delayed tests.",
+    "estimatedSeconds": 45,
+    "tags": ["retrieval-practice", "testing-effect"]
+  },
+  {
+    "id": "ret-mcq-closed-book",
+    "type": "mcq",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 2,
+    "prompt": "Why does Cairn ask you to try answering before revealing the explanation, even when you might get it wrong?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Wrong answers would plant wrong ideas, so the app only quizzes you when you are sure",
+        "misconceptionId": "failed-recall-is-wasted"
+      },
+      {
+        "id": "b",
+        "text": "The attempt itself strengthens the memory, and wrong answers get corrected immediately"
+      },
+      {
+        "id": "c",
+        "text": "Hiding content you already recognise saves time",
+        "misconceptionId": "recognition-equals-recall"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think about what happens inside memory during an attempt, right or wrong."
+      }
+    ],
+    "explanation": "The search through memory is the workout. Studies suggest even unsuccessful retrieval followed by feedback beats passive review.",
+    "estimatedSeconds": 45,
+    "tags": ["retrieval-practice", "testing-effect"]
+  },
+  {
+    "id": "ret-short-first-attempt",
+    "type": "short_answer",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 1,
+    "prompt": "Name the effect: the finding that practising recall improves later retention more than practising by rereading.",
+    "scoring": {
+      "mode": "contains",
+      "value": "testing effect"
+    },
+    "modelAnswer": "The testing effect, also called retrieval practice or active recall.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "It is named after the activity you do in a test."
+      }
+    ],
+    "explanation": "The testing effect: retrieval attempts beat rereading for long-term retention.",
+    "estimatedSeconds": 40,
+    "tags": ["retrieval-practice"]
+  },
+  {
+    "id": "ret-reflect-tracking",
+    "type": "reflection",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 2,
+    "prompt": "Turn your next study session into an experiment.",
+    "prompts": [
+      "Pick a topic you would normally reread.",
+      "Study it your usual way, then write five recall questions about it.",
+      "Tomorrow, answer the questions with notes closed before doing anything else.",
+      "Note two things: how much came back, and how different the attempt felt from rereading."
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The questions are the treatment. Make them require answers, not yes or no."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["retrieval-practice", "reflection"]
+  },
+  {
+    "id": "ret-teach-testing",
+    "type": "teach_back",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 3,
+    "prompt": "Teach it back: explain to an imaginary friend why rereading feels easier but works worse than recall. Name the effect and one piece of evidence.",
+    "rubricId": "rubric-teach-testing",
+    "modelAnswer": "Rereading feels easy because the text is familiar, and familiarity masquerades as knowledge. Recall forces reconstruction, which strengthens the trace. Experiments since Ebbinghaus, including Roediger and Karpicke in 2006, find recall practice beats rereading on tests days later.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three things to cover: why rereading misleads, what recall does, and what studies find."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["retrieval-practice", "teach-back"]
+  },
+  {
+    "id": "ret-lab-two-lists",
+    "type": "lab",
+    "skillIds": ["retrieval-practice"],
+    "difficulty": 2,
+    "prompt": "Lab: the two-list experiment",
+    "labId": "lab-two-lists",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Do the two study methods exactly as described. The difference between them is the experiment."
+      }
+    ],
+    "estimatedSeconds": 600,
+    "tags": ["retrieval-practice", "lab"]
+  },
+  {
+    "id": "space-explain-intervals",
+    "type": "explain",
+    "skillIds": ["spaced-repetition"],
+    "difficulty": 2,
+    "prompt": "Why reviewing on a schedule beats cramming",
+    "body": "The spacing effect is one of the most reliable findings in memory research: the same total study time, spread across days, produces stronger memory than massed together. Reviews also work best at expanding intervals - a day after learning, then a few days, then a week or more. Each review lands just as the memory is fading, and successful retrieval at that moment flattens the forgetting curve. Cramming can win in the very short term, which is why it feels effective, but studies consistently find the advantage evaporates within days. Cairn's review schedule follows this logic: first contact, then reviews at expanding gaps, with policy intervals at 1, 3, 7, 21, and 60 days.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Judge each plan by what will be left a month later, not tonight."
+      }
+    ],
+    "check": {
+      "prompt": "Two learners spend 60 minutes on new material. One does six 10-minute sessions in an evening; the other does three 20-minute sessions across a week. Who is probably better off a month later?",
+      "answer": "The spread learner - spacing wins for long-term retention even though cramming feels more intense."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["spacing", "review"]
+  },
+  {
+    "id": "space-worked-schedule",
+    "type": "worked_example",
+    "skillIds": ["spaced-repetition"],
+    "difficulty": 3,
+    "prompt": "Build a review schedule for vocabulary you started today.",
+    "steps": [
+      {
+        "title": "First contact",
+        "body": "Today: learn the words with a recall attempt for each one."
+      },
+      {
+        "title": "First review",
+        "body": "Tomorrow: recall each word before checking. Mark the ones that needed the answer."
+      },
+      {
+        "title": "Second review",
+        "body": "Three days later: recall again, spending most of the time on the marked ones."
+      },
+      {
+        "title": "Stretch the gap",
+        "body": "A week later, then roughly three weeks: each success earns a longer gap."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "After a successful review, what happens to the gap before the next one?",
+      "answer": "It grows - successful retrieval lets you wait longer before the next review."
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "The gaps grow only when the recall succeeds."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "space-review-first",
+        "kind": "check",
+        "prompt": "On review day, what is the first thing you do with the words?",
+        "answer": "Attempt to recall them with the list covered.",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is the same move that built the memory."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "space-mark-misses",
+            "kind": "check",
+            "prompt": "What happens to the words you failed to recall?",
+            "answer": "They come back sooner than the ones you knew.",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "space-gap-rule",
+        "kind": "mcq",
+        "prompt": "Your recall succeeds easily at the 7-day review. What is a reasonable next interval?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Review again tomorrow"
+          },
+          {
+            "id": "b",
+            "text": "Wait longer - around three weeks"
+          },
+          {
+            "id": "c",
+            "text": "Retire the words permanently"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Easy success earns a longer gap."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["spacing", "review-plan"]
+  },
+  {
+    "id": "space-mcq-cram",
+    "type": "mcq",
+    "skillIds": ["spaced-repetition"],
+    "difficulty": 2,
+    "prompt": "An exam is in two weeks. Which plan should leave you best off - both for the exam and afterwards?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Study everything the night before, when it will be freshest",
+        "misconceptionId": "cramming-is-efficient"
+      },
+      {
+        "id": "b",
+        "text": "Split the material into sessions across both weeks, with early topics revisited a few days later"
+      },
+      {
+        "id": "c",
+        "text": "Spend the sessions rereading notes closely but never testing yourself",
+        "misconceptionId": "rereading-is-review"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two forces: spread the time, and make each contact a recall attempt."
+      }
+    ],
+    "explanation": "Spacing wins on delayed tests, and retrieval within each session makes every contact count.",
+    "estimatedSeconds": 45,
+    "tags": ["spacing", "cramming"]
+  },
+  {
+    "id": "space-mcq-forget",
+    "type": "mcq",
+    "skillIds": ["spaced-repetition"],
+    "difficulty": 3,
+    "prompt": "A week after a good review session, you can barely recall the material. What is the most useful response?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The method failed and the ability is not there; spaced review cannot help you",
+        "misconceptionId": "forgetting-means-failure"
+      },
+      {
+        "id": "b",
+        "text": "That is the curve doing its job - schedule the next recall now, and treat the shaky attempt as the workout"
+      },
+      {
+        "id": "c",
+        "text": "Reread everything immediately and repeatedly until it feels solid",
+        "misconceptionId": "rereading-is-review"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Failed recall is not wasted time. What did the attempt just do?"
+      }
+    ],
+    "explanation": "Forgetting between reviews is expected. The recall attempt itself strengthens the trace even when it feels rough.",
+    "estimatedSeconds": 45,
+    "tags": ["spacing", "forgetting-curve"]
+  },
+  {
+    "id": "space-lab-spacing-audit",
+    "type": "lab",
+    "skillIds": ["spaced-repetition"],
+    "difficulty": 2,
+    "prompt": "Lab: audit where your review sessions actually fall",
+    "labId": "lab-spacing-audit",
+    "hints": [
+      {
+        "level": 1,
+        "text": "One line per contact is enough: date, material, and whether you recalled or re-read."
+      }
+    ],
+    "estimatedSeconds": 480,
+    "tags": ["spacing", "lab"]
+  },
+  {
+    "id": "int-explain-mixing",
+    "type": "explain",
+    "skillIds": ["interleaving"],
+    "difficulty": 2,
+    "prompt": "Mixing problem types: slower in practice, better in the end",
+    "body": "Interleaving means mixing related problem types in one session instead of doing them in blocks. If you are learning statistics, shuffle mean, median, and standard-deviation problems rather than doing twenty of one kind. In studies of maths learning, including Rohrer and Taylor's work on practice problems, students who practised in mixed order did worse during practice but clearly better on later tests. The reason: blocked practice lets you apply the same method on autopilot, so you never practise choosing the method - which is what tests and real work actually ask of you. Studies suggest the benefit is strongest for related categories that are easy to confuse.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Blocked practice answers: how do I apply method X? Interleaving adds: which method is this?"
+      }
+    ],
+    "check": {
+      "prompt": "You can knock out twenty near-identical problems in a row without errors. What might that skill be missing?",
+      "answer": "Choosing which method fits - blocked practice removes the selection step that tests require."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["interleaving", "practice"]
+  },
+  {
+    "id": "int-mcq-blocked",
+    "type": "mcq",
+    "skillIds": ["interleaving"],
+    "difficulty": 2,
+    "prompt": "Two students each spend an hour on algebra. One does 30 problems of type A, then 30 of type B. The other does 60 problems shuffled together. Who is likely to do better on next week's mixed test?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The blocked student - 60 clean repetitions beat confusion",
+        "misconceptionId": "massed-practice-feels-better-means-better"
+      },
+      {
+        "id": "b",
+        "text": "The shuffled student, most likely - studies suggest mixing builds skill at choosing the right method"
+      },
+      {
+        "id": "c",
+        "text": "Whichever one felt smoother during practice - feeling fluent predicts test results",
+        "misconceptionId": "massed-practice-feels-better-means-better"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "During practice, which student ever had to decide which method to use?"
+      }
+    ],
+    "explanation": "Mixed practice trains the discrimination step. Studies find shuffled groups behind during practice and ahead on delayed tests.",
+    "estimatedSeconds": 45,
+    "tags": ["interleaving", "practice", "transfer"]
+  },
+  {
+    "id": "int-mcq-feels-worse",
+    "type": "mcq",
+    "skillIds": ["interleaving"],
+    "difficulty": 3,
+    "prompt": "After switching to shuffled practice, your error rate doubles and sessions feel worse. Someone says the method must be bad. What is the likelier explanation?",
+    "options": [
+      {
+        "id": "a",
+        "text": "They are right - high error rates mean the method is not working",
+        "misconceptionId": "difficulty-means-bad-teaching"
+      },
+      {
+        "id": "b",
+        "text": "Interleaving is harder during practice by design; that struggle is what builds the longer-term advantage"
+      },
+      {
+        "id": "c",
+        "text": "Add more hours of the same shuffled practice immediately to catch up",
+        "misconceptionId": "more-hours-always-better"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Compare what feels hard now with what the test will ask later."
+      }
+    ],
+    "explanation": "Interleaving raises practice errors while improving test performance - a desirable difficulty, not a defect.",
+    "estimatedSeconds": 45,
+    "tags": ["interleaving", "difficulty"]
+  },
+  {
+    "id": "int-reflect-shuffle",
+    "type": "reflection",
+    "skillIds": ["interleaving"],
+    "difficulty": 2,
+    "prompt": "Redesign one practice session as a shuffle.",
+    "prompts": [
+      "Which subject do you practise in blocks, one topic at a time?",
+      "List the distinct problem types or subtopics you could mix.",
+      "Write a shuffled order for tomorrow's session.",
+      "Predict what will feel different, and what error rate you expect during practice."
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Mix at the level where you must choose a method, not just a topic name."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["interleaving", "reflection"]
+  },
+  {
+    "id": "ela-explain-explain",
+    "type": "explain",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "difficulty": 2,
+    "prompt": "Explain it, then draw it",
+    "body": "Two companion strategies deepen encoding. Elaboration: connect new material to what you already know by explaining it in your own words, asking why it works, and generating your own examples. Self-explanation - talking through the reasoning out loud - is repeatedly linked to better understanding than silent review. Dual coding: pair words with a visual you draw yourself, a timeline, a diagram, a rough sketch, so retrieval has two routes into the same idea. The visual must be yours. Copying a diagram you do not understand adds pictures, not understanding.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "One of these strategies makes you produce the connections. The other just shows them to you again."
+      }
+    ],
+    "check": {
+      "prompt": "Why does explaining a concept aloud to nobody beat rereading it silently?",
+      "answer": "Explaining forces you to reconstruct the idea and exposes gaps; rereading only re-exposes you to someone else's reconstruction."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["elaboration", "dual-coding"]
+  },
+  {
+    "id": "ela-mcq-why-explain",
+    "type": "mcq",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "difficulty": 2,
+    "prompt": "You can recite a definition word for word but freeze when asked to apply it. What went wrong?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Nothing - verbatim recall is the deepest form of knowing",
+        "misconceptionId": "memorize-before-understand"
+      },
+      {
+        "id": "b",
+        "text": "The definition was stored without connections; explaining it in your own words would have built the links that application needs"
+      },
+      {
+        "id": "c",
+        "text": "You need to reread the definition until application feels natural",
+        "misconceptionId": "rereading-is-review"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what is missing between the words and the use."
+      }
+    ],
+    "explanation": "Memory without connections is brittle. Elaboration builds the links that transfer requires.",
+    "estimatedSeconds": 45,
+    "tags": ["elaboration"]
+  },
+  {
+    "id": "ela-mcq-dual-coding",
+    "type": "mcq",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "difficulty": 3,
+    "prompt": "Which use of a diagram is most likely to help your memory?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Copy the textbook diagram neatly, then re-copy it twice",
+        "misconceptionId": "notes-equal-knowledge"
+      },
+      {
+        "id": "b",
+        "text": "Close the book, sketch the process from memory, then compare with the original and fix the gaps"
+      },
+      {
+        "id": "c",
+        "text": "Look at the diagram until it feels familiar, then move on",
+        "misconceptionId": "recognition-equals-recall"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The useful version makes you produce the visual, not admire it."
+      }
+    ],
+    "explanation": "A self-drawn sketch doubles as retrieval practice. Copying is transcription, not encoding.",
+    "estimatedSeconds": 45,
+    "tags": ["dual-coding"]
+  },
+  {
+    "id": "ela-lab-teach-one-thing",
+    "type": "lab",
+    "skillIds": ["elaboration-and-dual-coding"],
+    "difficulty": 2,
+    "prompt": "Lab: teach one thing back",
+    "labId": "lab-teach-one-thing",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Notes closed for the whole explanation. The notes come in only at the end."
+      }
+    ],
+    "estimatedSeconds": 600,
+    "tags": ["elaboration", "lab"]
+  },
+  {
+    "id": "des-explain-desirable",
+    "type": "explain",
+    "skillIds": ["desirable-difficulty"],
+    "difficulty": 2,
+    "prompt": "Why the right amount of struggle helps",
+    "body": "Robert Bjork coined the phrase desirable difficulties: conditions that slow learning down during practice but improve long-term retention. Spacing, interleaving, and retrieval are all desirable difficulties. Their common cousin is the fluency illusion: easy, smooth processing during study feels like learning, but ease is a poor guide. Recognising familiar material is not the ability to reconstruct it. The practical rule: pick the harder study method that still lets you succeed eventually. If practice is effortless, you are probably maintaining, not building. If it is impossible, back off a step.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Fast and fluent during practice can coexist with nothing left a week later."
+      }
+    ],
+    "check": {
+      "prompt": "Your study session felt smooth and easy. According to the fluency illusion, what should you conclude?",
+      "answer": "Very little - ease during study is a poor predictor of retention. Check yourself with a recall attempt instead."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["desirable-difficulties", "fluency-illusion"]
+  },
+  {
+    "id": "des-mcq-fluency",
+    "type": "mcq",
+    "skillIds": ["desirable-difficulty"],
+    "difficulty": 3,
+    "prompt": "A lecture was crystal clear and the examples felt obvious while watching. What does that feeling predict about next week's retention?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A lot - clarity and comfort during learning predict strong retention",
+        "misconceptionId": "massed-practice-feels-better-means-better"
+      },
+      {
+        "id": "b",
+        "text": "Little - fluency while studying is a poor predictor; only a recall attempt measures what stuck"
+      },
+      {
+        "id": "c",
+        "text": "A clear lecture means the teaching was good, so retention is guaranteed",
+        "misconceptionId": "difficulty-means-bad-teaching"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Distinguish the feeling during exposure from the ability at test time."
+      }
+    ],
+    "explanation": "The fluency illusion is why passive study feels superior and tests say otherwise.",
+    "estimatedSeconds": 45,
+    "tags": ["fluency-illusion"]
+  },
+  {
+    "id": "des-mcq-struggle",
+    "type": "mcq",
+    "skillIds": ["desirable-difficulty"],
+    "difficulty": 3,
+    "prompt": "You spent 20 minutes trying to recall an explanation before checking, and only got part of it. Was that time wasted?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Yes - failing for 20 minutes means the method does not suit someone like you",
+        "misconceptionId": "intelligence-is-fixed"
+      },
+      {
+        "id": "b",
+        "text": "No - the effortful attempt primes the memory; studies suggest retrieval attempts help even when they partly fail"
+      },
+      {
+        "id": "c",
+        "text": "Yes - good teaching would have made it effortless",
+        "misconceptionId": "difficulty-means-bad-teaching"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "What was your brain doing during those 20 minutes?"
+      }
+    ],
+    "explanation": "The search itself strengthens the trace and sets up the correction you read afterwards.",
+    "estimatedSeconds": 45,
+    "tags": ["desirable-difficulties"]
+  },
+  {
+    "id": "des-reflect-embrace",
+    "type": "reflection",
+    "skillIds": ["desirable-difficulty"],
+    "difficulty": 2,
+    "prompt": "Find one place where easy study is hiding weak memory.",
+    "prompts": [
+      "Name a topic you study in the most comfortable way available (rereading, watching, highlighting).",
+      "What does the comfort cost you, based on what you can actually recall today?",
+      "Design a harder version: closed notes, mixed order, or a teach-aloud.",
+      "What will you tell yourself when it feels harder tomorrow?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The goal is a method that is harder during practice and kinder at test time."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["desirable-difficulties", "reflection"]
+  },
+  {
+    "id": "ill-explain-illusion",
+    "type": "explain",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 2,
+    "prompt": "Recognition is not recall",
+    "body": "Two different memory abilities hide behind the phrase 'I know this'. Recognition: the answer looks right when you see it. Recall: you can produce the answer with nothing in front of you. Exams, work, and conversation demand recall, but most passive study - rereading, highlighting, copying notes - trains only recognition. A major 2013 review by Dunlosky and colleagues rated highlighting, rereading, and summarisation as low-utility techniques: they create familiarity, and familiarity feels like mastery. The escape is simple and uncomfortable: close the book and produce. Anything you cannot produce is not yet yours.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Seeing the right answer and generating it are different muscles."
+      }
+    ],
+    "check": {
+      "prompt": "You can follow every step of a worked solution in the book. What should you test before claiming the skill?",
+      "answer": "Whether you can produce the steps from a blank page - recognising correct steps is not the ability to generate them."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["metacognition", "recognition"]
+  },
+  {
+    "id": "ill-mcq-highlighting",
+    "type": "mcq",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 2,
+    "prompt": "Your textbook is dense with yellow highlights. What is the honest assessment of that work?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The highlighting reviewed the material and locked it in",
+        "misconceptionId": "highlighting-works"
+      },
+      {
+        "id": "b",
+        "text": "Highlighting marked text; on its own it trains recognition, and studies rate it among the least effective techniques"
+      },
+      {
+        "id": "c",
+        "text": "The highlighted sentences are stored, so recall practice is unnecessary",
+        "misconceptionId": "notes-equal-knowledge"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask what your brain did while highlighting: recognising or producing?"
+      }
+    ],
+    "explanation": "Highlighting helps only if it locates material for later recall practice. As a study method alone, its evidence is weak.",
+    "estimatedSeconds": 45,
+    "tags": ["metacognition", "highlighting"]
+  },
+  {
+    "id": "ill-mcq-familiar",
+    "type": "mcq",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 2,
+    "prompt": "On practice questions you keep thinking: 'I would have got that one.' On the real test you cannot produce the steps. What is happening?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The knowledge is intact and only nerves hid it - the recognition proves you knew it",
+        "misconceptionId": "recognition-equals-recall"
+      },
+      {
+        "id": "b",
+        "text": "You studied to recognition, not recall: familiar answers are not producible ones"
+      },
+      {
+        "id": "c",
+        "text": "Reread the chapter again - that is where the familiarity came from, so it will fix the test",
+        "misconceptionId": "rereading-is-review"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "'I would have got that' is a claim worth testing with a blank page."
+      }
+    ],
+    "explanation": "Recognition (it looks right) is easier than recall (produce it cold). They improve with different kinds of practice.",
+    "estimatedSeconds": 45,
+    "tags": ["metacognition", "recognition"]
+  },
+  {
+    "id": "ill-lab-highlight-audit",
+    "type": "lab",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 2,
+    "prompt": "Lab: audit your highlights",
+    "labId": "lab-highlight-audit",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Recall first, book closed. Reopen it only after you have written everything down."
+      }
+    ],
+    "estimatedSeconds": 600,
+    "tags": ["metacognition", "lab"]
+  },
+  {
+    "id": "ill-reflect-audit",
+    "type": "reflection",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 2,
+    "prompt": "Audit one 'I know this' claim.",
+    "prompts": [
+      "Pick something you are confident you know.",
+      "Write it out cold - definition, steps, or argument, no notes.",
+      "Compare with the source: what is missing, fuzzy, or wrong?",
+      "Reclassify the claim: known, half-known, or unknown. What would move it to known?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Confidence before the blank-page test is a prediction, not a measurement."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["metacognition", "reflection"]
+  },
+  {
+    "id": "ill-teach-illusions",
+    "type": "teach_back",
+    "skillIds": ["illusion-of-knowing"],
+    "difficulty": 3,
+    "prompt": "Teach it back: explain the difference between recognition and recall, why rereading and highlighting mislead, and what to do instead.",
+    "rubricId": "rubric-teach-illusions",
+    "modelAnswer": "Recognition is matching an answer you see; recall is producing it from nothing. Rereading and highlighting build familiarity, which the brain misreads as mastery. Close the book and attempt to produce instead - that trains the ability tests actually require.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the two abilities, the false feeling, and the fix."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["metacognition", "teach-back"]
+  },
+  {
+    "id": "mot-explain-mindset",
+    "type": "explain",
+    "skillIds": ["motivation-and-habits"],
+    "difficulty": 2,
+    "prompt": "Systems, streaks, and self-compassion",
+    "body": "Motivation follows action more often than it leads it: starting a small session creates the momentum that waiting for inspiration does not. Three habits help. Systems over willpower: a fixed time and place removes the daily negotiation. Streaks as scaffolding: tracking sessions builds identity, but a broken streak should cost one day of regret, not the habit itself - restarting small is the skill. Self-compassion over self-criticism: struggling with material is information about the method, not a verdict on your ability. On ability, the fixed 'I am just bad at this' belief sits badly with evidence that skills grow with effortful practice, though honest researchers note mindset interventions have modest average effects. Belief helps. Practice does the work.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which response protects the habit rather than the streak?"
+      }
+    ],
+    "check": {
+      "prompt": "You miss three study days in a row. What is the evidence-based move?",
+      "answer": "Restart small without self-punishment - a short session today beats both abandoning the habit and a punitive marathon."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["habits", "mindset"]
+  },
+  {
+    "id": "mot-mcq-streak",
+    "type": "mcq",
+    "skillIds": ["motivation-and-habits"],
+    "difficulty": 2,
+    "prompt": "Your 21-day streak breaks. Which response best protects long-term learning?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Abandon the habit - the broken streak proves you lack the discipline this takes",
+        "misconceptionId": "intelligence-is-fixed"
+      },
+      {
+        "id": "b",
+        "text": "Restart with a small session today; a missed streak costs one day, not the habit"
+      },
+      {
+        "id": "c",
+        "text": "Wait until you feel motivated again, then resume at full intensity",
+        "misconceptionId": "motivation-comes-before-action"
+      },
+      {
+        "id": "d",
+        "text": "Double today's session to make up the missed days",
+        "misconceptionId": "more-hours-always-better"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The habit is the asset. The streak is only its shadow."
+      }
+    ],
+    "explanation": "Habits survive breaks when the restart is easy. Self-criticism and make-up marathons both raise the cost of returning.",
+    "estimatedSeconds": 45,
+    "tags": ["habits"]
+  },
+  {
+    "id": "mot-mcq-ability",
+    "type": "mcq",
+    "skillIds": ["motivation-and-habits"],
+    "difficulty": 2,
+    "prompt": "After a hard week on a new subject you conclude: 'I am just not a maths person.' What is the better reading of the evidence?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The feeling is accurate data: some people simply cannot learn maths",
+        "misconceptionId": "intelligence-is-fixed"
+      },
+      {
+        "id": "b",
+        "text": "Skill tracks accumulated practice, not a fixed type; difficulty points at gaps and methods, which can change"
+      },
+      {
+        "id": "c",
+        "text": "Switch to easier material until it feels smooth again - struggle means the teaching is bad",
+        "misconceptionId": "difficulty-means-bad-teaching"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Fixed-trait beliefs predict giving up. Process explanations predict persistence."
+      }
+    ],
+    "explanation": "Evidence links skills to accumulated practice. Fixed-ability conclusions are the failure mode that ends learning early.",
+    "estimatedSeconds": 45,
+    "tags": ["mindset"]
+  },
+  {
+    "id": "mot-short-plan",
+    "type": "short_answer",
+    "skillIds": ["motivation-and-habits"],
+    "difficulty": 2,
+    "prompt": "Write an implementation intention for tomorrow's study session, in the form: I will [behaviour] at [time] in [place].",
+    "scoring": {
+      "mode": "contains",
+      "value": "will"
+    },
+    "modelAnswer": "I will review my Spanish deck at 7:30am at the kitchen table.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The format has three slots: what, when, where."
+      }
+    ],
+    "explanation": "Fixed time-and-place plans remove the daily negotiation, which is where most study plans die.",
+    "estimatedSeconds": 60,
+    "tags": ["habits"]
+  },
+  {
+    "id": "mot-reflect-obstacles",
+    "type": "reflection",
+    "skillIds": ["motivation-and-habits"],
+    "difficulty": 2,
+    "prompt": "Pre-mortem your study plan.",
+    "prompts": [
+      "What is the most likely thing to interrupt your study plan this week?",
+      "What tiny version of the session still counts as showing up (two minutes, one card, one recall)?",
+      "What will you say to yourself after a missed day?",
+      "When exactly is your restart session?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Plans survive contact with real weeks when the fallback is smaller than the obstacle."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["habits", "reflection"]
+  },
+  {
+    "id": "sleep-explain-consolidation",
+    "type": "explain",
+    "skillIds": ["sleep-and-consolidation"],
+    "difficulty": 2,
+    "prompt": "Sleep is part of studying",
+    "body": "Memory does not finish forming during the lesson. During deep and REM sleep the brain replays and stabilises the day's learning, a process called consolidation, supported by decades of animal and human research. Sleep deprivation studies find poorer retention of material learned before the bad night. Two consequences. Sleep lost to all-night cramming trades the strongest consolidation window for a few extra hours of exposure, and studies suggest that is a bad trade. And study done shortly before sleep gets first claim on the night's consolidation. Breaks matter too: waking rest lets consolidation run without competition from new input.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Learning continues after you close the book. Ask what runs that process."
+      }
+    ],
+    "check": {
+      "prompt": "You must choose between one extra hour of cramming at midnight or sleeping. Which does the consolidation evidence favour?",
+      "answer": "Sleep - consolidation during sleep strengthens what you already studied; the extra exposure hour is worth less than the night's work on it."
+    },
+    "estimatedSeconds": 150,
+    "tags": ["sleep", "consolidation"]
+  },
+  {
+    "id": "sleep-mcq-allnighter",
+    "type": "mcq",
+    "skillIds": ["sleep-and-consolidation"],
+    "difficulty": 3,
+    "prompt": "Before a 9am exam, a friend plans to stay up all night studying. What does the research on sleep and memory suggest will happen?",
+    "options": [
+      {
+        "id": "a",
+        "text": "More hours of contact always means more learning, so the plan is sound",
+        "misconceptionId": "more-hours-always-better"
+      },
+      {
+        "id": "b",
+        "text": "The all-nighter sacrifices the night's consolidation; they will likely retain less than the extra hours gained"
+      },
+      {
+        "id": "c",
+        "text": "It works if they mass the material efficiently at the last minute - that is the strongest method",
+        "misconceptionId": "cramming-is-efficient"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "What does the brain do with the day's learning during sleep?"
+      }
+    ],
+    "explanation": "Consolidation runs during sleep. Cutting it to extend exposure costs more than the exposure adds.",
+    "estimatedSeconds": 45,
+    "tags": ["sleep", "cramming"]
+  },
+  {
+    "id": "sleep-mcq-breaks",
+    "type": "mcq",
+    "skillIds": ["sleep-and-consolidation"],
+    "difficulty": 2,
+    "prompt": "You study for two hours straight with no breaks and feel exhausted but productive. What would the research on consolidation and spacing suggest instead?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Push through - exhaustion is proof of effort, and effort is proof of learning",
+        "misconceptionId": "more-hours-always-better"
+      },
+      {
+        "id": "b",
+        "text": "Split the time with short breaks or a walk; consolidation and spacing both benefit from gaps between study bouts"
+      },
+      {
+        "id": "c",
+        "text": "Skip breaks entirely - gaps only matter in review apps, not in study sessions",
+        "misconceptionId": "massed-practice-feels-better-means-better"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two supported ideas point the same way: spacing between bouts, and rest that lets consolidation run."
+      }
+    ],
+    "explanation": "Spacing applies within study plans, and rest - especially sleep - is when consolidation happens.",
+    "estimatedSeconds": 45,
+    "tags": ["sleep", "consolidation", "transfer"]
+  },
+  {
+    "id": "sleep-reflect-tonight",
+    "type": "reflection",
+    "skillIds": ["sleep-and-consolidation"],
+    "difficulty": 2,
+    "prompt": "Design tonight around consolidation.",
+    "prompts": [
+      "What is the last thing you will study before sleep, and why that one?",
+      "What time do you actually need to be in bed to wake up functional?",
+      "What will you move out of the last hour before bed?",
+      "Tomorrow, how will you test what survived the night - recall before coffee, or rereading?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Put the material you most want to keep closest to the night."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["sleep", "reflection"]
+  }
+]

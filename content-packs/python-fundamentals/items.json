@@ -1,0 +1,1334 @@
+[
+  {
+    "id": "py-explain-values",
+    "type": "explain",
+    "skillIds": ["values-and-types"],
+    "difficulty": 1,
+    "prompt": "Values and types",
+    "body": "Every value in Python has a type. `42` is an int, `3.14` is a float, `\"hello\"` is a str, and `True` is a bool. The `type()` function reports which: `type(42)` prints `<class 'int'>`. Types matter because operators behave differently on them: `2 + 3` is `5`, but `\"2\" + \"3\"` is `\"23\"` — strings glue together instead of adding. One surprise: `/` always produces a float, even when the result is whole — `10 / 2` gives `5.0`. Use `//` when you want a floored whole number: `7 // 2` gives `3`.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask of any value: what type is it, and what do your operators do to that type?"
+      }
+    ],
+    "check": {
+      "prompt": "What does `type(10 / 2)` print, and why?",
+      "answer": "<class 'float'> — / always produces a float, even when the division is exact"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "types"]
+  },
+  {
+    "id": "py-mcq-division",
+    "type": "mcq",
+    "skillIds": ["values-and-types"],
+    "difficulty": 1,
+    "prompt": "What does `print(7 / 2)` show?",
+    "options": [
+      {
+        "id": "a",
+        "text": "3",
+        "misconceptionId": "division-type-surprise"
+      },
+      {
+        "id": "b",
+        "text": "3.5"
+      },
+      {
+        "id": "c",
+        "text": "4",
+        "misconceptionId": "division-type-surprise"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Python has one operator for plain division, and it does not round."
+      },
+      {
+        "level": 2,
+        "text": "The result keeps a decimal part, so it cannot be an int."
+      }
+    ],
+    "explanation": "`/` is true division and always returns a float: `7 / 2` is `3.5`. `7 // 2` floors to `3`.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "operators"]
+  },
+  {
+    "id": "py-mcq-add-types",
+    "type": "mcq",
+    "skillIds": ["values-and-types"],
+    "difficulty": 2,
+    "prompt": "What does `print(\"5\" + 5)` do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Prints 10",
+        "misconceptionId": "type-confusion-concat"
+      },
+      {
+        "id": "b",
+        "text": "Raises TypeError"
+      },
+      {
+        "id": "c",
+        "text": "Prints 55",
+        "misconceptionId": "type-confusion-concat"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look closely at the quotes. One value is text, the other is a number."
+      },
+      {
+        "level": 2,
+        "text": "Python refuses to guess a conversion between str and int."
+      }
+    ],
+    "explanation": "`\"5\" + 5` mixes a str with an int and raises `TypeError`. `\"5\" + \"5\"` is `\"55\"` and `5 + 5` is `10`; Python never converts for you.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "types"]
+  },
+  {
+    "id": "py-short-bool",
+    "type": "short_answer",
+    "skillIds": ["values-and-types"],
+    "difficulty": 2,
+    "prompt": "What does `int(True)` return? Answer with the value only.",
+    "scoring": {
+      "mode": "exact",
+      "value": "1"
+    },
+    "modelAnswer": "1. Booleans are ints in disguise: True is 1 and False is 0.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Booleans are closer to numbers than they look."
+      }
+    ],
+    "explanation": "`int(True)` is `1` and `int(False)` is `0`, which is why `sum()` works on a list of booleans.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "types"]
+  },
+  {
+    "id": "py-explain-variables",
+    "type": "explain",
+    "skillIds": ["variables-and-names"],
+    "difficulty": 1,
+    "prompt": "Variables: names for values",
+    "body": "A variable is a name pointing at a value. Assignment uses one `=`: `score = 10` stores 10 under the name score. Comparison uses two `==`: `score == 10` asks a question and answers True or False. Names use letters, digits, and underscores, cannot start with a digit, and are case-sensitive: `total` and `Total` are different variables. Reassignment simply repoints the name: after `x = 3` then `x = x + 4`, x is 7 — the right side is computed first, then stored. Avoid builtin names like `list` and `str`; renaming them breaks later code.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "One equals sign stores. Two equals signs ask."
+      }
+    ],
+    "check": {
+      "prompt": "After `x = 3` and then `x = x + 4`, what is x?",
+      "answer": "7 — Python computes x + 4 first, then stores the result back in x"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "variables"]
+  },
+  {
+    "id": "py-mcq-assign-vs-equals",
+    "type": "mcq",
+    "skillIds": ["variables-and-names"],
+    "difficulty": 1,
+    "prompt": "Which line prints True only when score is exactly 100?",
+    "options": [
+      {
+        "id": "a",
+        "text": "print(score = 100)",
+        "misconceptionId": "equals-vs-assign"
+      },
+      {
+        "id": "b",
+        "text": "print(score == 100)"
+      },
+      {
+        "id": "c",
+        "text": "print(score equals 100)",
+        "misconceptionId": "equals-vs-assign"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One of these stores a value or uses a word Python does not know. You want the one that asks a question."
+      }
+    ],
+    "explanation": "`==` compares. A single `=` in a call is a syntax error, and there is no `equals` keyword.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "variables"]
+  },
+  {
+    "id": "py-mcq-naming",
+    "type": "mcq",
+    "skillIds": ["variables-and-names"],
+    "difficulty": 2,
+    "prompt": "Which assignment causes trouble later in the program?",
+    "options": [
+      {
+        "id": "a",
+        "text": "str = \"hello\"",
+        "misconceptionId": "shadowed-builtin"
+      },
+      {
+        "id": "b",
+        "text": "user_name = \"bo\""
+      },
+      {
+        "id": "c",
+        "text": "list = []",
+        "misconceptionId": "shadowed-builtin"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One of these names already belongs to Python."
+      }
+    ],
+    "explanation": "`str` and `list` are built-in types. Reusing them shadows the builtin, so later calls like `list(range(3))` fail with TypeError.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "variables"]
+  },
+  {
+    "id": "py-teach-assignment",
+    "type": "teach_back",
+    "skillIds": ["variables-and-names"],
+    "difficulty": 2,
+    "prompt": "Teach it back: what does a single = do, what does == do, and why is naming a variable `list` risky?",
+    "rubricId": "rubric-teach-assignment",
+    "modelAnswer": "A single = assigns: it stores the right-hand value under a name. == compares two values and gives True or False. Naming a variable list or str shadows the builtin type, so later calls like list(range(3)) raise TypeError.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: store, ask, and the builtin you should not rename."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["python", "variables"]
+  },
+  {
+    "id": "py-worked-reassign",
+    "type": "worked_example",
+    "skillIds": ["variables-and-names"],
+    "difficulty": 2,
+    "prompt": "Trace a variable through three assignments.",
+    "steps": [
+      {
+        "title": "Start",
+        "body": "`total = 2`. The name total now points at 2."
+      },
+      {
+        "title": "Update",
+        "body": "`total = total + 3`. Python reads the old value (2), computes 5, and repoints total at it."
+      },
+      {
+        "title": "Repoint again",
+        "body": "`total = total * 10`. Same rule: read, compute (50), store. The name never remembers its old value."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "After `n = 1`, `n = n + 1`, `n = n + 1`, what is n?",
+      "answer": "3 — each line uses the value the previous line left"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Each assignment runs once, top to bottom, and uses the current value."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "reassign-order",
+        "kind": "check",
+        "prompt": "In `total = total + 3`, which side does Python evaluate first?",
+        "answer": "the right side — the expression is computed before anything is stored",
+        "hints": [
+          {
+            "level": 1,
+            "text": "The equals sign is not a sentence. It is a command with two moments: compute, then store."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "reassign-right",
+            "kind": "check",
+            "prompt": "What is the right-hand value of `total = total + 3` when total is 2?",
+            "answer": "5",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      },
+      {
+        "id": "reassign-history",
+        "kind": "mcq",
+        "prompt": "After `total = 2`, `total = total + 3`, `total = total * 10`, what is total?",
+        "options": [
+          {
+            "id": "a",
+            "text": "5"
+          },
+          {
+            "id": "b",
+            "text": "50"
+          },
+          {
+            "id": "c",
+            "text": "20"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Run the lines in order; each one uses the value the line above left."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 150,
+    "tags": ["python", "variables"]
+  },
+  {
+    "id": "py-explain-control",
+    "type": "explain",
+    "skillIds": ["control-flow"],
+    "difficulty": 2,
+    "prompt": "Making decisions and repeating work",
+    "body": "`if temp > 30:` runs an indented block only when the condition is True. The colon ends every header — `if`, `elif`, `else`, `while`, `for`, `def` — and the indentation defines the block. `while condition:` repeats while the condition stays True, so something inside the loop must move it toward False. `for i in range(3):` repeats a known number of times, and `range(3)` produces 0, 1, 2 — it starts at 0 and stops before the end value. `range(1, 4)` produces 1, 2, 3: the stop value is a fence you never touch.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Colon at the end of the header, indentation for the body. Every time."
+      }
+    ],
+    "check": {
+      "prompt": "How many times does `for i in range(3)` run, and what values does i take?",
+      "answer": "Three times: i is 0, then 1, then 2"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "control-flow"]
+  },
+  {
+    "id": "py-mcq-colon",
+    "type": "mcq",
+    "skillIds": ["control-flow"],
+    "difficulty": 1,
+    "prompt": "This code fails with SyntaxError:\n\n```\nif score > 90\n    print(\"pass\")\n```\n\nWhat is missing?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Parentheses around the condition",
+        "misconceptionId": "missing-colon"
+      },
+      {
+        "id": "b",
+        "text": "A colon at the end of the if line"
+      },
+      {
+        "id": "c",
+        "text": "The word then after the condition",
+        "misconceptionId": "missing-colon"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Every if, while, for, and def header ends with the same punctuation."
+      }
+    ],
+    "explanation": "Python headers end with `:`. The indented lines below form the body; parentheses and `then` belong to other languages.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "syntax"]
+  },
+  {
+    "id": "py-mcq-range",
+    "type": "mcq",
+    "skillIds": ["control-flow"],
+    "difficulty": 2,
+    "prompt": "What does `for i in range(1, 4): print(i)` print?",
+    "options": [
+      {
+        "id": "a",
+        "text": "1, 2, 3, 4 — one per line",
+        "misconceptionId": "range-off-by-one"
+      },
+      {
+        "id": "b",
+        "text": "1, 2, 3 — one per line"
+      },
+      {
+        "id": "c",
+        "text": "2, 3 — one per line",
+        "misconceptionId": "range-off-by-one"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The stop value in range is a fence you never touch."
+      },
+      {
+        "level": 2,
+        "text": "Count the integers from the start value up to, but not including, the stop."
+      }
+    ],
+    "explanation": "`range(1, 4)` produces 1, 2, 3. The stop value 4 is excluded, so it prints three lines.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "loops"]
+  },
+  {
+    "id": "py-mcq-while",
+    "type": "mcq",
+    "skillIds": ["control-flow"],
+    "difficulty": 2,
+    "prompt": "What does this loop do?\n\n```\ncount = 0\nwhile count < 3:\n    print(count)\n```\n\n(The body never changes count.)",
+    "options": [
+      {
+        "id": "a",
+        "text": "Prints 0, 1, 2 and stops",
+        "misconceptionId": "infinite-loop"
+      },
+      {
+        "id": "b",
+        "text": "Prints 0 forever until you stop it"
+      },
+      {
+        "id": "c",
+        "text": "Prints nothing",
+        "misconceptionId": "infinite-loop"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The loop repeats only while the condition is True. Did anything change what it tests?"
+      },
+      {
+        "level": 2,
+        "text": "count stays 0, and 0 < 3 stays True."
+      }
+    ],
+    "explanation": "Nothing inside the body changes count, so `count < 3` stays True forever. Move the update inside: `count = count + 1`.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "loops"]
+  },
+  {
+    "id": "py-lab-loop",
+    "type": "lab",
+    "skillIds": ["control-flow"],
+    "difficulty": 2,
+    "prompt": "Lab: count down with a loop",
+    "labId": "lab-loop-counter",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Write the file in your editor, then run `python3 countdown.py` in a terminal."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["python", "loops", "lab"]
+  },
+  {
+    "id": "py-explain-functions",
+    "type": "explain",
+    "skillIds": ["functions"],
+    "difficulty": 2,
+    "prompt": "Functions: define once, call often",
+    "body": "`def greet(name):` defines a function; the indented body runs only when you call it, as in `greet(\"Ada\")`. Values you pass land in the parameters. `return` sends a value back to the caller — without it, the function hands back `None`. Printing is not returning: `print` shows text on the screen, but only `return` lets the caller keep the result. Beware plain mutable default arguments like `def collect(x, items=[])`: the default list is created once, at definition time, and shared across calls.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "def stores the recipe. Calling it cooks the meal."
+      }
+    ],
+    "check": {
+      "prompt": "What does `result = greet(\"Ada\")` hold if greet prints a greeting but has no return?",
+      "answer": "None — print is not return, so the call hands back None"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "functions"]
+  },
+  {
+    "id": "py-mcq-return-print",
+    "type": "mcq",
+    "skillIds": ["functions"],
+    "difficulty": 2,
+    "prompt": "```\ndef add(a, b):\n    print(a + b)\n\nresult = add(2, 3)\n```\n\nWhat is result?",
+    "options": [
+      {
+        "id": "a",
+        "text": "5",
+        "misconceptionId": "missing-return"
+      },
+      {
+        "id": "b",
+        "text": "None"
+      },
+      {
+        "id": "c",
+        "text": "\"5\"",
+        "misconceptionId": "missing-return"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The function shows 5 on screen. What does it hand back to the caller?"
+      },
+      {
+        "level": 2,
+        "text": "No return statement means the call returns None."
+      }
+    ],
+    "explanation": "add prints 5 but returns None, so result is None. Add `return a + b` to keep the value.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "functions"]
+  },
+  {
+    "id": "py-mcq-mutable-default",
+    "type": "mcq",
+    "skillIds": ["functions"],
+    "difficulty": 4,
+    "prompt": "```\ndef collect(x, items=[]):\n    items.append(x)\n    return items\n\nprint(collect(1))\nprint(collect(2))\n```\n\nWhat prints?",
+    "options": [
+      {
+        "id": "a",
+        "text": "[1] then [2]",
+        "misconceptionId": "mutable-default-arg"
+      },
+      {
+        "id": "b",
+        "text": "[1] then [1, 2]"
+      },
+      {
+        "id": "c",
+        "text": "A TypeError on the second call",
+        "misconceptionId": "mutable-default-arg"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The default list is created once, when def runs — not on every call."
+      },
+      {
+        "level": 2,
+        "text": "Both calls that omit items share the very same list."
+      }
+    ],
+    "explanation": "Default arguments are evaluated once at definition. The shared list keeps growing: use `items=None` and create a new list inside the function.",
+    "estimatedSeconds": 60,
+    "tags": ["python", "functions"]
+  },
+  {
+    "id": "py-mcq-shadow",
+    "type": "mcq",
+    "skillIds": ["functions"],
+    "difficulty": 3,
+    "prompt": "A script runs `list = [3, 1, 2]` at the top. Later it calls `list(range(3))`. What happens?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It prints [0, 1, 2]",
+        "misconceptionId": "shadowed-builtin"
+      },
+      {
+        "id": "b",
+        "text": "TypeError: 'list' object is not callable"
+      },
+      {
+        "id": "c",
+        "text": "It prints []",
+        "misconceptionId": "shadowed-builtin"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "What does the name list point at by the time of the call?"
+      }
+    ],
+    "explanation": "The assignment replaced the builtin list type with your list object, so calling it like a function fails. Avoid builtin names: use `numbers` or `items`.",
+    "estimatedSeconds": 50,
+    "tags": ["python", "functions", "names"]
+  },
+  {
+    "id": "py-worked-greet",
+    "type": "worked_example",
+    "skillIds": ["functions"],
+    "difficulty": 2,
+    "prompt": "Write and use a function that builds a greeting.",
+    "steps": [
+      {
+        "title": "Define",
+        "body": "`def greet(name):` starts the definition. The colon and the indent are part of the shape."
+      },
+      {
+        "title": "Return",
+        "body": "Inside: `return \"Hi, \" + name + \"!\"`. return hands the string back to whoever called."
+      },
+      {
+        "title": "Call",
+        "body": "Below the definition: `message = greet(\"Ada\")` then `print(message)` prints Hi, Ada!."
+      },
+      {
+        "title": "Reuse",
+        "body": "`print(greet(\"Bo\"))` calls it again with a different value — no copy-paste."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "Which line gives the caller the greeting: `print(greeting)` or `return greeting`?",
+      "answer": "return greeting — print only shows it; return hands it back"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Define at the top, call below, and let return carry the value out."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "greet-return",
+        "kind": "check",
+        "prompt": "In greet, which keyword sends the built string back to the caller?",
+        "answer": "return",
+        "hints": [
+          {
+            "level": 1,
+            "text": "It is the opposite of keeping the value to yourself."
+          }
+        ],
+        "scaffolds": []
+      },
+      {
+        "id": "greet-call",
+        "kind": "mcq",
+        "prompt": "Which line stores the greeting for later use?",
+        "options": [
+          {
+            "id": "a",
+            "text": "greet(\"Ada\")"
+          },
+          {
+            "id": "b",
+            "text": "message = greet(\"Ada\")"
+          },
+          {
+            "id": "c",
+            "text": "return message"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "Storing needs a name on the left of =."
+          }
+        ],
+        "scaffolds": []
+      }
+    ],
+    "estimatedSeconds": 150,
+    "tags": ["python", "functions"]
+  },
+  {
+    "id": "py-lab-functions",
+    "type": "lab",
+    "skillIds": ["functions"],
+    "difficulty": 2,
+    "prompt": "Lab: define and call a function",
+    "labId": "lab-define-functions",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run `python3 shapes.py` after saving the file; both results must come from calls to area."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["python", "functions", "lab"]
+  },
+  {
+    "id": "py-explain-data-structures",
+    "type": "explain",
+    "skillIds": ["data-structures"],
+    "difficulty": 3,
+    "prompt": "Lists, dicts, tuples, and sets",
+    "body": "A list holds ordered items and indexes from 0: `names = [\"ann\", \"bo\", \"cy\"]`, and `names[0]` is `\"ann\"`. A dict maps keys to values: `ages = {\"ann\": 31}`, and you look up by key — `ages[\"ann\"]` — not by position. A tuple is a list that cannot change: `point = (3, 4)`. A set keeps unique items with no order: `set([1, 1, 2])` is `{1, 2}`. Methods like `append` and `sort` change a list in place and return None, and removing items while a for loop walks the same list will skip elements.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Lists count positions from zero. Dicts ignore positions entirely — keys are the address."
+      }
+    ],
+    "check": {
+      "prompt": "How do you get the second name from `names = [\"ann\", \"bo\", \"cy\"]`?",
+      "answer": "names[1] — indexing starts at 0"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "collections"]
+  },
+  {
+    "id": "py-mcq-index",
+    "type": "mcq",
+    "skillIds": ["data-structures"],
+    "difficulty": 2,
+    "prompt": "What is `names[1]` when `names = [\"ann\", \"bo\", \"cy\"]`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"ann\"",
+        "misconceptionId": "index-and-key-confusion"
+      },
+      {
+        "id": "b",
+        "text": "\"bo\""
+      },
+      {
+        "id": "c",
+        "text": "IndexError",
+        "misconceptionId": "index-and-key-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The index is a position, and positions start counting from zero."
+      }
+    ],
+    "explanation": "Index 1 is the second item: \"bo\". `names[0]` is \"ann\"; `names[3]` would raise IndexError.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "lists"]
+  },
+  {
+    "id": "py-mcq-dict",
+    "type": "mcq",
+    "skillIds": ["data-structures"],
+    "difficulty": 2,
+    "prompt": "What is `ages[0]` when `ages = {\"ann\": 31, \"bo\": 25}`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "31 — the first value",
+        "misconceptionId": "index-and-key-confusion"
+      },
+      {
+        "id": "b",
+        "text": "KeyError: 0"
+      },
+      {
+        "id": "c",
+        "text": "\"ann\"",
+        "misconceptionId": "index-and-key-confusion"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Dicts have no positions. What are the only valid subscripts here?"
+      },
+      {
+        "level": 2,
+        "text": "You must use a key that exists: \"ann\" or \"bo\"."
+      }
+    ],
+    "explanation": "Dicts are keyed, not positioned: `ages[\"ann\"]` is 31, and `ages[0]` raises KeyError because 0 is not a key.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "dicts"]
+  },
+  {
+    "id": "py-mcq-mutate",
+    "type": "mcq",
+    "skillIds": ["data-structures"],
+    "difficulty": 4,
+    "prompt": "```\nnums = [3, -1, 4, -1, 5]\nfor n in nums:\n    if n < 0:\n        nums.remove(n)\n```\n\nWhat is the risk here?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It removes every negative number reliably",
+        "misconceptionId": "mutate-while-iterating"
+      },
+      {
+        "id": "b",
+        "text": "The loop can skip items, leaving negatives behind"
+      },
+      {
+        "id": "c",
+        "text": "Python raises an error immediately",
+        "misconceptionId": "mutate-while-iterating"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Picture the loop holding a position number while the list shifts underneath it."
+      },
+      {
+        "level": 2,
+        "text": "Removing an item slides the rest left, and the loop's next index jumps past one."
+      }
+    ],
+    "explanation": "Changing a list while looping over it shifts items under the loop's cursor, so elements get skipped. Build a new list instead: `nums = [n for n in nums if n >= 0]`.",
+    "estimatedSeconds": 60,
+    "tags": ["python", "lists"]
+  },
+  {
+    "id": "py-lab-data",
+    "type": "lab",
+    "skillIds": ["data-structures"],
+    "difficulty": 3,
+    "prompt": "Lab: pair a list with a dict",
+    "labId": "lab-list-dict",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Loop over the names and look each price up by key."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["python", "collections", "lab"]
+  },
+  {
+    "id": "py-explain-strings",
+    "type": "explain",
+    "skillIds": ["strings-and-formatting"],
+    "difficulty": 2,
+    "prompt": "Strings and f-strings",
+    "body": "Strings are text in quotes. An f-string embeds values: `f\"Hi, {name}!\"` — the f goes before the opening quote, and anything in braces is evaluated. Strings are immutable: methods like `upper()` return a new string and leave the original alone, so `s.upper()` on its own changes nothing you can keep — write `s = s.upper()`. `len()` counts characters: `len(\"hi\")` is 2. And `len` counts characters, not numbers: `len(\"42\")` is 2, while `len(42)` raises TypeError.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The f prefix and the braces work as a pair."
+      }
+    ],
+    "check": {
+      "prompt": "How do you print a greeting that includes the value of name?",
+      "answer": "print(f\"Hi, {name}!\") — f before the quote, name inside braces"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "strings"]
+  },
+  {
+    "id": "py-mcq-fstring",
+    "type": "mcq",
+    "skillIds": ["strings-and-formatting"],
+    "difficulty": 2,
+    "prompt": "What does `print(\"Hi {name}\")` (no f prefix) print when name is \"Ada\"?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Hi Ada",
+        "misconceptionId": "forgot-f-prefix"
+      },
+      {
+        "id": "b",
+        "text": "Hi {name}"
+      },
+      {
+        "id": "c",
+        "text": "It raises NameError",
+        "misconceptionId": "forgot-f-prefix"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Without the special prefix, the string is just characters."
+      }
+    ],
+    "explanation": "Without the f prefix, braces are ordinary characters. Use `print(f\"Hi {name}\")` to interpolate.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "strings"]
+  },
+  {
+    "id": "py-mcq-len-str",
+    "type": "mcq",
+    "skillIds": ["strings-and-formatting"],
+    "difficulty": 2,
+    "prompt": "What is `len(\"42\")`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "42",
+        "misconceptionId": "type-confusion-concat"
+      },
+      {
+        "id": "b",
+        "text": "2"
+      },
+      {
+        "id": "c",
+        "text": "TypeError",
+        "misconceptionId": "type-confusion-concat"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The quotes make this a piece of text, not a number."
+      }
+    ],
+    "explanation": "\"42\" is a two-character string, so len is 2. `len(42)` would raise TypeError because numbers have no length.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "strings"]
+  },
+  {
+    "id": "py-short-fstring",
+    "type": "short_answer",
+    "skillIds": ["strings-and-formatting"],
+    "difficulty": 2,
+    "prompt": "What does `f\"{2 + 3}\"` evaluate to? Answer with the value only.",
+    "scoring": {
+      "mode": "exact",
+      "value": "5"
+    },
+    "modelAnswer": "The string \"5\" — the expression inside the braces is evaluated, then converted to text.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The braces hold an expression. Python computes it, then turns the result into text."
+      }
+    ],
+    "explanation": "`f\"{2 + 3}\"` is the string \"5\": expressions inside braces are evaluated and converted with str().",
+    "estimatedSeconds": 40,
+    "tags": ["python", "strings"]
+  },
+  {
+    "id": "py-explain-files",
+    "type": "explain",
+    "skillIds": ["files"],
+    "difficulty": 3,
+    "prompt": "Reading and writing text files",
+    "body": "`with open(\"notes.txt\", \"r\") as f:` opens a file and closes it automatically at the end of the block — always use with. Modes: \"r\" reads, \"w\" writes and empties an existing file the moment it opens, \"a\" appends to the end. `f.read()` returns the whole file as one string, newlines included; `f.readlines()` returns a list of lines. Writing is a method call: `f.write(\"done\\n\")` — add the newline yourself.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The mode letter is the second argument, in quotes."
+      }
+    ],
+    "check": {
+      "prompt": "Which mode keeps a log file's history and adds new lines at the end?",
+      "answer": "\"a\" — append mode"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "files"]
+  },
+  {
+    "id": "py-mcq-w-mode",
+    "type": "mcq",
+    "skillIds": ["files"],
+    "difficulty": 2,
+    "prompt": "report.txt already has 200 lines. What does `open(\"report.txt\", \"w\")` do to it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Keeps the lines and starts writing after them",
+        "misconceptionId": "write-vs-append"
+      },
+      {
+        "id": "b",
+        "text": "Empties the file immediately"
+      },
+      {
+        "id": "c",
+        "text": "Refuses to open an existing file",
+        "misconceptionId": "write-vs-append"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "\"w\" stands for write-from-scratch, not write-more."
+      }
+    ],
+    "explanation": "\"w\" truncates the file the moment it opens. To keep history, use \"a\".",
+    "estimatedSeconds": 45,
+    "tags": ["python", "files"]
+  },
+  {
+    "id": "py-mcq-append-mode",
+    "type": "mcq",
+    "skillIds": ["files"],
+    "difficulty": 2,
+    "prompt": "You log one line per run and must keep every earlier line. Which mode opens log.txt?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"w\"",
+        "misconceptionId": "write-vs-append"
+      },
+      {
+        "id": "b",
+        "text": "\"a\""
+      },
+      {
+        "id": "c",
+        "text": "\"r\"",
+        "misconceptionId": "write-vs-append"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One mode appends. Its letter is the first letter of that word."
+      }
+    ],
+    "explanation": "\"a\" appends new writes after the existing content. \"w\" would wipe it; \"r\" can only read.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "files"]
+  },
+  {
+    "id": "py-lab-files",
+    "type": "lab",
+    "skillIds": ["files"],
+    "difficulty": 3,
+    "prompt": "Lab: write a diary file and read it back",
+    "labId": "lab-write-read",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Run the script twice; mode \"a\" should grow the file, not reset it."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["python", "files", "lab"]
+  },
+  {
+    "id": "py-explain-exceptions",
+    "type": "explain",
+    "skillIds": ["errors-and-exceptions"],
+    "difficulty": 3,
+    "prompt": "Errors and try/except",
+    "body": "A traceback is Python telling you where it gave up — read the last line first: it names the error type and message, like `ValueError: invalid literal for int() with base 10: 'abc'`. Wrap risky code in try/except: the try block runs, and if it raises the named error, the except block handles it and the program continues on its way. Catch specific errors — `except ValueError:` — not everything at once, so real bugs stay visible.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The traceback reads like a story told backwards: the ending is the last line."
+      }
+    ],
+    "check": {
+      "prompt": "After an except block runs, does the program stop?",
+      "answer": "No — it continues with the code after the try/except"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "errors"]
+  },
+  {
+    "id": "py-mcq-int-convert",
+    "type": "mcq",
+    "skillIds": ["errors-and-exceptions"],
+    "difficulty": 2,
+    "prompt": "What happens when `int(\"12a\")` runs?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Returns 12, ignoring the a",
+        "misconceptionId": "type-confusion-concat"
+      },
+      {
+        "id": "b",
+        "text": "Raises ValueError"
+      },
+      {
+        "id": "c",
+        "text": "Returns \"12a\"",
+        "misconceptionId": "type-confusion-concat"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "int() converts only clean digit strings."
+      },
+      {
+        "level": 2,
+        "text": "One bad character spoils the whole conversion."
+      }
+    ],
+    "explanation": "`int(\"12a\")` raises ValueError because \"12a\" is not a valid number. This is the error to catch around `int(input())`.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "errors"]
+  },
+  {
+    "id": "py-short-try-explain",
+    "type": "short_answer",
+    "skillIds": ["errors-and-exceptions"],
+    "difficulty": 3,
+    "prompt": "In two or three sentences: what does the try block contain, what does the except block do, and why catch ValueError specifically instead of every error?",
+    "scoring": {
+      "mode": "rubric",
+      "rubricId": "rubric-teach-errors"
+    },
+    "modelAnswer": "The try block holds the risky code that might raise. The except block runs only if that specific error occurs, handling it so the program continues. Catching ValueError specifically keeps other bugs — typos, logic errors — visible instead of silencing everything.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the risky lines, the rescue lines, and why narrow beats broad."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["python", "errors"]
+  },
+  {
+    "id": "py-lab-errors",
+    "type": "lab",
+    "skillIds": ["errors-and-exceptions"],
+    "difficulty": 3,
+    "prompt": "Lab: catch a ValueError",
+    "labId": "lab-catch-error",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The friendly message replaces the traceback; a final print proves the program survived."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["python", "errors", "lab"]
+  },
+  {
+    "id": "py-explain-modules",
+    "type": "explain",
+    "skillIds": ["modules-and-imports"],
+    "difficulty": 2,
+    "prompt": "Modules and imports",
+    "body": "A module is a file of Python you can pull in with import. `import math`, then `math.sqrt(9)` gives `3.0` — the functions live behind the module name. `from math import sqrt` lets you call `sqrt(9)` directly. Importing runs the module's top-level code once, which is why scripts guard their main behaviour with `if __name__ == \"__main__\":` — that block runs only when the file itself is executed, not when it is imported.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "import attaches a name. Everything the module defines hides behind it."
+      }
+    ],
+    "check": {
+      "prompt": "After `import math`, which call computes the square root of 9?",
+      "answer": "math.sqrt(9)"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "modules"]
+  },
+  {
+    "id": "py-mcq-randint",
+    "type": "mcq",
+    "skillIds": ["modules-and-imports"],
+    "difficulty": 2,
+    "prompt": "After `import random`, what values can `random.randint(1, 6)` return?",
+    "options": [
+      {
+        "id": "a",
+        "text": "1 through 5",
+        "misconceptionId": "range-off-by-one"
+      },
+      {
+        "id": "b",
+        "text": "Any whole number from 1 to 6, both included"
+      },
+      {
+        "id": "c",
+        "text": "0 through 6",
+        "misconceptionId": "range-off-by-one"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "randint is unlike range: both ends count."
+      },
+      {
+        "level": 2,
+        "text": "Think dice roll: six faces, all reachable."
+      }
+    ],
+    "explanation": "`random.randint(1, 6)` includes both endpoints — it models a six-sided die. `range(1, 6)` excludes the stop; randint does not.",
+    "estimatedSeconds": 45,
+    "tags": ["python", "modules"]
+  },
+  {
+    "id": "py-reflection-modules",
+    "type": "reflection",
+    "skillIds": ["modules-and-imports"],
+    "difficulty": 2,
+    "prompt": "Which part of your own work could become a module?",
+    "prompts": [
+      "Name one task you repeat across scripts — a calculation, a lookup, a cleanup. What would you put in a helpers.py module?",
+      "What would you guard with `if __name__ == \"__main__\":` in that module?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think of code you have copy-pasted more than once."
+      }
+    ],
+    "estimatedSeconds": 120,
+    "tags": ["python", "modules"]
+  },
+  {
+    "id": "py-short-main-guard",
+    "type": "short_answer",
+    "skillIds": ["modules-and-imports"],
+    "difficulty": 3,
+    "prompt": "Which standard condition guards code that should run only when the file is executed directly, not imported? Answer with the if line.",
+    "scoring": {
+      "mode": "contains",
+      "value": "__main__"
+    },
+    "modelAnswer": "if __name__ == \"__main__\":",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The answer compares a dunder name to a certain string."
+      }
+    ],
+    "explanation": "`if __name__ == \"__main__\":` runs its block only when the file is executed directly.",
+    "estimatedSeconds": 60,
+    "tags": ["python", "modules"]
+  },
+  {
+    "id": "py-explain-testing",
+    "type": "explain",
+    "skillIds": ["testing-basics"],
+    "difficulty": 3,
+    "prompt": "Testing with assert",
+    "body": "An `assert` states what must be true: `assert add(2, 3) == 5`. If it is true, assert says nothing — silence is the sound of passing. If it is false, it raises AssertionError and stops the program. Group asserts into small test files: one file per module, one check per line of behaviour. Run them with `python3 test_math.py`; no output means every check passed, and many developers add a final `print(\"all tests passed\")` for peace of mind.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Think of each assert as a tripwire: quiet when untouched."
+      }
+    ],
+    "check": {
+      "prompt": "What does the terminal show when all your asserts pass?",
+      "answer": "Nothing — a passing assert prints nothing"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["python", "testing"]
+  },
+  {
+    "id": "py-mcq-assert-pass",
+    "type": "mcq",
+    "skillIds": ["testing-basics"],
+    "difficulty": 2,
+    "prompt": "A test file with five asserts all passes. What does `python3 test_math.py` print?",
+    "options": [
+      {
+        "id": "a",
+        "text": "OK — 5 passed",
+        "misconceptionId": "assert-silent-pass"
+      },
+      {
+        "id": "b",
+        "text": "Nothing"
+      },
+      {
+        "id": "c",
+        "text": "True five times",
+        "misconceptionId": "assert-silent-pass"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Asserts are silent unless something breaks."
+      }
+    ],
+    "explanation": "Passing asserts produce no output. No news is good news — add your own `print(\"all tests passed\")` if you want a sign-off.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "testing"]
+  },
+  {
+    "id": "py-mcq-assert-fail",
+    "type": "mcq",
+    "skillIds": ["testing-basics"],
+    "difficulty": 2,
+    "prompt": "What happens when an assert fails: `assert 2 + 2 == 5`?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Prints False and continues to the next line",
+        "misconceptionId": "assert-silent-pass"
+      },
+      {
+        "id": "b",
+        "text": "Raises AssertionError and stops the program"
+      },
+      {
+        "id": "c",
+        "text": "Retries the line three times",
+        "misconceptionId": "assert-silent-pass"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "A failed assert is not a message. It is an error."
+      }
+    ],
+    "explanation": "A failing assert raises AssertionError immediately, ending the run — that is what makes it a test.",
+    "estimatedSeconds": 40,
+    "tags": ["python", "testing"]
+  },
+  {
+    "id": "py-lab-testing",
+    "type": "lab",
+    "skillIds": ["testing-basics"],
+    "difficulty": 3,
+    "prompt": "Lab: write and break a test file",
+    "labId": "lab-write-tests",
+    "hints": [
+      {
+        "level": 1,
+        "text": "First run should be silent. Then break one assert on purpose and read the AssertionError."
+      }
+    ],
+    "estimatedSeconds": 360,
+    "tags": ["python", "testing", "lab"]
+  }
+]

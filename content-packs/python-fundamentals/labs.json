@@ -1,0 +1,291 @@
+[
+  {
+    "id": "lab-first-script",
+    "title": "Write and run your first script",
+    "skillIds": ["values-and-types", "variables-and-names"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create hello.py in your editor with two variables and a print that uses both, then run it with python3 and confirm the output.",
+    "commands": ["python3 --version", "python3 hello.py"],
+    "checks": [
+      {
+        "id": "runs",
+        "type": "manual",
+        "prompt": "Does `python3 hello.py` print your greeting without any traceback?",
+        "answer": "yes"
+      },
+      {
+        "id": "values-shown",
+        "type": "manual",
+        "prompt": "Does the output show the variable values rather than literal braces or quotes?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Create hello.py in your editor, save it, and run python3 hello.py from the same directory."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, run these commands inside WSL; python3 is built in on macOS and Linux."
+      },
+      {
+        "level": 3,
+        "text": "An f-string embeds variables: print(f\"{name} likes {number}\")."
+      }
+    ],
+    "solution": "name = \"Ada\"\nfavourite_number = 42\nprint(f\"{name} likes {favourite_number}\")\n# then: python3 hello.py",
+    "cleanup": ["rm hello.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-loop-counter",
+    "title": "Count down with a loop",
+    "skillIds": ["control-flow"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create countdown.py that prints 3, 2, 1 on separate lines and then Liftoff!, run it, and confirm the output.",
+    "commands": ["python3 countdown.py"],
+    "checks": [
+      {
+        "id": "sequence",
+        "type": "manual",
+        "prompt": "Does the output show 3, 2, 1 each on its own line, followed by Liftoff!?",
+        "answer": "yes"
+      },
+      {
+        "id": "stops",
+        "type": "manual",
+        "prompt": "Does the program end after Liftoff! instead of hanging?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "A for loop with range handles the numbers; print Liftoff! after the loop."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. range(3, 0, -1) counts down: 3, 2, 1."
+      },
+      {
+        "level": 3,
+        "text": "If you use while, make sure something in the body lowers the counter, or the loop never ends."
+      }
+    ],
+    "solution": "for n in range(3, 0, -1):\n    print(n)\nprint(\"Liftoff!\")\n# then: python3 countdown.py",
+    "cleanup": ["rm countdown.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-define-functions",
+    "title": "Define and call a function",
+    "skillIds": ["functions"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create shapes.py with a function area(width, height) that returns the area, call it twice with different values, and print both results.",
+    "commands": ["python3 shapes.py"],
+    "checks": [
+      {
+        "id": "two-results",
+        "type": "manual",
+        "prompt": "Does the output show two different areas, both produced by calls to area?",
+        "answer": "yes"
+      },
+      {
+        "id": "no-none",
+        "type": "manual",
+        "prompt": "Does the output show numbers rather than None?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "def area(width, height): starts the definition; the body is indented under it."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. Inside the function, return width * height — return, not print."
+      }
+    ],
+    "solution": "def area(width, height):\n    return width * height\n\nprint(area(3, 4))\nprint(area(5, 2))\n# then: python3 shapes.py",
+    "cleanup": ["rm shapes.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-list-dict",
+    "title": "Pair a list with a dict",
+    "skillIds": ["data-structures"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create inventory.py with a list of three item names and a dict of their prices, then print each item with its price using a loop.",
+    "commands": ["python3 inventory.py"],
+    "checks": [
+      {
+        "id": "pairs",
+        "type": "manual",
+        "prompt": "Does the output show all three items, each with the price stored under its key?",
+        "answer": "yes"
+      },
+      {
+        "id": "by-key",
+        "type": "manual",
+        "prompt": "Does the code look prices up by key (prices[item]) rather than by a position number?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "for item in items: visits each name; prices[item] fetches its value."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. Dicts are keyed, not positioned: prices[0] would raise KeyError."
+      }
+    ],
+    "solution": "items = [\"pen\", \"pad\", \"clip\"]\nprices = {\"pen\": 2, \"pad\": 5, \"clip\": 1}\n\nfor item in items:\n    print(item, prices[item])\n# then: python3 inventory.py",
+    "cleanup": ["rm inventory.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-write-read",
+    "title": "Write a diary file and read it back",
+    "skillIds": ["files"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create diary.py that appends two lines to diary.txt using mode a, reads the file back, and prints it. Run it twice and watch the file grow.",
+    "commands": ["python3 diary.py", "cat diary.txt", "python3 diary.py", "cat diary.txt"],
+    "checks": [
+      {
+        "id": "appended",
+        "type": "manual",
+        "prompt": "After running the script twice, does diary.txt hold four lines rather than two?",
+        "answer": "yes"
+      },
+      {
+        "id": "printed",
+        "type": "manual",
+        "prompt": "Does the script's own read-back print the file contents?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Use two with open(...) blocks: one with mode \"a\" to write, one with \"r\" to read."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. \"w\" would empty the file each run; \"a\" keeps the history."
+      },
+      {
+        "level": 3,
+        "text": "f.write(\"line\\n\") adds the newline explicitly; f.read() returns the whole file as one string."
+      }
+    ],
+    "solution": "with open(\"diary.txt\", \"a\") as f:\n    f.write(\"morning: wrote a file\\n\")\n    f.write(\"evening: read it back\\n\")\n\nwith open(\"diary.txt\", \"r\") as f:\n    print(f.read())\n# then: python3 diary.py",
+    "cleanup": ["rm diary.py diary.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-catch-error",
+    "title": "Catch a ValueError",
+    "skillIds": ["errors-and-exceptions"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create safe_convert.py that tries int(\"abc\") inside a try block, catches ValueError, prints a friendly message, and prints a final line to prove the program kept running.",
+    "commands": ["python3 safe_convert.py"],
+    "checks": [
+      {
+        "id": "handled",
+        "type": "manual",
+        "prompt": "Does the friendly message appear instead of a traceback?",
+        "answer": "yes"
+      },
+      {
+        "id": "continued",
+        "type": "manual",
+        "prompt": "Does the final line still print, showing the program continued after the except block?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "try: holds the conversion; except ValueError: holds the message."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. A print after the try/except proves the program survived."
+      }
+    ],
+    "solution": "try:\n    number = int(\"abc\")\n    print(number)\nexcept ValueError:\n    print(\"That was not a number.\")\n\nprint(\"done\")\n# then: python3 safe_convert.py",
+    "cleanup": ["rm safe_convert.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-write-tests",
+    "title": "Write and break a test file",
+    "skillIds": ["testing-basics"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create test_area.py with a function area and three asserts over it, run it and observe silence, then break one assert and run again to see AssertionError. Fix it and finish on a silent pass.",
+    "commands": ["python3 test_area.py"],
+    "checks": [
+      {
+        "id": "silent-pass",
+        "type": "manual",
+        "prompt": "With correct asserts, does the first run print nothing at all?",
+        "answer": "yes"
+      },
+      {
+        "id": "failure-seen",
+        "type": "manual",
+        "prompt": "After breaking one assert, does the run end with an AssertionError traceback?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Each line: assert area(3, 4) == 12 — state what must be true."
+      },
+      {
+        "level": 2,
+        "text": "On Windows, use WSL. Silence means the tests passed; a failing assert raises AssertionError and stops the run."
+      },
+      {
+        "level": 3,
+        "text": "Break the file by asserting area(1, 1) == 2, run it, read the last traceback line, then fix it."
+      }
+    ],
+    "solution": "def area(width, height):\n    return width * height\n\nassert area(3, 4) == 12\nassert area(5, 2) == 10\nassert area(0, 9) == 0\nprint(\"all tests passed\")\n# then: python3 test_area.py",
+    "cleanup": ["rm test_area.py"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

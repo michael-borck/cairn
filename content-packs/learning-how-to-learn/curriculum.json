@@ -1,0 +1,117 @@
+{
+  "modules": [
+    {
+      "id": "how-memory-works",
+      "title": "How memory works",
+      "order": 1,
+      "skillIds": [
+        "memory-and-forgetting",
+        "retrieval-practice",
+        "spaced-repetition"
+      ]
+    },
+    {
+      "id": "stronger-study-moves",
+      "title": "Stronger study moves",
+      "order": 2,
+      "skillIds": [
+        "interleaving",
+        "elaboration-and-dual-coding",
+        "desirable-difficulty"
+      ]
+    },
+    {
+      "id": "honest-checks-lasting-habits",
+      "title": "Honest checks and lasting habits",
+      "order": 3,
+      "skillIds": [
+        "illusion-of-knowing",
+        "motivation-and-habits",
+        "sleep-and-consolidation"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "memory-and-forgetting",
+      "title": "Memory and the forgetting curve",
+      "description": "How memories form, why they fade, and why forgetting is normal rather than a defect.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["memory", "forgetting-curve", "encoding"]
+    },
+    {
+      "id": "retrieval-practice",
+      "title": "Retrieval practice",
+      "description": "Why pulling answers out of memory beats putting them in again, and how to practise recall.",
+      "prerequisites": ["memory-and-forgetting"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["retrieval-practice", "testing-effect", "recall"]
+    },
+    {
+      "id": "spaced-repetition",
+      "title": "Spaced repetition",
+      "description": "The spacing effect and expanding review intervals, and why cramming fades fast.",
+      "prerequisites": ["retrieval-practice"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["spacing", "review", "forgetting-curve"]
+    },
+    {
+      "id": "interleaving",
+      "title": "Interleaving",
+      "description": "Mixing problem types in one session so you learn to choose methods, not just apply them.",
+      "prerequisites": ["retrieval-practice"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["interleaving", "practice"]
+    },
+    {
+      "id": "elaboration-and-dual-coding",
+      "title": "Elaboration and dual coding",
+      "description": "Explaining ideas in your own words and pairing them with visuals you draw yourself.",
+      "prerequisites": ["retrieval-practice"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["elaboration", "dual-coding", "self-explanation"]
+    },
+    {
+      "id": "desirable-difficulty",
+      "title": "Desirable difficulty",
+      "description": "Why harder practice can mean stronger memory, and how the fluency illusion misleads.",
+      "prerequisites": ["interleaving", "elaboration-and-dual-coding"],
+      "difficulty": 3,
+      "estimatedMinutes": 15,
+      "tags": ["desirable-difficulties", "fluency-illusion"]
+    },
+    {
+      "id": "illusion-of-knowing",
+      "title": "The illusion of knowing",
+      "description": "Recognition versus recall, and the honest evidence on rereading and highlighting.",
+      "prerequisites": ["desirable-difficulty"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["metacognition", "recognition", "recall"]
+    },
+    {
+      "id": "motivation-and-habits",
+      "title": "Motivation and habits",
+      "description": "Systems over willpower, restarts over streaks, and self-compassion over self-criticism.",
+      "prerequisites": ["spaced-repetition"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["habits", "mindset", "motivation"]
+    },
+    {
+      "id": "sleep-and-consolidation",
+      "title": "Sleep and consolidation",
+      "description": "How sleep and rest lock in what you studied, and why all-nighters trade away the wrong thing.",
+      "prerequisites": ["memory-and-forgetting"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["sleep", "consolidation"]
+    }
+  ]
+}

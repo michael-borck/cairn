@@ -1,0 +1,304 @@
+[
+  {
+    "id": "lab-first-request",
+    "title": "Your first request",
+    "skillIds": ["request-response-model"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Send a real request with curl and look at the raw response, headers first.",
+    "commands": ["curl -i https://example.com"],
+    "checks": [
+      {
+        "id": "status-line",
+        "type": "manual",
+        "prompt": "Does the output start with a status line like HTTP/2 200 before any HTML?",
+        "answer": "yes"
+      },
+      {
+        "id": "headers",
+        "type": "manual",
+        "prompt": "Can you find a Content-Type header in the output?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-i stands for include: it prints the response headers above the body."
+      },
+      {
+        "level": 2,
+        "text": "Everything above the first blank line is metadata; below it is the body."
+      }
+    ],
+    "solution": "curl -i https://example.com",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-query-params",
+    "title": "Send query parameters",
+    "skillIds": ["urls-and-resources"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Echo your own query parameters back using httpbin and see how the server parsed them.",
+    "commands": ["curl \"https://httpbin.org/get?course=cairn&lesson=urls\""],
+    "checks": [
+      {
+        "id": "parsed",
+        "type": "manual",
+        "prompt": "In the JSON response, does the args object show course and lesson as separate keys?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Quote the whole URL so the shell does not eat the &."
+      },
+      {
+        "level": 2,
+        "text": "Look at the args key in the response body."
+      }
+    ],
+    "solution": "curl \"https://httpbin.org/get?course=cairn&lesson=urls\"",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-methods-echo",
+    "title": "Echo a POST and a PUT",
+    "skillIds": ["methods-and-semantics"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Send a POST and a PUT with a JSON body to httpbin and inspect what arrived.",
+    "commands": [
+      "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"name\\\":\\\"cairn\\\"}\" https://httpbin.org/post",
+      "curl -X PUT -H \"Content-Type: application/json\" -d \"{\\\"name\\\":\\\"cairn\\\"}\" https://httpbin.org/put"
+    ],
+    "checks": [
+      {
+        "id": "body-arrived",
+        "type": "manual",
+        "prompt": "Does the json field in the response show the name key you sent?",
+        "answer": "yes"
+      },
+      {
+        "id": "url-differs",
+        "type": "manual",
+        "prompt": "Does the response show the request went to /post the first time and /put the second?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-X chooses the method, -H adds a header, -d sets the body."
+      },
+      {
+        "level": 2,
+        "text": "The response echoes the request; find your payload under json or data."
+      }
+    ],
+    "solution": "curl -X POST -H \"Content-Type: application/json\" -d '{\"name\":\"cairn\"}' https://httpbin.org/post",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-status-codes",
+    "title": "Collect status codes",
+    "skillIds": ["status-codes"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Provoke a 200, a 404, and a 401 from real endpoints and read only the status lines.",
+    "commands": [
+      "curl -s -o /dev/null -w \"%{http_code}\\n\" https://example.com",
+      "curl -s -o /dev/null -w \"%{http_code}\\n\" https://api.github.com/repos/michael-borck/cairn-does-not-exist",
+      "curl -s -o /dev/null -w \"%{http_code}\\n\" https://api.github.com/user"
+    ],
+    "checks": [
+      {
+        "id": "three-codes",
+        "type": "manual",
+        "prompt": "Did you get 200, 404, and 401 in that order?",
+        "answer": "yes"
+      },
+      {
+        "id": "explain-401",
+        "type": "manual",
+        "prompt": "Can you say why the last one was 401 and not 403?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-o /dev/null discards the body; -w prints a custom string afterwards."
+      },
+      {
+        "level": 2,
+        "text": "The last endpoint needs credentials you did not send: that is 401, not 403."
+      }
+    ],
+    "solution": "curl -s -o /dev/null -w \"%{http_code}\\n\" https://api.github.com/user",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-content-negotiation",
+    "title": "Negotiate a content type",
+    "skillIds": ["headers-and-content-types"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Ask the same endpoint for two different formats with the Accept header.",
+    "commands": [
+      "curl -s -H \"Accept: application/json\" https://api.github.com/zen",
+      "curl -s -H \"Accept: text/plain\" https://api.github.com/zen"
+    ],
+    "checks": [
+      {
+        "id": "json-form",
+        "type": "manual",
+        "prompt": "Does the first call wrap the message in a JSON object and the second return plain text?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Accept tells the server what you want back; the server decides."
+      }
+    ],
+    "solution": "curl -s -H \"Accept: application/json\" https://api.github.com/zen",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-json-field",
+    "title": "Pull one field from JSON",
+    "skillIds": ["json-payloads"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Fetch repository metadata and extract a single nested field with python3.",
+    "commands": [
+      "curl -s https://api.github.com/repos/michael-borck/cairn",
+      "curl -s https://api.github.com/repos/michael-borck/cairn | python3 -c \"import json,sys; d=json.load(sys.stdin); print(d['owner']['login'], d['license']['spdx_id'])\""
+    ],
+    "checks": [
+      {
+        "id": "fields",
+        "type": "manual",
+        "prompt": "Does the second command print the owner login and the licence SPDX id instead of the whole document?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Owner is itself an object; drill down with two keys in a row."
+      }
+    ],
+    "solution": "curl -s https://api.github.com/repos/michael-borck/cairn | python3 -c \"import json,sys; d=json.load(sys.stdin); print(d['owner']['login'], d['license']['spdx_id'])\"",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-auth-bearer",
+    "title": "Send a bearer token",
+    "skillIds": ["auth-basics"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "See the difference between calling a protected endpoint with no token and with a token in the Authorization header.",
+    "commands": [
+      "curl -s -o /dev/null -w \"%{http_code}\\n\" https://httpbin.org/bearer",
+      "curl -s -H \"Authorization: Bearer my-not-real-token\" https://httpbin.org/bearer"
+    ],
+    "checks": [
+      {
+        "id": "unauthenticated",
+        "type": "manual",
+        "prompt": "Without the header, does the endpoint answer 401?",
+        "answer": "yes"
+      },
+      {
+        "id": "authenticated-shape",
+        "type": "manual",
+        "prompt": "With the header, does the JSON response show authenticated: true (it does not validate the token, just its presence)?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Credentials travel in a header, never in the URL."
+      },
+      {
+        "level": 2,
+        "text": "The scheme comes first: Authorization: Bearer <token>."
+      }
+    ],
+    "solution": "curl -s -H \"Authorization: Bearer my-not-real-token\" https://httpbin.org/bearer",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-inspect-verbose",
+    "title": "Read the whole exchange",
+    "skillIds": ["inspecting-traffic"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Use curl -v to watch the full conversation, including the redirect hop.",
+    "commands": ["curl -v -L \"https://httpbin.org/redirect/2\" 2>&1 | rtk less"],
+    "checks": [
+      {
+        "id": "hops",
+        "type": "manual",
+        "prompt": "Do you see more than one request: a 302 with a Location header, then the final 200?",
+        "answer": "yes"
+      },
+      {
+        "id": "gt-lt",
+        "type": "manual",
+        "prompt": "Does > mark lines your client sent and < mark lines the server returned?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-v prints the conversation to stderr; pipe stderr into the pager too."
+      },
+      {
+        "level": 2,
+        "text": "Count the status lines: one per hop."
+      }
+    ],
+    "solution": "curl -v -L \"https://httpbin.org/redirect/2\"",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  }
+]

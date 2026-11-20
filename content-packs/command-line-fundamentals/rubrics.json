@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rubric-teach-paths",
+    "title": "Explain absolute vs relative paths",
+    "criteria": [
+      {
+        "id": "anchor",
+        "label": "Says what each path kind is anchored to",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: absolute starts at /, relative at the current directory"
+        }
+      },
+      {
+        "id": "tilde",
+        "label": "Explains what ~ expands to",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "up",
+        "label": "Explains what .. means",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-permissions",
+    "title": "Explain permission bits and safe habits",
+    "criteria": [
+      {
+        "id": "triads",
+        "label": "Decodes the owner, group, other triads",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "octals",
+        "label": "Explains what 644 or 755 means as bits",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      },
+      {
+        "id": "caution",
+        "label": "Shows care about sudo and rm",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear"
+        }
+      }
+    ]
+  }
+]

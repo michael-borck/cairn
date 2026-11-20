@@ -1,0 +1,32 @@
+{
+  "id": "default-v1",
+  "targetSuccessMin": 0.75,
+  "targetSuccessMax": 0.85,
+  "masteryThreshold": 0.9,
+  "reviewIntervalsDays": [
+    1,
+    3,
+    7,
+    21,
+    60
+  ],
+  "hysteresis": {
+    "observations": 2,
+    "minItemsBetweenChanges": 3
+  },
+  "wrongStreak": {
+    "similarItem": 1,
+    "switchRepresentation": 2,
+    "prerequisite": 3
+  },
+  "help": {
+    "startLevelByMastery": {
+      "0.0": 2,
+      "0.4": 1,
+      "0.7": 0
+    },
+    "escalateAfterWrong": 2,
+    "fadeAfterCorrect": 2
+  },
+  "confidenceSampleRate": 0.2
+}

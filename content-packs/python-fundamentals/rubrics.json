@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rubric-teach-assignment",
+    "title": "Explain assignment, comparison, and builtin names",
+    "criteria": [
+      {
+        "id": "assignment",
+        "label": "Explains what a single = does",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: it stores the right-hand value under a name"
+        }
+      },
+      {
+        "id": "comparison",
+        "label": "Explains what == does",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: it compares two values and gives True or False"
+        }
+      },
+      {
+        "id": "builtins",
+        "label": "Says why naming a variable list or str is risky",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: it shadows the builtin type and breaks later calls"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-errors",
+    "title": "Explain try and except",
+    "criteria": [
+      {
+        "id": "try-scope",
+        "label": "Says what belongs inside the try block",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: the risky lines that might raise"
+        }
+      },
+      {
+        "id": "except-behaviour",
+        "label": "Explains when and how the except block runs",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: only if the named error is raised, then the program continues"
+        }
+      },
+      {
+        "id": "specific-catching",
+        "label": "Explains why to catch ValueError rather than every error",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: narrow catches keep real bugs visible"
+        }
+      }
+    ]
+  }
+]

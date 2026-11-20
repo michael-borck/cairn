@@ -1,0 +1,74 @@
+[
+  {
+    "id": "rubric-teach-prompting",
+    "title": "Explain prompting with intent",
+    "criteria": [
+      {
+        "id": "parts",
+        "label": "Names the four parts: role, context, constraints, examples",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial: names some parts",
+          "2": "Clear: all four, with what each contributes"
+        }
+      },
+      {
+        "id": "checkable",
+        "label": "Explains why checkable rules beat vague ones",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: a reader can verify a checkable rule in the output; vibes cannot be violated observably"
+        }
+      },
+      {
+        "id": "iterate",
+        "label": "Explains why there is no single magic phrasing",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: the model predicts from supplied patterns, so context and iteration beat spells"
+        }
+      }
+    ]
+  },
+  {
+    "id": "rubric-teach-verification",
+    "title": "Explain confabulation and the checking habit",
+    "criteria": [
+      {
+        "id": "mechanism",
+        "label": "Explains why models confabulate",
+        "weight": 0.4,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: answers come from training plus the prompt, no third source, so invention is ordinary behaviour"
+        }
+      },
+      {
+        "id": "confidence",
+        "label": "Says why confidence is not evidence",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: tone is generated style, not a measurement of evidence"
+        }
+      },
+      {
+        "id": "habit",
+        "label": "Names a concrete check before acting on a claim",
+        "weight": 0.3,
+        "levels": {
+          "0": "Missing",
+          "1": "Partial",
+          "2": "Clear: open the source, verify by a second method, or ask who would catch an invention"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,333 @@
+[
+  {
+    "id": "lab-navigate",
+    "title": "Navigate home and back",
+    "skillIds": ["paths-and-navigation"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Practice moving between your home directory and a subdirectory without using the file browser.",
+    "commands": ["pwd", "cd ~", "pwd", "cd Documents", "cd .."],
+    "checks": [
+      {
+        "id": "home",
+        "type": "manual",
+        "prompt": "After `cd ~`, does `pwd` print your home directory path?",
+        "answer": "yes"
+      },
+      {
+        "id": "up",
+        "type": "manual",
+        "prompt": "After `cd ..`, does `pwd` show the parent of Documents?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "~ always means your home directory, whatever directory you are in now."
+      },
+      {
+        "level": 2,
+        "text": ".. is the parent of the current directory."
+      }
+    ],
+    "solution": "cd ~ && pwd && cd Documents && cd .. && pwd",
+    "cleanup": ["cd ~"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-inspect",
+    "title": "Inspect a directory fully",
+    "skillIds": ["listing-and-inspecting"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": ["touch .cairn-hidden-demo"],
+    "task": "List a directory including hidden files, then sort by size to find the largest file.",
+    "commands": ["ls -a", "ls -lah", "ls -lahS"],
+    "checks": [
+      {
+        "id": "hidden",
+        "type": "manual",
+        "prompt": "Does `ls -a` reveal `.cairn-hidden-demo` while plain `ls` does not?",
+        "answer": "yes"
+      },
+      {
+        "id": "sorted",
+        "type": "manual",
+        "prompt": "With `ls -lahS`, is the largest file at the top?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-a shows all entries including dot files; -S sorts by size."
+      },
+      {
+        "level": 2,
+        "text": "Combine flags: `ls -lahS` is long output, human sizes, all entries, sorted by size."
+      }
+    ],
+    "solution": "ls -lahS",
+    "cleanup": ["rm .cairn-hidden-demo"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-sample-text",
+    "title": "Read and count a sample file",
+    "skillIds": ["reading-files"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "printf 'cairn is a local-first learning engine\\nit adapts to your answers\\nit explains every choice\\n' > cairn-sample.txt"
+    ],
+    "task": "Create the sample file, then view its start, its end, and count its lines.",
+    "commands": [
+      "head -n 1 cairn-sample.txt",
+      "tail -n 1 cairn-sample.txt",
+      "wc -l cairn-sample.txt"
+    ],
+    "checks": [
+      {
+        "id": "first",
+        "type": "manual",
+        "prompt": "Does `head -n 1` print the line about being local-first?",
+        "answer": "yes"
+      },
+      {
+        "id": "count",
+        "type": "manual",
+        "prompt": "Does `wc -l` report 3 lines?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "head takes lines from the top; tail takes them from the bottom."
+      },
+      {
+        "level": 2,
+        "text": "`wc -l` counts newline characters, so it reports lines."
+      }
+    ],
+    "solution": "head -n 1 cairn-sample.txt && tail -n 1 cairn-sample.txt && wc -l cairn-sample.txt",
+    "cleanup": ["rm cairn-sample.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-grep-todos",
+    "title": "Hunt TODOs in a small tree",
+    "skillIds": ["searching-text"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "mkdir -p cairn-demo/src",
+      "printf 'def load():\\n    # TODO validate input\\n    return data\\n' > cairn-demo/src/app.py",
+      "printf '# notes\\n\\nsome text without markers\\n' > cairn-demo/notes.txt"
+    ],
+    "task": "Search the whole cairn-demo tree for TODO markers, case-insensitively, with line numbers.",
+    "commands": ["grep -rni \"todo\" cairn-demo"],
+    "checks": [
+      {
+        "id": "found",
+        "type": "manual",
+        "prompt": "Does the output show src/app.py with the TODO line and its line number?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "-r searches directories, -i ignores case, -n prints line numbers."
+      },
+      {
+        "level": 2,
+        "text": "The pattern comes before the path: `grep -rni todo cairn-demo`."
+      }
+    ],
+    "solution": "grep -rni \"todo\" cairn-demo",
+    "cleanup": ["rm -r cairn-demo"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-pipe-frequency",
+    "title": "Build a word-frequency pipeline",
+    "skillIds": ["pipes-and-redirection"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "printf 'the shell is quiet\\nthe shell is honest\\nquiet tools last\\n' > cairn-pipe.txt"
+    ],
+    "task": "Count how often each word appears, most frequent first, keeping only the top lines.",
+    "commands": [
+      "cat cairn-pipe.txt | tr ' ' '\\n' | sort | uniq -c | sort -nr | head -n 5"
+    ],
+    "checks": [
+      {
+        "id": "counts",
+        "type": "manual",
+        "prompt": "Does the output list words with counts, starting with the word 'the' at 3?",
+        "answer": "yes"
+      },
+      {
+        "id": "saved",
+        "type": "manual",
+        "prompt": "After running it again with `> counts.txt`, does the file exist with the same content?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Each stage does one job: split into words, sort, count neighbours, sort numerically, keep the top."
+      },
+      {
+        "level": 2,
+        "text": "The order matters: uniq only collapses adjacent lines, so sort first."
+      }
+    ],
+    "solution": "cat cairn-pipe.txt | tr ' ' '\\n' | sort | uniq -c | sort -nr | head -n 5 > counts.txt",
+    "cleanup": ["rm cairn-pipe.txt counts.txt"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-file-tree",
+    "title": "Build and move a mini project",
+    "skillIds": ["creating-and-moving"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Create a two-level project, copy it, then rename the copy.",
+    "commands": [
+      "mkdir -p project/src project/docs",
+      "touch project/src/main.py",
+      "cp -r project project-backup",
+      "mv project-backup archive"
+    ],
+    "checks": [
+      {
+        "id": "tree",
+        "type": "manual",
+        "prompt": "Does `ls -R project` show src and docs with main.py inside src?",
+        "answer": "yes"
+      },
+      {
+        "id": "renamed",
+        "type": "manual",
+        "prompt": "Does `ls` show a directory named archive and no project-backup?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "mkdir -p creates nested directories in one command."
+      },
+      {
+        "level": 2,
+        "text": "Copying a directory needs cp -r; renaming is just mv with a new name."
+      }
+    ],
+    "solution": "mkdir -p project/src project/docs && touch project/src/main.py && cp -r project project-backup && mv project-backup archive",
+    "cleanup": ["rm -r project archive"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-find-logs",
+    "title": "Find and size log files",
+    "skillIds": ["finding-files"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [
+      "mkdir -p cairn-logs/old",
+      "printf 'log line\\n' > cairn-logs/app.log",
+      "printf 'log line\\n' > cairn-logs/old/app.log"
+    ],
+    "task": "Find every .log file under cairn-logs, then list only the files (not directories).",
+    "commands": ["find cairn-logs -name \"*.log\"", "find cairn-logs -type f"],
+    "checks": [
+      {
+        "id": "both",
+        "type": "manual",
+        "prompt": "Does the first find list both app.log files, including the one inside old?",
+        "answer": "yes"
+      },
+      {
+        "id": "files",
+        "type": "manual",
+        "prompt": "Does `-type f` hide the directories from the output?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "find needs a starting directory: `find cairn-logs ...`."
+      },
+      {
+        "level": 2,
+        "text": "Quote the pattern so the shell does not expand it: -name \"*.log\"."
+      }
+    ],
+    "solution": "find cairn-logs -name \"*.log\" && find cairn-logs -type f",
+    "cleanup": ["rm -r cairn-logs"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-chmod",
+    "title": "Make a script executable",
+    "skillIds": ["permissions-and-safety"],
+    "platforms": ["macos", "linux"],
+    "setup": [
+      "printf '#!/bin/sh\\necho cairn says hi\\n' > greet.sh"
+    ],
+    "task": "Try to run the script, add execute permission, and run it again.",
+    "commands": ["./greet.sh", "chmod +x greet.sh", "./greet.sh", "ls -l greet.sh"],
+    "checks": [
+      {
+        "id": "before",
+        "type": "manual",
+        "prompt": "Before chmod, does running ./greet.sh fail with permission denied?",
+        "answer": "yes"
+      },
+      {
+        "id": "after",
+        "type": "manual",
+        "prompt": "After chmod +x, does ls -l show an x in the permissions (like -rwxr--r--)?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The error message before chmod names the missing permission."
+      },
+      {
+        "level": 2,
+        "text": "chmod +x adds execute for owner, group, and others at once."
+      }
+    ],
+    "solution": "chmod +x greet.sh && ./greet.sh",
+    "cleanup": ["rm greet.sh"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

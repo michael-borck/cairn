@@ -1,0 +1,117 @@
+{
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Foundations",
+      "order": 1,
+      "skillIds": [
+        "shell-and-commands",
+        "paths-and-navigation",
+        "listing-and-inspecting"
+      ]
+    },
+    {
+      "id": "working-with-text",
+      "title": "Working with text",
+      "order": 2,
+      "skillIds": [
+        "reading-files",
+        "searching-text",
+        "pipes-and-redirection"
+      ]
+    },
+    {
+      "id": "managing-files",
+      "title": "Managing files and staying safe",
+      "order": 3,
+      "skillIds": [
+        "creating-and-moving",
+        "finding-files",
+        "permissions-and-safety"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "id": "shell-and-commands",
+      "title": "The shell and commands",
+      "description": "Run commands, read flags, and use built-in help.",
+      "prerequisites": [],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["cli", "shell"]
+    },
+    {
+      "id": "paths-and-navigation",
+      "title": "Paths and navigation",
+      "description": "Move around the filesystem with pwd, cd, absolute and relative paths.",
+      "prerequisites": ["shell-and-commands"],
+      "difficulty": 1,
+      "estimatedMinutes": 20,
+      "tags": ["cli", "filesystem"]
+    },
+    {
+      "id": "listing-and-inspecting",
+      "title": "Listing and inspecting",
+      "description": "See what is in a directory, including hidden files and file details.",
+      "prerequisites": ["paths-and-navigation"],
+      "difficulty": 2,
+      "estimatedMinutes": 15,
+      "tags": ["cli", "filesystem"]
+    },
+    {
+      "id": "reading-files",
+      "title": "Reading files",
+      "description": "View whole files, slices of files, and count lines.",
+      "prerequisites": ["listing-and-inspecting"],
+      "difficulty": 1,
+      "estimatedMinutes": 15,
+      "tags": ["cli", "text"]
+    },
+    {
+      "id": "searching-text",
+      "title": "Searching text",
+      "description": "Find lines that match a pattern with grep and its common flags.",
+      "prerequisites": ["reading-files"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["cli", "text", "grep"]
+    },
+    {
+      "id": "pipes-and-redirection",
+      "title": "Pipes and redirection",
+      "description": "Chain commands and send output to files instead of the screen.",
+      "prerequisites": ["reading-files"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["cli", "pipes"]
+    },
+    {
+      "id": "creating-and-moving",
+      "title": "Creating, copying, moving, deleting",
+      "description": "Build a directory tree and move files around safely.",
+      "prerequisites": ["paths-and-navigation"],
+      "difficulty": 2,
+      "estimatedMinutes": 20,
+      "tags": ["cli", "filesystem"]
+    },
+    {
+      "id": "finding-files",
+      "title": "Finding files",
+      "description": "Locate files by name, type, and size with find.",
+      "prerequisites": ["listing-and-inspecting"],
+      "difficulty": 3,
+      "estimatedMinutes": 15,
+      "tags": ["cli", "find"]
+    },
+    {
+      "id": "permissions-and-safety",
+      "title": "Permissions and safety",
+      "description": "Read permission bits, change them, and handle rm and sudo with care.",
+      "prerequisites": ["creating-and-moving"],
+      "difficulty": 3,
+      "estimatedMinutes": 25,
+      "tags": ["cli", "permissions", "safety"]
+    }
+  ]
+}

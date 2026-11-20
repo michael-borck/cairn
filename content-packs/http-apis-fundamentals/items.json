@@ -1,0 +1,1190 @@
+[
+  {
+    "id": "req-explain",
+    "type": "explain",
+    "skillIds": ["request-response-model"],
+    "difficulty": 1,
+    "prompt": "Every exchange is a request and a response",
+    "body": "HTTP is a conversation of structured text. A client (your browser, curl, an app) sends a request: a method and URL on the first line, then headers like Host and Accept, then an optional body. The server answers with a response: a status line like HTTP/2 200, then its own headers, then usually a body. Nothing magical happens in between: one process wrote bytes down a socket and another read them. When an API misbehaves, you debug it by reading those bytes, which is what tools like curl -v expose.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Both messages have the same three-part shape: start line, headers, body."
+      }
+    ],
+    "check": {
+      "prompt": "In the response HTTP/2 200, what does the 200 describe?",
+      "answer": "The outcome of handling the request: success"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http"]
+  },
+  {
+    "id": "req-mcq-client",
+    "type": "mcq",
+    "skillIds": ["request-response-model"],
+    "difficulty": 1,
+    "prompt": "Your terminal runs curl. In HTTP terms, what is curl?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A client that sends requests"
+      },
+      {
+        "id": "b",
+        "text": "A server that answers requests"
+      },
+      {
+        "id": "c",
+        "text": "A protocol between client and server"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Who speaks first in the exchange?"
+      }
+    ],
+    "explanation": "curl is an HTTP client: it sends requests and prints responses. HTTP is the protocol; curl is a program.",
+    "estimatedSeconds": 35,
+    "tags": ["http"]
+  },
+  {
+    "id": "req-mcq-parts",
+    "type": "mcq",
+    "skillIds": ["request-response-model"],
+    "difficulty": 2,
+    "prompt": "Which parts does an HTTP request always contain?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A method and a URL"
+      },
+      {
+        "id": "b",
+        "text": "A method, a URL, and a JSON body",
+        "misconceptionId": "headers-for-get-useless"
+      },
+      {
+        "id": "c",
+        "text": "A status code and a body"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The mandatory first line names an action and a target."
+      }
+    ],
+    "explanation": "Method and URL are required. Bodies are optional, and status codes belong to responses.",
+    "estimatedSeconds": 40,
+    "tags": ["http"]
+  },
+  {
+    "id": "req-teach-request",
+    "type": "teach_back",
+    "skillIds": ["request-response-model"],
+    "difficulty": 2,
+    "prompt": "Teach it back: describe one full request-response exchange, naming the parts of each message.",
+    "rubricId": "rubric-teach-request",
+    "modelAnswer": "The client sends a request: method and URL on the first line, headers like Host and Accept, optional body. The server replies: a status line such as HTTP/2 200, headers like Content-Type, and a body. Example: curl requests GET https://example.com and receives 200 with HTML.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts per message, plus one concrete example."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http"]
+  },
+  {
+    "id": "req-lab-first",
+    "type": "lab",
+    "skillIds": ["request-response-model"],
+    "difficulty": 1,
+    "prompt": "Lab: your first request",
+    "labId": "lab-first-request",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Look for the blank line that separates headers from the body."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "lab"]
+  },
+  {
+    "id": "url-explain",
+    "type": "explain",
+    "skillIds": ["urls-and-resources"],
+    "difficulty": 2,
+    "prompt": "Reading a URL",
+    "body": "A URL names a resource. It reads in order: scheme://host/path?query. The scheme (https) says how to talk, the host (api.github.com) says which server, the path (/repos/michael-borck/cairn) says which resource on that server, and the query string (?page=2&per_page=50) carries parameters as key=value pairs joined by &. The path identifies; the query adjusts. Anything after the ? is not part of the resource's address, which is also why query strings are the wrong place for secrets.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Find the ? first: it splits the address from the parameters."
+      }
+    ],
+    "check": {
+      "prompt": "In https://api.github.com/search/issues?q=cairn, what is q=cairn?",
+      "answer": "A query parameter: key q with value cairn"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "urls"]
+  },
+  {
+    "id": "url-mcq-parts",
+    "type": "mcq",
+    "skillIds": ["urls-and-resources"],
+    "difficulty": 2,
+    "prompt": "In https://api.github.com/repos/michael-borck/cairn?per_page=5, what is api.github.com?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The host that will answer the request"
+      },
+      {
+        "id": "b",
+        "text": "The path to the resource",
+        "misconceptionId": "url-parts-reordered"
+      },
+      {
+        "id": "c",
+        "text": "A query parameter"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "It sits between the // and the first single /."
+      }
+    ],
+    "explanation": "api.github.com is the host. The path starts after it, and per_page=5 is a query parameter.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "urls"]
+  },
+  {
+    "id": "url-mcq-query",
+    "type": "mcq",
+    "skillIds": ["urls-and-resources"],
+    "difficulty": 2,
+    "prompt": "Which URL asks page 2 with 50 results per page?",
+    "options": [
+      {
+        "id": "a",
+        "text": "https://api.example.com/items?page=2&per_page=50"
+      },
+      {
+        "id": "b",
+        "text": "https://api.example.com/items/2/50",
+        "misconceptionId": "url-parts-reordered"
+      },
+      {
+        "id": "c",
+        "text": "https://page=2.example.com/items?per_page=50"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Parameters live after a ? and join with &."
+      }
+    ],
+    "explanation": "Query parameters come after the path: ?key=value&key=value.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "urls"]
+  },
+  {
+    "id": "url-lab-query",
+    "type": "lab",
+    "skillIds": ["urls-and-resources"],
+    "difficulty": 2,
+    "prompt": "Lab: send query parameters",
+    "labId": "lab-query-params",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Quote the URL: unquoted & means run-in-background to the shell."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "urls", "lab"]
+  },
+  {
+    "id": "method-explain",
+    "type": "explain",
+    "skillIds": ["methods-and-semantics"],
+    "difficulty": 2,
+    "prompt": "Methods and what they promise",
+    "body": "The method says what you intend to do. GET reads without changing anything. POST creates something new; calling it twice usually creates two things. PUT replaces a resource's whole representation with what you send. PATCH changes only the fields you send. DELETE removes. The useful property here is idempotence: an operation is idempotent if calling it once or five times ends in the same state. GET, PUT, and DELETE are idempotent; POST is not. This is why retrying a failed POST can double-charge a card, and why APIs use idempotency keys to make retries safe.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask of each method: if the network drops and I send it again, is the world still consistent?"
+      }
+    ],
+    "check": {
+      "prompt": "A payment POST times out. Why is blind retrying dangerous?",
+      "answer": "POST is not idempotent; the first attempt may have succeeded, so a retry could charge twice"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["http", "methods"]
+  },
+  {
+    "id": "method-mcq-idempotent",
+    "type": "mcq",
+    "skillIds": ["methods-and-semantics"],
+    "difficulty": 2,
+    "prompt": "Which method is NOT idempotent?",
+    "options": [
+      {
+        "id": "a",
+        "text": "GET"
+      },
+      {
+        "id": "b",
+        "text": "POST",
+        "misconceptionId": "post-not-idempotent-safe"
+      },
+      {
+        "id": "c",
+        "text": "PUT"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Which method can create a new thing every time it runs?"
+      }
+    ],
+    "explanation": "Repeated POSTs can create duplicates. GET, PUT, and DELETE converge to the same state.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "methods"]
+  },
+  {
+    "id": "method-mcq-put",
+    "type": "mcq",
+    "skillIds": ["methods-and-semantics"],
+    "difficulty": 2,
+    "prompt": "You want to change just the email field of a user record. Which request fits?",
+    "options": [
+      {
+        "id": "a",
+        "text": "PATCH /users/7 with {\"email\": \"new@x.io\"}"
+      },
+      {
+        "id": "b",
+        "text": "PUT /users/7 with {\"email\": \"new@x.io\"}",
+        "misconceptionId": "put-patch-swap"
+      },
+      {
+        "id": "c",
+        "text": "POST /users/7 with {\"email\": \"new@x.io\"}",
+        "misconceptionId": "put-patch-swap"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "PUT replaces the whole representation; you only have one field."
+      }
+    ],
+    "explanation": "PATCH sends a partial change. PUT with a one-field body implies the other fields are gone.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "methods"]
+  },
+  {
+    "id": "method-worked-update",
+    "type": "worked_example",
+    "skillIds": ["methods-and-semantics"],
+    "difficulty": 3,
+    "prompt": "Walk through: rename a widget from wren to finch without losing its colour field.",
+    "steps": [
+      {
+        "title": "Read the current record",
+        "body": "GET /widgets/12 returns {\"name\": \"wren\", \"colour\": \"red\"}."
+      },
+      {
+        "title": "Choose the method",
+        "body": "You have one field to change. PATCH /widgets/12 with {\"name\": \"finch\"} keeps colour untouched."
+      },
+      {
+        "title": "Why not PUT",
+        "body": "PUT /widgets/12 with {\"name\": \"finch\"} would declare the whole resource is now just that; colour would be gone."
+      },
+      {
+        "title": "Verify",
+        "body": "GET /widgets/12 again: {\"name\": \"finch\", \"colour\": \"red\"}."
+      }
+    ],
+    "checkpoint": {
+      "prompt": "Which method changes one field without touching the rest?",
+      "answer": "PATCH"
+    },
+    "hints": [
+      {
+        "level": 1,
+        "text": "Whole replacement versus partial change."
+      }
+    ],
+    "scaffolds": [
+      {
+        "id": "update-method-choice",
+        "kind": "mcq",
+        "prompt": "The request only carries the name field. Which method promises to leave colour alone?",
+        "options": [
+          {
+            "id": "a",
+            "text": "PUT",
+            "misconceptionId": "put-patch-swap"
+          },
+          {
+            "id": "b",
+            "text": "PATCH"
+          },
+          {
+            "id": "c",
+            "text": "POST"
+          }
+        ],
+        "correctOptionId": "b",
+        "hints": [
+          {
+            "level": 1,
+            "text": "P stands for partial."
+          }
+        ],
+        "scaffolds": [
+          {
+            "id": "update-method-put",
+            "kind": "check",
+            "prompt": "What does PUT with a partial body imply about the missing fields?",
+            "answer": "That they no longer exist; PUT replaces the whole representation",
+            "hints": [],
+            "scaffolds": []
+          }
+        ]
+      }
+    ],
+    "estimatedSeconds": 180,
+    "tags": ["http", "methods"]
+  },
+  {
+    "id": "method-lab-echo",
+    "type": "lab",
+    "skillIds": ["methods-and-semantics"],
+    "difficulty": 2,
+    "prompt": "Lab: echo a POST and a PUT",
+    "labId": "lab-methods-echo",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Escape the inner quotes of the JSON body carefully, or use single quotes outside."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["http", "methods", "lab"]
+  },
+  {
+    "id": "status-explain",
+    "type": "explain",
+    "skillIds": ["status-codes"],
+    "difficulty": 1,
+    "prompt": "Status codes come in families",
+    "body": "The first digit tells you the family. 2xx succeeded (200 OK, 201 Created, 204 No Content). 3xx redirected (301 moved for good, 302 moved for now); the answer lives in the Location header. 4xx means the client must change something: 400 bad request, 401 unauthenticated (who are you?), 403 unauthorised (I know you, and no), 404 not found, 429 too many requests. 5xx means the server tripped: 500 generic error, 502 bad gateway, 503 unavailable. Debug rule: 4xx is your bug, 5xx is theirs.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read only the first digit first, then learn four or six specific codes."
+      }
+    ],
+    "check": {
+      "prompt": "You call an API without credentials and get 401. What must you change?",
+      "answer": "Send credentials, for example an Authorization header"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "status"]
+  },
+  {
+    "id": "status-mcq-families",
+    "type": "mcq",
+    "skillIds": ["status-codes"],
+    "difficulty": 1,
+    "prompt": "What does a 302 response tell the client to do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Give up; the request failed",
+        "misconceptionId": "redirect-is-error"
+      },
+      {
+        "id": "b",
+        "text": "Look at the Location header and go there next"
+      },
+      {
+        "id": "c",
+        "text": "Retry immediately"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "3xx is not an error family."
+      }
+    ],
+    "explanation": "302 is a redirect: the response's Location header names the next address to try.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "status"]
+  },
+  {
+    "id": "status-mcq-301",
+    "type": "mcq",
+    "skillIds": ["status-codes"],
+    "difficulty": 2,
+    "prompt": "curl prints HTTP/2 301 for an old URL you still have bookmarked. What happened?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The resource moved permanently; a Location header names the new address",
+        "misconceptionId": "redirect-is-error"
+      },
+      {
+        "id": "b",
+        "text": "The server crashed with an internal error",
+        "misconceptionId": "redirect-is-error"
+      },
+      {
+        "id": "c",
+        "text": "Your request had a syntax error"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "301 is the permanent half of the 3xx family."
+      }
+    ],
+    "explanation": "301 Moved Permanently: update the bookmark. curl -L follows it automatically.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "status"]
+  },
+  {
+    "id": "status-mcq-401",
+    "type": "mcq",
+    "skillIds": ["status-codes"],
+    "difficulty": 2,
+    "prompt": "An API answers 401. What does the server not know?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Who you are; you sent no valid credentials",
+        "misconceptionId": "auth-status-mixup"
+      },
+      {
+        "id": "b",
+        "text": "Who you are, and it refuses your access",
+        "misconceptionId": "auth-status-mixup"
+      },
+      {
+        "id": "c",
+        "text": "Where the resource lives"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "401 asks a question; 403 answers no."
+      }
+    ],
+    "explanation": "401 Unauthenticated: send credentials. 403 Forbidden: identity accepted, access denied.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "status", "auth"]
+  },
+  {
+    "id": "status-lab-codes",
+    "type": "lab",
+    "skillIds": ["status-codes"],
+    "difficulty": 1,
+    "prompt": "Lab: collect status codes",
+    "labId": "lab-status-codes",
+    "hints": [
+      {
+        "level": 1,
+        "text": "The -w format string prints only the code, which makes comparing easy."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "status", "lab"]
+  },
+  {
+    "id": "header-explain",
+    "type": "explain",
+    "skillIds": ["headers-and-content-types"],
+    "difficulty": 2,
+    "prompt": "Headers describe the message",
+    "body": "Headers are key: value pairs that carry metadata. The ones to know first: Content-Type describes the body you are sending (application/json is the API default); Accept says what you will take back, which is content negotiation; Authorization carries credentials such as Bearer tokens; Cache-Control and ETag manage caching so clients can reuse unmodified resources. Content-Type belongs to requests that have a body; a bodyless GET has nothing to describe. When a server answers with a surprising format, check whether you negotiated it with Accept.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "One header describes what you send, another what you want back."
+      }
+    ],
+    "check": {
+      "prompt": "Which header would you set to ask a server for JSON?",
+      "answer": "Accept: application/json"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "headers"]
+  },
+  {
+    "id": "header-mcq-content-type",
+    "type": "mcq",
+    "skillIds": ["headers-and-content-types"],
+    "difficulty": 2,
+    "prompt": "You POST a JSON body. Which header must accompany it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Accept: application/json"
+      },
+      {
+        "id": "b",
+        "text": "Content-Type: application/json"
+      },
+      {
+        "id": "c",
+        "text": "No header; JSON is assumed"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "You are describing the body you are sending."
+      }
+    ],
+    "explanation": "Content-Type declares the body you send. Accept negotiates the response format.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "headers"]
+  },
+  {
+    "id": "header-mcq-accept",
+    "type": "mcq",
+    "skillIds": ["headers-and-content-types"],
+    "difficulty": 2,
+    "prompt": "A bodyless GET carries Content-Type: application/json. What does that accomplish?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Nothing useful; a GET has no body to describe, and the header you wanted is Accept",
+        "misconceptionId": "headers-for-get-useless"
+      },
+      {
+        "id": "b",
+        "text": "It forces the server to answer in JSON"
+      },
+      {
+        "id": "c",
+        "text": "It compresses the request"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Content describes the body you send; a GET sends none."
+      }
+    ],
+    "explanation": "Content-Type on a bodyless GET is a no-op. To ask for JSON back, send Accept: application/json.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "headers"]
+  },
+  {
+    "id": "header-lab-negotiate",
+    "type": "lab",
+    "skillIds": ["headers-and-content-types"],
+    "difficulty": 2,
+    "prompt": "Lab: negotiate a content type",
+    "labId": "lab-content-negotiation",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Change only the Accept header between the two calls."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "headers", "lab"]
+  },
+  {
+    "id": "json-explain",
+    "type": "explain",
+    "skillIds": ["json-payloads"],
+    "difficulty": 2,
+    "prompt": "Reading JSON",
+    "body": "JSON is a text format with exactly six kinds of value: objects ({}), arrays ([]), strings, numbers, true/false, and null. Objects map keys to values with double-quoted keys; arrays are ordered lists. Nesting is how APIs express structure: a repository object can contain an owner object, which contains a login string, reached as repo.owner.login. JSON is stricter than JavaScript object literals: double quotes only, no trailing commas, no comments. Reading a big response is easier if you pull one field out instead of scanning the wall of text.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Curly braces are lookups by name; square brackets are ordered lists."
+      }
+    ],
+    "check": {
+      "prompt": "In {\"owner\": {\"login\": \"michael-borck\"}}, how do you reach the login value?",
+      "answer": "owner.login, an object nested inside another object"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "json"]
+  },
+  {
+    "id": "json-mcq-invalid",
+    "type": "mcq",
+    "skillIds": ["json-payloads"],
+    "difficulty": 2,
+    "prompt": "Which of these is valid JSON?",
+    "options": [
+      {
+        "id": "a",
+        "text": "{'name': 'cairn'}",
+        "misconceptionId": "json-is-javascript"
+      },
+      {
+        "id": "b",
+        "text": "{\"name\": \"cairn\",}"
+      },
+      {
+        "id": "c",
+        "text": "{\"name\": \"cairn\"}"
+      }
+    ],
+    "correctOptionId": "c",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "JSON accepts only one kind of quote and hates trailing commas."
+      }
+    ],
+    "explanation": "Double quotes are required and trailing commas are illegal; both other candidates came from JavaScript habits.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "json"]
+  },
+  {
+    "id": "json-mcq-nested",
+    "type": "mcq",
+    "skillIds": ["json-payloads"],
+    "difficulty": 3,
+    "prompt": "Given {\"license\": {\"spdx_id\": \"MIT\"}, \"stargazers_count\": 42}, which expression reads the licence id?",
+    "options": [
+      {
+        "id": "a",
+        "text": "license.spdx_id"
+      },
+      {
+        "id": "b",
+        "text": "license[0]",
+        "misconceptionId": "json-is-javascript"
+      },
+      {
+        "id": "c",
+        "text": "spdx_id"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "spdx_id lives inside the license object; walk down through it."
+      }
+    ],
+    "explanation": "license is an object, so you look up spdx_id inside it: license.spdx_id.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "json"]
+  },
+  {
+    "id": "json-lab-field",
+    "type": "lab",
+    "skillIds": ["json-payloads"],
+    "difficulty": 2,
+    "prompt": "Lab: pull one field from JSON",
+    "labId": "lab-json-field",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Pipe curl's output into python3 and load it with json.load(sys.stdin)."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["http", "json", "lab"]
+  },
+  {
+    "id": "auth-explain",
+    "type": "explain",
+    "skillIds": ["auth-basics"],
+    "difficulty": 3,
+    "prompt": "API keys and bearer tokens",
+    "body": "APIs need to know who is calling. The common patterns: an API key, a long string that identifies you, sent in a header like X-API-Key; and bearer tokens, sent as Authorization: Bearer <token>, which is how OAuth 2 flows hand out access. Both are secrets. They belong in environment variables or a credential store, never in source code, and never in URLs, which end up in server logs, browser history, and proxies. Base64 encoding a secret is not protection: encoding is reversible by anyone. If a key leaks, revoke it and issue a new one; rotation is routine, not an emergency measure to avoid.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Ask of any secret: where does this string travel, and who can copy it on the way?"
+      }
+    ],
+    "check": {
+      "prompt": "Why is Authorization: Bearer x better than ?token=x in the URL?",
+      "answer": "Headers are not logged the way URLs are; URLs get stored in logs, history, and proxies"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["http", "auth"]
+  },
+  {
+    "id": "auth-mcq-key-hygiene",
+    "type": "mcq",
+    "skillIds": ["auth-basics"],
+    "difficulty": 2,
+    "prompt": "Where should your API token live while you develop?",
+    "options": [
+      {
+        "id": "a",
+        "text": "In an environment variable or system credential store"
+      },
+      {
+        "id": "b",
+        "text": "In a config file committed to the repo, base64-encoded for safety",
+        "misconceptionId": "base64-is-encryption"
+      },
+      {
+        "id": "c",
+        "text": "In the request URL so the request is self-contained",
+        "misconceptionId": "api-key-in-url"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two traps here: encoding is not hiding, and URLs leak."
+      }
+    ],
+    "explanation": "Env vars and credential stores keep secrets out of code and logs. Base64 decodes trivially, and URLs get logged everywhere.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "auth"]
+  },
+  {
+    "id": "auth-mcq-leak",
+    "type": "mcq",
+    "skillIds": ["auth-basics"],
+    "difficulty": 3,
+    "prompt": "You accidentally pushed a real token to a public repo. What is the right response?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Delete the commit; if the file is gone it is safe"
+      },
+      {
+        "id": "b",
+        "text": "Revoke the token immediately, then clean the history",
+        "misconceptionId": "base64-is-encryption"
+      },
+      {
+        "id": "c",
+        "text": "Nothing; the repo is new and nobody saw it"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Assume anything ever public is already copied by crawlers."
+      }
+    ],
+    "explanation": "Bots scan public repos within minutes. Revocation kills the leaked credential regardless of who holds a copy; history cleanup is second.",
+    "estimatedSeconds": 50,
+    "tags": ["http", "auth"]
+  },
+  {
+    "id": "auth-teach-credentials",
+    "type": "teach_back",
+    "skillIds": ["auth-basics"],
+    "difficulty": 3,
+    "prompt": "Teach it back: how is a bearer token sent, which two places must never hold a secret, and what do you do when one leaks?",
+    "rubricId": "rubric-teach-auth",
+    "modelAnswer": "Sent in the Authorization header as Bearer <token>. Secrets never live in source control or in URLs, which are logged. On leak: revoke immediately and issue a replacement, then scrub the history.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Three parts: the header, the two forbidden places, the leak procedure."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "auth"]
+  },
+  {
+    "id": "auth-lab-bearer",
+    "type": "lab",
+    "skillIds": ["auth-basics"],
+    "difficulty": 2,
+    "prompt": "Lab: send a bearer token",
+    "labId": "lab-auth-bearer",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Compare only the status code of the two calls."
+      }
+    ],
+    "estimatedSeconds": 240,
+    "tags": ["http", "auth", "lab"]
+  },
+  {
+    "id": "rest-explain",
+    "type": "explain",
+    "skillIds": ["rest-design"],
+    "difficulty": 3,
+    "prompt": "REST is nouns plus methods",
+    "body": "A well-designed API names resources as nouns and lets the method carry the verb: GET /users lists, POST /users creates, GET /users/7 reads one, PATCH /users/7 edits, DELETE /users/7 removes. Collections are plural; members hang off them. Filtering, sorting, and pagination belong in query parameters, not in new paths: /items?page=2&per_page=50&sort=created. When an endpoint grows verbs like /getUser or /deleteItem, that is RPC thinking wearing a REST URL, and it usually means the method semantics are being duplicated in the path.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Read a URL and ask: is this a thing, or an instruction?"
+      }
+    ],
+    "check": {
+      "prompt": "Which URL reads page 3 of the items collection?",
+      "answer": "GET /items?page=3"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "rest"]
+  },
+  {
+    "id": "rest-mcq-collection",
+    "type": "mcq",
+    "skillIds": ["rest-design"],
+    "difficulty": 2,
+    "prompt": "Which design reads one item and then deletes it, REST-style?",
+    "options": [
+      {
+        "id": "a",
+        "text": "GET /items/7 then DELETE /items/7"
+      },
+      {
+        "id": "b",
+        "text": "GET /items/7 then POST /deleteItem/7",
+        "misconceptionId": "post-not-idempotent-safe"
+      },
+      {
+        "id": "c",
+        "text": "GET /items?id=7 then GET /remove-item?id=7"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The method is the verb; the URL is only the noun."
+      }
+    ],
+    "explanation": "REST lets DELETE carry the removal. Verb-named paths duplicate what methods already say.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "rest"]
+  },
+  {
+    "id": "rest-mcq-pagination",
+    "type": "mcq",
+    "skillIds": ["rest-design"],
+    "difficulty": 2,
+    "prompt": "Where does a REST API usually put pagination parameters?",
+    "options": [
+      {
+        "id": "a",
+        "text": "In query parameters: /items?page=2&per_page=50"
+      },
+      {
+        "id": "b",
+        "text": "In new paths for each page: /items/page/2"
+      },
+      {
+        "id": "c",
+        "text": "In the request body of a GET"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Pagination adjusts a listing rather than naming a new resource."
+      }
+    ],
+    "explanation": "Query parameters adjust a collection. Page-shaped paths multiply endpoints for the same resource.",
+    "estimatedSeconds": 40,
+    "tags": ["http", "rest"]
+  },
+  {
+    "id": "rest-reflection-collect",
+    "type": "reflection",
+    "skillIds": ["rest-design"],
+    "difficulty": 2,
+    "prompt": "Reflect: find one public API you use (GitHub, a weather service, anything) and write down two of its URLs. Are they nouns? Do the query parameters adjust listings?",
+    "prompts": [
+      "Which API did you pick, and what are its resource URLs?",
+      "Do the paths read as nouns with methods doing the verbs?",
+      "Where does that API put pagination and filtering?"
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The GitHub REST API docs are a good specimen if you have none in mind."
+      }
+    ],
+    "estimatedSeconds": 420,
+    "tags": ["http", "rest"]
+  },
+  {
+    "id": "retry-explain",
+    "type": "explain",
+    "skillIds": ["errors-and-retries"],
+    "difficulty": 3,
+    "prompt": "Errors, timeouts, and polite retries",
+    "body": "Three failure modes matter. A 4xx tells you your request was wrong; do not retry it unchanged. A 429 says slow down; honour the Retry-After header if present. A 5xx or a network timeout means the far end struggled; retrying can help, but wait between attempts and grow the wait each time (exponential backoff, for example 1s, 2s, 4s). Two cautions. First, a 200 status does not guarantee success: some APIs wrap business errors in a 200 body, so read both signals. Second, a timeout does not mean the server stopped: it may still be processing, which is why POST retries need idempotency keys.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Classify first: my bug, their bug, or too fast?"
+      }
+    ],
+    "check": {
+      "prompt": "You get 429 with Retry-After: 30. What do you do?",
+      "answer": "Wait 30 seconds, then retry; do not hammer the endpoint"
+    },
+    "estimatedSeconds": 150,
+    "tags": ["http", "reliability"]
+  },
+  {
+    "id": "retry-mcq-backoff",
+    "type": "mcq",
+    "skillIds": ["errors-and-retries"],
+    "difficulty": 2,
+    "prompt": "A batch job hits 429 responses. Which retry behaviour is correct?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Retry instantly in a tight loop until it succeeds",
+        "misconceptionId": "retry-without-backoff"
+      },
+      {
+        "id": "b",
+        "text": "Wait, growing the wait each attempt, and honour Retry-After"
+      },
+      {
+        "id": "c",
+        "text": "Give up permanently on the first 429"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The server is telling you a rate; read what it says and slow down."
+      }
+    ],
+    "explanation": "Exponential backoff with Retry-After respected is the polite and effective pattern.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "reliability"]
+  },
+  {
+    "id": "retry-mcq-timeout",
+    "type": "mcq",
+    "skillIds": ["errors-and-retries"],
+    "difficulty": 3,
+    "prompt": "A payment POST times out after 30s. Why is a plain retry dangerous?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Timeouts crash the server's database",
+        "misconceptionId": "timeout-is-crash"
+      },
+      {
+        "id": "b",
+        "text": "The first request may still have succeeded, so the retry could pay twice",
+        "misconceptionId": "post-not-idempotent-safe"
+      },
+      {
+        "id": "c",
+        "text": "Timeouts are always caused by your own network, so retrying never helps"
+      }
+    ],
+    "correctOptionId": "b",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Your client gave up; nobody told the server to stop."
+      }
+    ],
+    "explanation": "The server may have completed the charge after your client gave up. Idempotency keys exist precisely for this.",
+    "estimatedSeconds": 50,
+    "tags": ["http", "reliability"]
+  },
+  {
+    "id": "retry-mcq-200",
+    "type": "mcq",
+    "skillIds": ["errors-and-retries"],
+    "difficulty": 3,
+    "prompt": "An API answers 200 OK but the body is {\"error\": \"insufficient_funds\"}. What happened?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The transport succeeded; the business operation failed. Your code must read the body",
+        "misconceptionId": "status-200-always-good"
+      },
+      {
+        "id": "b",
+        "text": "Nothing; 200 means the payment went through",
+        "misconceptionId": "status-200-always-good"
+      },
+      {
+        "id": "c",
+        "text": "The server is broken and must be reported to its operator"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "Status code and body are two separate signals."
+      }
+    ],
+    "explanation": "Some APIs reserve HTTP errors for transport problems and put business outcomes in the body. Trusting the code alone misses the failure.",
+    "estimatedSeconds": 50,
+    "tags": ["http", "reliability"]
+  },
+  {
+    "id": "inspect-explain",
+    "type": "explain",
+    "skillIds": ["inspecting-traffic"],
+    "difficulty": 2,
+    "prompt": "Reading the wire with curl -v",
+    "body": "curl -v prints the whole conversation. Lines starting with > are what your client sent; lines starting with < are what the server returned; * lines are curl's own commentary about connections and TLS. With redirects and -L, you get one status line per hop, so you can watch a 301 turn into a 200. When an API behaves differently in your code than in the docs, run the same request with curl -v before blaming either side: the exchange shows exactly which headers went out and what came back.",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Point one way: > is yours, < is theirs."
+      }
+    ],
+    "check": {
+      "prompt": "In curl -v output, which character marks response headers?",
+      "answer": "<, the less-than sign, marks what came back from the server"
+    },
+    "estimatedSeconds": 120,
+    "tags": ["http", "curl", "debugging"]
+  },
+  {
+    "id": "inspect-mcq-gt-lt",
+    "type": "mcq",
+    "skillIds": ["inspecting-traffic"],
+    "difficulty": 2,
+    "prompt": "In curl -v output, what does a line beginning with > contain?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Something your client sent to the server"
+      },
+      {
+        "id": "b",
+        "text": "Something the server sent back",
+        "misconceptionId": "url-parts-reordered"
+      },
+      {
+        "id": "c",
+        "text": "An error; only < lines matter"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "The arrow points away from you on the way out."
+      }
+    ],
+    "explanation": "> marks request material, < marks response material, * marks curl's own notes.",
+    "estimatedSeconds": 35,
+    "tags": ["http", "curl"]
+  },
+  {
+    "id": "inspect-mcq-hops",
+    "type": "mcq",
+    "skillIds": ["inspecting-traffic"],
+    "difficulty": 3,
+    "prompt": "curl -vL on a redirecting URL shows two status lines: 302 then 200. What does that prove?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The client followed the Location header and made a second request",
+        "misconceptionId": "redirect-is-error"
+      },
+      {
+        "id": "b",
+        "text": "The server sent the final body twice"
+      },
+      {
+        "id": "c",
+        "text": "The connection was retried after a timeout",
+        "misconceptionId": "timeout-is-crash"
+      }
+    ],
+    "correctOptionId": "a",
+    "confidencePrompt": true,
+    "hints": [
+      {
+        "level": 1,
+        "text": "One request per status line."
+      }
+    ],
+    "explanation": "-L follows redirects, so each hop gets its own exchange in the log.",
+    "estimatedSeconds": 45,
+    "tags": ["http", "curl"]
+  },
+  {
+    "id": "inspect-lab-verbose",
+    "type": "lab",
+    "skillIds": ["inspecting-traffic"],
+    "difficulty": 2,
+    "prompt": "Lab: read the whole exchange",
+    "labId": "lab-inspect-verbose",
+    "hints": [
+      {
+        "level": 1,
+        "text": "Count the status lines to count the hops."
+      }
+    ],
+    "estimatedSeconds": 300,
+    "tags": ["http", "curl", "lab"]
+  }
+]

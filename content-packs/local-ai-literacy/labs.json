@@ -1,0 +1,283 @@
+[
+  {
+    "id": "lab-install-ollama",
+    "title": "Install Ollama",
+    "skillIds": ["running-local-models"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Install Ollama on your machine and confirm the command works. macOS and Windows: download the installer from ollama.com (Ollama for Windows ships as preview builds; grab the current one). Linux: run the one-line install script shown on the same page.",
+    "commands": ["ollama --version"],
+    "checks": [
+      {
+        "id": "version",
+        "type": "manual",
+        "prompt": "Does `ollama --version` print a version number (and not \"command not found\")?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "If the command is not found after installing, the Ollama app may not be running yet. Start it, open a fresh terminal, and try again."
+      },
+      {
+        "level": 2,
+        "text": "Windows: after the installer finishes, Ollama usually starts itself in the system tray; open a new PowerShell or terminal window for the command."
+      }
+    ],
+    "solution": "Install from https://ollama.com for your platform, then run `ollama --version` in a new terminal window.",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-pull-model",
+    "title": "Pull a small model",
+    "skillIds": ["running-local-models"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Download a small model and see it in your local library. llama3.2:1b is the 1-billion-parameter model and the download is about 1-2 GB, so check your disk space and your data plan before pulling. Later labs in this pack reuse it.",
+    "commands": ["ollama pull llama3.2:1b", "ollama list"],
+    "checks": [
+      {
+        "id": "listed",
+        "type": "manual",
+        "prompt": "Does `ollama list` show llama3.2:1b with a size of roughly 1-2 GB?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "The tag matters: llama3.2:1b is the small one. Tags like llama3.2:70b are much larger downloads."
+      },
+      {
+        "level": 2,
+        "text": "Watch the progress bar. The weights land in Ollama's model folder on your own disk."
+      }
+    ],
+    "solution": "ollama pull llama3.2:1b && ollama list",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": true
+    }
+  },
+  {
+    "id": "lab-chat-model",
+    "title": "Chat with your model",
+    "skillIds": ["running-local-models"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Start a chat with the model in your terminal, ask it two questions, then leave the chat cleanly.",
+    "commands": [
+      "ollama run llama3.2:1b",
+      "/bye"
+    ],
+    "checks": [
+      {
+        "id": "reply",
+        "type": "manual",
+        "prompt": "Did the model answer both questions in the terminal?",
+        "answer": "yes"
+      },
+      {
+        "id": "exit",
+        "type": "manual",
+        "prompt": "Did `/bye` return you to your normal shell prompt?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Type your question and press Enter. The first reply can pause for a few seconds while the model loads into memory."
+      },
+      {
+        "level": 2,
+        "text": "Leave the chat with `/bye` (or Ctrl+D), not by closing the terminal."
+      }
+    ],
+    "solution": "ollama run llama3.2:1b, ask your questions, then /bye",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-temperature",
+    "title": "Feel the temperature dial",
+    "skillIds": ["how-generation-works"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Ask the same question twice at low temperature and twice at high temperature, then compare how much the answers move.",
+    "commands": [
+      "ollama run llama3.2:1b",
+      "/set parameter temperature 0.1",
+      "Give me one unusual name for a coffee shop.",
+      "/set parameter temperature 1.5",
+      "Give me one unusual name for a coffee shop.",
+      "/bye"
+    ],
+    "checks": [
+      {
+        "id": "low",
+        "type": "manual",
+        "prompt": "At temperature 0.1, were repeated answers similar to each other?",
+        "answer": "yes"
+      },
+      {
+        "id": "high",
+        "type": "manual",
+        "prompt": "At temperature 1.5, did the answers wander further apart?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Inside the chat, run `/set parameter temperature 0.1`, ask the question, then `/set parameter temperature 1.5` and ask again."
+      },
+      {
+        "level": 2,
+        "text": "Prefer the REST route? POST to http://localhost:11434/api/generate with {\"model\": \"llama3.2:1b\", \"prompt\": \"...\", \"stream\": false, \"options\": {\"temperature\": 1.5}} in the JSON body."
+      }
+    ],
+    "solution": "ollama run llama3.2:1b, then /set parameter temperature 0.1, ask twice, then /set parameter temperature 1.5, ask twice, then /bye",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-fresh-context",
+    "title": "Watch the model forget you",
+    "skillIds": ["tokens-and-context"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Prove the model keeps nothing between sessions: tell it your name in one chat, leave, start a fresh chat, and ask for your name again.",
+    "commands": [
+      "ollama run llama3.2:1b",
+      "/bye",
+      "ollama run llama3.2:1b"
+    ],
+    "checks": [
+      {
+        "id": "remembered",
+        "type": "manual",
+        "prompt": "Within the first session, did the model use your name correctly later in that same session?",
+        "answer": "yes"
+      },
+      {
+        "id": "forgotten",
+        "type": "manual",
+        "prompt": "In the second session, did the model fail to know your name?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Two separate `ollama run` sessions are two separate conversations."
+      },
+      {
+        "level": 2,
+        "text": "Within one session the app resends the transcript, so the name appears remembered. Between sessions there is no transcript to resend."
+      }
+    ],
+    "solution": "ollama run llama3.2:1b, say \"My name is <your name>\", /bye, then ollama run llama3.2:1b again and ask \"What is my name?\"",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-confabulation",
+    "title": "Catch a confident invention",
+    "skillIds": ["verification-habits"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Ask the model about the borrowing rules of a small club that does not exist, press for exact figures, then ask again in a fresh session and compare the inventions.",
+    "commands": [
+      "ollama run llama3.2:1b \"According to the Harbour Street Book Club borrowing rules, how many books can a member borrow at once, and what is the fine per week for a late return?\"",
+      "ollama run llama3.2:1b \"According to the Harbour Street Book Club borrowing rules, how many books can a member borrow at once, and what is the fine per week for a late return?\""
+    ],
+    "checks": [
+      {
+        "id": "invented",
+        "type": "manual",
+        "prompt": "Did the model produce specific numbers for a club that does not exist?",
+        "answer": "yes"
+      },
+      {
+        "id": "unstable",
+        "type": "manual",
+        "prompt": "Comparing the two runs, did the invented numbers stay the same?",
+        "answer": "no"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "If the model hedges, follow up the way an impatient user would: \"just give me the numbers\"."
+      },
+      {
+        "level": 2,
+        "text": "Specific figures with no source are the tell. The confidence in the tone is borrowed from questions it can usually answer."
+      }
+    ],
+    "solution": "ollama run llama3.2:1b \"According to the Harbour Street Book Club borrowing rules, how many books can a member borrow at once, and what is the fine per week for a late return?\" (run twice and compare)",
+    "cleanup": ["echo done"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  },
+  {
+    "id": "lab-offline-proof",
+    "title": "Prove it stays home",
+    "skillIds": ["privacy-and-locality"],
+    "platforms": ["macos", "linux", "windows"],
+    "setup": [],
+    "task": "Turn off Wi-Fi (or unplug the network cable), ask the local model a question, get an answer, then turn the network back on. The answer arriving with every path out of the machine closed is proof that no prompt was transmitted.",
+    "commands": [
+      "ollama run llama3.2:1b \"In one sentence, what is a cairn?\"",
+      "ollama ps"
+    ],
+    "checks": [
+      {
+        "id": "answered",
+        "type": "manual",
+        "prompt": "With Wi-Fi off, did the model still answer?",
+        "answer": "yes"
+      },
+      {
+        "id": "local",
+        "type": "manual",
+        "prompt": "Does `ollama ps` show the model running against localhost?",
+        "answer": "yes"
+      }
+    ],
+    "hints": [
+      {
+        "level": 1,
+        "text": "Turn the network off before running the command, and turn it back on afterwards."
+      },
+      {
+        "level": 2,
+        "text": "No policy document can add anything to this demonstration, because the event the policies govern did not occur."
+      }
+    ],
+    "solution": "Wi-Fi off, then ollama run llama3.2:1b \"In one sentence, what is a cairn?\", then Wi-Fi back on",
+    "cleanup": ["ollama rm llama3.2:1b", "echo network back on"],
+    "security": {
+      "executesOnHost": false,
+      "network": false
+    }
+  }
+]

@@ -1,0 +1,156 @@
+[
+  {
+    "id": "help-syntax-guessing",
+    "label": "Guesses at help syntax instead of using --help or man",
+    "skillIds": ["shell-and-commands"],
+    "description": "The learner invents help commands like `doc cp` instead of checking `cp --help` or `man cp`.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "Every command answers to `command --help` for a quick summary and `man command` for the full manual.",
+      "itemIds": ["cli-mcq-help", "cli-mcq-combined-flags"]
+    }
+  },
+  {
+    "id": "absolute-relative-confusion",
+    "label": "Mixes up absolute and relative paths",
+    "skillIds": ["paths-and-navigation"],
+    "description": "The learner treats a relative path like `reports/2026.md` as if it worked from any directory.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A path starting with / (or ~) is anchored from the top. Anything else starts from where you are.",
+      "itemIds": ["path-mcq-absolute", "path-mcq-cd-up", "path-worked-sibling"]
+    }
+  },
+  {
+    "id": "tilde-literal-folder",
+    "label": "Reads ~ as a literal folder name",
+    "skillIds": ["paths-and-navigation"],
+    "description": "The learner thinks `cd ~/projects` enters a folder literally named ~.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "The shell expands ~ to your home directory before the command runs.",
+      "itemIds": ["path-mcq-tilde", "path-teach-paths"]
+    }
+  },
+  {
+    "id": "dot-hide-default",
+    "label": "Expects ls to show hidden files",
+    "skillIds": ["listing-and-inspecting"],
+    "description": "The learner does not realise files starting with a dot are hidden from plain ls.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A leading dot hides a file from plain `ls`. Add -a to see it.",
+      "itemIds": ["ls-mcq-hidden", "ls-mcq-dotfile", "ls-lab-inspect"]
+    }
+  },
+  {
+    "id": "head-tail-swapped",
+    "label": "Swaps head and tail",
+    "skillIds": ["reading-files"],
+    "description": "The learner uses head when they want the end of a file and tail when they want the start.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "head reads from the top, tail reads from the bottom.",
+      "itemIds": ["read-mcq-tail", "read-lab-sample"]
+    }
+  },
+  {
+    "id": "wc-flag-mixup",
+    "label": "Picks the wrong wc flag",
+    "skillIds": ["reading-files"],
+    "description": "The learner confuses wc -l (lines) with -w (words) and -c (bytes).",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "l for lines, w for words, c for characters or bytes.",
+      "itemIds": ["read-mcq-wc", "read-lab-sample"]
+    }
+  },
+  {
+    "id": "grep-order-swapped",
+    "label": "Swaps the grep pattern and file order",
+    "skillIds": ["searching-text"],
+    "description": "The learner writes `grep file.txt pattern` instead of `grep pattern file.txt`.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "grep takes the pattern first, then the file: `grep pattern file`.",
+      "itemIds": ["grep-mcq-order", "grep-lab-todos"]
+    }
+  },
+  {
+    "id": "pipe-file-confusion",
+    "label": "Uses a pipe where a redirect is needed",
+    "skillIds": ["pipes-and-redirection"],
+    "description": "The learner writes `ls | list.txt` as if a pipe could name a file.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "A pipe | connects two commands. A redirect > or >> connects a command to a file.",
+      "itemIds": ["pipe-mcq-overwrite", "pipe-lab-frequency"]
+    }
+  },
+  {
+    "id": "redirect-append-confusion",
+    "label": "Overwrites when intending to append",
+    "skillIds": ["pipes-and-redirection"],
+    "description": "The learner uses > when they wanted >> and destroys earlier content.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "One > overwrites the file. Two >> append to the end.",
+      "itemIds": ["pipe-mcq-append", "pipe-mcq-overwrite"]
+    }
+  },
+  {
+    "id": "cp-mv-swap",
+    "label": "Swaps cp and mv",
+    "skillIds": ["creating-and-moving"],
+    "description": "The learner uses mv when they wanted a copy, or cp when they wanted to move.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "cp copies and leaves the original. mv moves and removes the original, doubling as rename.",
+      "itemIds": ["files-mcq-cp-vs-mv", "files-mcq-rename", "files-lab-tree"]
+    }
+  },
+  {
+    "id": "cp-needs-recursive",
+    "label": "Copies directories without -r",
+    "skillIds": ["creating-and-moving"],
+    "description": "The learner runs plain `cp` on a directory and gets an error or a partial copy.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "cp copies single files. For a directory and everything inside it, add -r.",
+      "itemIds": ["files-mcq-cp-dir", "files-lab-tree"]
+    }
+  },
+  {
+    "id": "find-missing-path",
+    "label": "Omits the search path in find",
+    "skillIds": ["finding-files"],
+    "description": "The learner writes `find -name \"*.log\"` without the starting directory.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "find always walks from a starting point: `find . -name \"*.log\"`.",
+      "itemIds": ["find-mcq-logs", "find-lab-logs"]
+    }
+  },
+  {
+    "id": "sudo-habit",
+    "label": "Reaches for sudo by habit",
+    "skillIds": ["permissions-and-safety"],
+    "description": "The learner uses sudo for everyday commands, masking permission problems and raising risk.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "sudo runs a command as root. Use it for admin tasks only, and ask why permission was denied first.",
+      "itemIds": ["perm-mcq-sudo", "perm-teach-permissions"]
+    }
+  },
+  {
+    "id": "rm-has-trash",
+    "label": "Believes rm is undoable",
+    "skillIds": ["permissions-and-safety"],
+    "description": "The learner thinks deleted files rest in a Trash folder and can be restored.",
+    "remediation": {
+      "strategy": "contrast",
+      "explanation": "rm is permanent. There is no trash and no undo; only backups save you.",
+      "itemIds": ["perm-mcq-trash", "perm-lab-chmod"]
+    }
+  }
+]

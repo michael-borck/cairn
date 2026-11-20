@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "0.1",
+  "id": "learning-how-to-learn",
+  "version": "0.1.0",
+  "title": "Learning How to Learn",
+  "description": "The evidence-based learning strategies Cairn is built on: retrieval practice, spaced repetition, interleaving, elaboration, dual coding, desirable difficulties, honest self-checks, sustainable habits, and sleep. Understand why the app asks you to recall, review on a schedule, and explain things back.",
+  "author": {
+    "name": "Cairn"
+  },
+  "license": "CC-BY-4.0",
+  "source": "https://github.com/michael-borck/cairn",
+  "language": "en",
+  "audience": "adult-self-learner",
+  "level": "beginner",
+  "estimatedMinutes": 180,
+  "engine": {
+    "minVersion": "0.1.0"
+  },
+  "requires": {
+    "ai": false,
+    "docker": false,
+    "appNetwork": false
+  },
+  "entries": {
+    "curriculum": "curriculum.json",
+    "items": "items.json",
+    "rubrics": "rubrics.json",
+    "misconceptions": "misconceptions.json",
+    "labs": "labs.json",
+    "policy": "policy.json"
+  }
+}
